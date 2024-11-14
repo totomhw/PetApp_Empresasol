@@ -1,0 +1,38 @@
+﻿@model IEnumerable<PetApp_Empresa.Models.Adopcione>
+
+@{
+    ViewData["Title"] = "Verificar Solicitudes de Adopción";
+}
+
+<h1>Solicitudes de Adopción en Proceso</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mascota</th>
+            <th>Solicitante</th>
+            <th>Fecha de Solicitud</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var adopcion in Model)
+        {
+            <tr>
+                <td>@adopcion.Mascota.Nombre</td>
+                <td>@adopcion.Usuario.Nombre</td>
+                <td>@adopcion.FechaSolicitud?.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <form asp-action="AprobarAdopcion" method="post" style="display:inline">
+                        <input type="hidden" name="adopcionId" value="@adopcion.AdopcionId" />
+                        <button type="submit" class="btn btn-success">Aprobar</button>
+                    </form>
+                    <form asp-action="RechazarAdopcion" method="post" style="display:inline">
+                        <input type="hidden" name="adopcionId" value="@adopcion.AdopcionId" />
+                        <button type="submit" class="btn btn-danger">Rechazar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

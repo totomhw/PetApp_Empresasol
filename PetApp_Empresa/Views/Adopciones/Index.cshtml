@@ -1,0 +1,79 @@
+﻿@model IEnumerable<PetApp_Empresa.Models.Adopcione>
+
+@{
+    ViewData["Title"] = "Lista de Solicitudes de Adopción";
+}
+
+<h1>Solicitudes de Adopción</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Crear Nueva Solicitud</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaAprobacion)
+            </th>
+            <th>
+                Mascota
+            </th>
+            <th>
+                Usuario
+            </th>
+            <th>
+                Estado
+            </th>
+            <th>
+                Nombre Completo
+            </th>
+            <th>
+                Correo Electrónico
+            </th>
+            <th>
+                Teléfono
+            </th>
+            <th>
+                Dirección
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaAprobacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mascota.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Usuario.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreCompleto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CorreoElectronico)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefono)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Direccion)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.AdopcionId">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.AdopcionId">Detalles</a> |
+                    <a asp-action="Delete" asp-route-id="@item.AdopcionId">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

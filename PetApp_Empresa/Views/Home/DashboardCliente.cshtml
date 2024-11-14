@@ -1,0 +1,55 @@
+﻿@model PetApp_Empresa.Models.Usuario
+@{
+    ViewData["Title"] = "Panel de Cliente";
+    var adopciones = ViewData["Adopciones"] as IEnumerable<PetApp_Empresa.Models.Adopcione>;
+    var donaciones = ViewData["Donaciones"] as IEnumerable<PetApp_Empresa.Models.Donacione>;
+}
+
+<h2>Bienvenido al Panel de Cliente, @Model.Nombre</h2>
+
+<!-- Opciones para el Cliente -->
+<div class="mb-4">
+    <a class="btn btn-primary" asp-action="Adoptar">Adoptar una mascota</a>
+    <a class="btn btn-secondary" asp-action="ComprarAccesorios">Comprar Accesorios</a>
+    <a class="btn btn-success" asp-action="Donar">Hacer una Donación</a>
+</div>
+
+<hr />
+
+<!-- Sección de Adopciones -->
+<h3>Mis Adopciones</h3>
+@if (adopciones != null && adopciones.Any())
+{
+    <ul>
+        @foreach (var adopcion in adopciones)
+        {
+            <li>
+                Mascota: @adopcion.Mascota.Nombre - Fecha de adopción: @adopcion.FechaSolicitud?.ToString("dd/MM/yyyy")
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No has adoptado ninguna mascota.</p>
+}
+
+<hr />
+
+<!-- Sección de Donaciones -->
+<h3>Mis Donaciones</h3>
+@if (donaciones != null && donaciones.Any())
+{
+    <ul>
+        @foreach (var donacion in donaciones)
+        {
+            <li>
+                Refugio: @donacion.Refugio.Nombre - Monto: @donacion.Monto.ToString("C") - Fecha: @donacion.FechaDonacion?.ToString("dd/MM/yyyy")
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No has realizado donaciones.</p>
+}

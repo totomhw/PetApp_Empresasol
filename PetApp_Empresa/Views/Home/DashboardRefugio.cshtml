@@ -1,0 +1,61 @@
+﻿@model PetApp_Empresa.Models.Mascota
+@{
+    ViewData["Title"] = "Vista Admin";
+}
+
+<h1>Vista Admin</h1>
+
+<p>Bienvenido a la vista de administrador. Aquí puedes gestionar todo el contenido disponible en la plataforma:</p>
+
+<div class="admin-menu">
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link btn btn-outline-primary mb-2" asp-area="" asp-controller="Mascotas" asp-action="VistaMascota">
+                <i class="fas fa-box-open"></i> VistaMascota
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link btn btn-outline-primary mb-2" asp-area="" asp-controller="Mascotas" asp-action="Index">
+                <i class="fas fa-box-open"></i> Index
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link btn btn-outline-primary mb-2" asp-area="" asp-controller="Mascotas" asp-action="MisMascotas">
+                <i class="fas fa-box-open"></i> MisMascotas
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link btn btn-outline-primary mb-2" asp-area="" asp-controller="Mascotas" asp-action="MisDonaciones">
+                <i class="fas fa-paw"></i> MisDonaciones
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link btn btn-outline-primary mb-2" asp-area="" asp-controller="Refugios" asp-action="Index">
+                <i class="fas fa-paw"></i> Index refugio
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Opcionalmente puedes incluir algunos estilos -->
+<style>
+    .admin-menu {
+        margin-top: 20px;
+    }
+
+        .admin-menu .nav-link {
+            font-size: 1.1rem;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+            .admin-menu .nav-link i {
+                margin-right: 10px;
+                font-size: 1.2rem;
+            }
+</style>
+
+<!-- Recuerda incluir el CDN de Font Awesome para que los íconos funcionen -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">

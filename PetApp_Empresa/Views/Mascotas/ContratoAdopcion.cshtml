@@ -1,0 +1,20 @@
+﻿@model int
+
+@{
+    ViewData["Title"] = "Contrato de Adopción";
+}
+
+<h2>Contrato de Adopción</h2>
+<p>Por favor, revisa el siguiente contrato de adopción. Al confirmar, aceptas todos los términos y condiciones para la adopción de la mascota.</p>
+
+<!-- Aquí se puede incluir el texto completo del contrato -->
+<p>Contrato de adopción: ... [contenido del contrato]</p>
+
+<form asp-action="ConfirmarAdopcion" method="post">
+    <input type="hidden" name="mascotaId" value="@Model" />
+    <button type="submit" class="btn btn-success">Aceptar y Confirmar Adopción</button>
+</form>
+
+<div>
+    <a asp-action="VistaMascota">Cancelar y Volver</a>
+</div>

@@ -1,0 +1,133 @@
+﻿@model IEnumerable<PetApp_Empresa.Models.Mascota>
+
+@{
+    ViewData["Title"] = "Lista de Mascotas Disponibles";
+}
+
+<h1>Mascotas Disponibles para Adopción</h1>
+
+<!-- Formulario para filtrar por edad -->
+<form method="get" asp-action="VistaMascota" class="form-inline mb-4">
+    <label for="edadFiltro" class="mr-2">Filtrar por Edad:</label>
+    <input type="number" name="edadFiltro" id="edadFiltro" class="form-control mr-2" placeholder="Edad" />
+    <button type="submit" class="btn btn-primary">Aplicar Filtro</button>
+</form>
+
+<div class="mascotas-container">
+    @foreach (var mascota in Model.OrderBy(m => m.EstadoAdopcion == "Adoptado"))
+    {
+        <div class="mascota-card @(mascota.EstadoAdopcion == "Adoptado" ? "adopted-card" : "")">
+            <img src="@mascota.ImagenUrl" alt="@mascota.Nombre">
+            <h2>@mascota.Nombre</h2>
+            <p><strong>Raza:</strong> @mascota.Raza</p>
+            <p><strong>Edad:</strong> @mascota.Edad años</p>
+            <p><strong>Sexo:</strong> @mascota.Sexo</p>
+            <a href="@Url.Action("DetailsMascota", new { id = mascota.MascotaId })" class="btn btn-primary">Ver detalles</a>
+        </div>
+    }
+</div>
+
+<style>
+    h1 {
+        font-size: 3rem;
+        color: #ffdf91;
+        margin-bottom: 20px;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .form-inline {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .mascotas-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        height: calc(100vh - 200px);
+    }
+
+    .mascota-card {
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin: 15px;
+        width: 250px;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .mascota-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+    .adopted-card {
+        background-color: rgba(255, 0, 0, 0.2); /* Fondo rojo claro para mascotas adoptadas */
+        order: 1; /* Coloca las tarjetas adoptadas al final */
+    }
+
+    footer {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        color: white;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 4px;
+        display: inline-block;
+        font-weight: bold;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        color: #fff;
+        overflow-y: auto;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+    header, main, footer {
+        position: relative;
+        z-index: 1;
+    }
+</style>

@@ -1,0 +1,363 @@
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using PetApp_Empresa.Models;
+
+namespace PetApp_Empresa.Controllers
+{
+    public class MascotasController : Controller
+    {
+        private readonly PettappPruebaContext _context;
+
+        public MascotasController(PettappPruebaContext context)
+        {
+            _context = context;
+        }
+
+        // Método para que el usuario vea las mascotas de los refugios que administra
+        public async Task<IActionResult> MisMascotas()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            int userId = int.Parse(userIdClaim.Value);
+
+            var mascotas = await _context.Mascotas
+                .Include(m => m.Refugio)
+                .Where(m => m.Refugio.UsuarioId == userId)
+                .ToListAsync();
+
+            return View("MisMascotas", mascotas);
+        }
+
+        // Método para que el usuario vea las donaciones realizadas a los refugios que administra
+        public async Task<IActionResult> MisDonaciones()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            int userId = int.Parse(userIdClaim.Value);
+
+            var donaciones = await _context.Donaciones
+                .Include(d => d.Refugio)
+                .Include(d => d.Usuario)
+                .Where(d => d.Refugio.UsuarioId == userId)
+                .ToListAsync();
+
+            return View("MisDonaciones", donaciones);
+        }
+
+        // GET: Mascotas
+        public async Task<IActionResult> Index()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            int userId = int.Parse(userIdClaim.Value);
+
+            var mascotasUsuario = await _context.Mascotas
+                .Include(m => m.Refugio)
+                .Where(m => m.Refugio.UsuarioId == userId)
+                .ToListAsync();
+
+            return View("Index", mascotasUsuario);
+        }
+
+        // Nueva acción para ver todas las mascotas en general
+        public async Task<IActionResult> VerTodas()
+        {
+            var todasLasMascotas = await _context.Mascotas.Include(m => m.Refugio).ToListAsync();
+            return View("VerTodas", todasLasMascotas);
+        }
+
+        // GET: Mascotas/Create
+        public async Task<IActionResult> Create()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            int userId = int.Parse(userIdClaim.Value);
+
+            var refugiosUsuario = await _context.Refugios
+                .Where(r => r.UsuarioId == userId)
+                .ToListAsync();
+            ViewData["RefugioId"] = new SelectList(refugiosUsuario, "RefugioId", "Nombre");
+
+            return View();
+        }
+
+        // POST: Mascotas/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("MascotaId,Nombre,Raza,Sexo,Descripcion,EstadoAdopcion,RefugioId,Edad,ImagenUrl")] Mascota mascota)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            int userId = int.Parse(userIdClaim.Value);
+
+            var refugio = await _context.Refugios
+                .FirstOrDefaultAsync(r => r.RefugioId == mascota.RefugioId && r.UsuarioId == userId);
+            if (refugio == null)
+            {
+                return Unauthorized("No puedes crear una mascota en un refugio que no administras.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(mascota);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            var refugiosUsuario = await _context.Refugios
+                .Where(r => r.UsuarioId == userId)
+                .ToListAsync();
+            ViewData["RefugioId"] = new SelectList(refugiosUsuario, "RefugioId", "Nombre", mascota.RefugioId);
+
+            return View(mascota);
+        }
+
+        // GET: Mascotas/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var mascota = await _context.Mascotas
+                .Include(m => m.Refugio)
+                .FirstOrDefaultAsync(m => m.MascotaId == id);
+            if (mascota == null)
+            {
+                return NotFound();
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            int userId = int.Parse(userIdClaim.Value);
+
+            if (mascota.Refugio.UsuarioId != userId)
+            {
+                return Unauthorized("No puedes editar una mascota que no pertenece a tus refugios.");
+            }
+
+            var refugiosUsuario = await _context.Refugios
+                .Where(r => r.UsuarioId == userId)
+                .ToListAsync();
+            ViewData["RefugioId"] = new SelectList(refugiosUsuario, "RefugioId", "Nombre", mascota.RefugioId);
+
+            return View(mascota);
+        }
+
+        // POST: Mascotas/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("MascotaId,Nombre,Raza,Sexo,Descripcion,EstadoAdopcion,RefugioId,Edad")] Mascota mascota, IFormFile ImagenArchivo)
+        {
+            if (id != mascota.MascotaId)
+            {
+                return NotFound();
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            int userId = int.Parse(userIdClaim.Value);
+
+            var refugio = await _context.Refugios
+                .FirstOrDefaultAsync(r => r.RefugioId == mascota.RefugioId && r.UsuarioId == userId);
+            if (refugio == null)
+            {
+                return Unauthorized("No puedes editar una mascota en un refugio que no administras.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (ImagenArchivo != null && ImagenArchivo.Length > 0)
+                    {
+                        var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imagenes");
+                        if (!Directory.Exists(rutaCarpeta))
+                        {
+                            Directory.CreateDirectory(rutaCarpeta);
+                        }
+
+                        var nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(ImagenArchivo.FileName);
+                        var rutaCompleta = Path.Combine(rutaCarpeta, nombreArchivo);
+
+                        using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+                        {
+                            await ImagenArchivo.CopyToAsync(stream);
+                        }
+
+                        mascota.ImagenUrl = "/imagenes/" + nombreArchivo;
+                    }
+
+                    _context.Update(mascota);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!MascotaExists(mascota.MascotaId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            var refugiosUsuario = await _context.Refugios
+                .Where(r => r.UsuarioId == userId)
+                .ToListAsync();
+            ViewData["RefugioId"] = new SelectList(refugiosUsuario, "RefugioId", "Nombre", mascota.RefugioId);
+
+            return View(mascota);
+        }
+
+        private bool MascotaExists(int id)
+        {
+            return _context.Mascotas.Any(e => e.MascotaId == id);
+        }
+
+        // GET: Mascotas/VistaMascota
+        public async Task<IActionResult> VistaMascota(int? edadFiltro)
+        {
+            var mascotas = await _context.Mascotas.Include(m => m.Refugio).ToListAsync();
+
+            if (edadFiltro.HasValue)
+            {
+                mascotas = mascotas.Where(m => m.Edad == edadFiltro.Value).ToList();
+            }
+
+            mascotas = mascotas.OrderBy(m => m.EstadoAdopcion == "Adoptado").ToList();
+
+            return View("VistaMascota", mascotas);
+        }
+
+        // GET: Mascotas/DetailsMascota/5
+        public async Task<IActionResult> DetailsMascota(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var mascota = await _context.Mascotas.Include(m => m.Refugio).FirstOrDefaultAsync(m => m.MascotaId == id);
+            if (mascota == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "Nombre");
+
+            return View("DetailsMascota", mascota);
+        }
+
+        // Solicitar Adopción - GET
+        public async Task<IActionResult> SolicitarAdopcion(int id)
+        {
+            var mascota = await _context.Mascotas.FindAsync(id);
+            if (mascota == null || mascota.EstadoAdopcion != "Disponible")
+            {
+                return NotFound("La mascota no está disponible para adopción.");
+            }
+
+            return View("FormularioAdopcion", new SolicitudAdopcionViewModel { MascotaId = id });
+        }
+
+        // Solicitar Adopción - POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SolicitarAdopcion(SolicitudAdopcionViewModel solicitud)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("FormularioAdopcion", solicitud);
+            }
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var adopcion = new Adopcione
+            {
+                MascotaId = solicitud.MascotaId,
+                UsuarioId = userId,
+                Estado = "Pendiente",
+                NombreCompleto = solicitud.NombreCompleto,
+                CorreoElectronico = solicitud.CorreoElectronico,
+                Telefono = solicitud.Telefono,
+                Direccion = solicitud.Direccion
+            };
+
+            _context.Adopciones.Add(adopcion);
+            await _context.SaveChangesAsync();
+
+            // Redirige a la vista de contrato después de completar la solicitud de adopción
+            return RedirectToAction(nameof(ContratoAdopcion), new { mascotaId = solicitud.MascotaId });
+        }
+
+        // GET: Contrato de Adopción
+        public IActionResult ContratoAdopcion(int mascotaId)
+        {
+            return View("ContratoAdopcion", mascotaId);
+        }
+
+        // POST: Confirmar Contrato
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmarAdopcion(int mascotaId)
+        {
+            var adopcion = await _context.Adopciones
+                .FirstOrDefaultAsync(a => a.MascotaId == mascotaId && a.Estado == "Pendiente");
+
+            if (adopcion == null)
+            {
+                return NotFound("No se encontró la solicitud de adopción.");
+            }
+
+            // Cambia el estado de la adopción y la mascota a "En Proceso"
+            adopcion.Estado = "En Proceso";
+            var mascota = await _context.Mascotas.FindAsync(mascotaId);
+            if (mascota != null)
+            {
+                mascota.EstadoAdopcion = "En Proceso";
+                _context.Mascotas.Update(mascota);
+            }
+
+            _context.Adopciones.Update(adopcion);
+            await _context.SaveChangesAsync();
+
+            // Redirige a la lista de mascotas
+            return RedirectToAction("VistaMascota", "Mascotas");
+        }
+
+    }
+}

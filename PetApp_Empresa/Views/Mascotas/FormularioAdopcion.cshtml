@@ -1,0 +1,30 @@
+﻿@model PetApp_Empresa.Models.SolicitudAdopcionViewModel
+
+<h2>Formulario de Solicitud de Adopción</h2>
+
+<form asp-action="SolicitarAdopcion" method="post">
+    <input type="hidden" asp-for="MascotaId" />
+
+    <div class="form-group">
+        <label asp-for="NombreCompleto"></label>
+        <input asp-for="NombreCompleto" class="form-control" />
+        <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CorreoElectronico"></label>
+        <input asp-for="CorreoElectronico" class="form-control" />
+        <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Telefono"></label>
+        <input asp-for="Telefono" class="form-control" />
+        <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Direccion"></label>
+        <input asp-for="Direccion" class="form-control" />
+        <span asp-validation-for="Direccion" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
+</form>

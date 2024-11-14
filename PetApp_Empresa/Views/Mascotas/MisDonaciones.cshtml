@@ -1,0 +1,23 @@
+﻿@model IEnumerable<PetApp_Empresa.Models.Donacione>
+<h2>Mis Donaciones</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Refugio</th>
+            <th>Monto</th>
+            <th>Fecha</th>
+            <th>Donante</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var donacion in Model)
+        {
+            <tr>
+                <td>@donacion.Refugio.Nombre</td>
+                <td>@donacion.Monto</td>
+                <td>@donacion.FechaDonacion?.ToString("dd/MM/yyyy") ?? "N/A"</td>
+                <td>@donacion.Usuario.Nombre</td>
+            </tr>
+        }
+    </tbody>
+</table>

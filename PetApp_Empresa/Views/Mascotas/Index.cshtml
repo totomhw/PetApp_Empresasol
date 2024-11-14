@@ -1,0 +1,62 @@
+﻿@model IEnumerable<PetApp_Empresa.Models.Mascota>
+
+@{
+    ViewData["Title"] = "Mis Mascotas";
+}
+
+<h1>Mis Mascotas</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Crear Nueva Mascota</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+            <th>@Html.DisplayNameFor(model => model.Raza)</th>
+            <th>@Html.DisplayNameFor(model => model.Sexo)</th>
+            <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
+            <th>@Html.DisplayNameFor(model => model.EstadoAdopcion)</th>
+            <th>@Html.DisplayNameFor(model => model.Edad)</th>
+            <th>Imagen</th>
+            <th>Refugio</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="@(item.EstadoAdopcion == "Adoptado" ? "table-danger" : "")">
+                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => item.Raza)</td>
+                <td>@Html.DisplayFor(modelItem => item.Sexo)</td>
+                <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                <td>@Html.DisplayFor(modelItem => item.EstadoAdopcion)</td>
+                <td>@Html.DisplayFor(modelItem => item.Edad)</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImagenUrl))
+                    {
+                        <img src="@item.ImagenUrl" alt="Imagen de @item.Nombre" width="100" height="100" />
+                    }
+                    else
+                    {
+                        <span>No disponible</span>
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Refugio.Nombre)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MascotaId" class="btn btn-sm btn-warning">Editar</a> |
+                    <a asp-action="DetailsMascota" asp-route-id="@item.MascotaId" class="btn btn-sm btn-info">Detalles</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MascotaId" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    .table-danger {
+        background-color: #f8d7da !important; /* Fondo rojo claro para mascotas adoptadas */D
+    }
+</style>

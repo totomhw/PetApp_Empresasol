@@ -1,0 +1,54 @@
+﻿@model PetApp_Empresa.Models.Mascota
+
+<h2>Editar Mascota</h2>
+
+<form asp-action="Edit" enctype="multipart/form-data" method="post">
+    <input type="hidden" asp-for="MascotaId" />
+    <div class="form-group">
+        <label asp-for="Nombre" class="control-label"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Raza" class="control-label"></label>
+        <input asp-for="Raza" class="form-control" />
+        <span asp-validation-for="Raza" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Sexo" class="control-label">Sexo</label>
+        <select asp-for="Sexo" class="form-control">
+            <option value="">Seleccione...</option>
+            <option value="Macho">Macho</option>
+            <option value="Hembra">Hembra</option>
+        </select>
+        <span asp-validation-for="Sexo" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Descripcion" class="control-label"></label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Edad" class="control-label"></label>
+        <input asp-for="Edad" class="form-control" />
+        <span asp-validation-for="Edad" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EstadoAdopcion" class="control-label">Estado de Adopción</label>
+        <select asp-for="EstadoAdopcion" class="form-control">
+            <option value="Disponible">Disponible</option>
+            <option value="Adoptado">No disponible</option>
+        </select>
+        <span asp-validation-for="EstadoAdopcion" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RefugioId" class="control-label">Refugio</label>
+        <select asp-for="RefugioId" class="form-control" asp-items="ViewBag.RefugioId"></select>
+        <span asp-validation-for="RefugioId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ImagenUrl" class="control-label">Imagen</label>
+        <input asp-for="ImagenUrl" type="file" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+</form>

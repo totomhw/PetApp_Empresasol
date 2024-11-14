@@ -1,0 +1,66 @@
+﻿@model PetApp_Empresa.Models.Adopcione
+
+@{
+    ViewData["Title"] = "Crear Solicitud de Adopción";
+}
+
+<h1>Crear Solicitud de Adopción</h1>
+
+<h4>Solicitud de Adopción</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="SolicitarAdopcion">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Mascota -->
+            <div class="form-group">
+                <label asp-for="MascotaId" class="control-label"></label>
+                <select asp-for="MascotaId" class="form-control" asp-items="ViewBag.MascotaId"></select>
+                <span asp-validation-for="MascotaId" class="text-danger"></span>
+            </div>
+
+            <!-- Nombre Completo -->
+            <div class="form-group">
+                <label asp-for="NombreCompleto" class="control-label"></label>
+                <input asp-for="NombreCompleto" class="form-control" />
+                <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+            </div>
+
+            <!-- Correo Electrónico -->
+            <div class="form-group">
+                <label asp-for="CorreoElectronico" class="control-label"></label>
+                <input asp-for="CorreoElectronico" class="form-control" />
+                <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+            </div>
+
+            <!-- Teléfono -->
+            <div class="form-group">
+                <label asp-for="Telefono" class="control-label"></label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+
+            <!-- Dirección -->
+            <div class="form-group">
+                <label asp-for="Direccion" class="control-label"></label>
+                <input asp-for="Direccion" class="form-control" />
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Enviar Solicitud" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Volver a la Lista</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

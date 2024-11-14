@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PetApp_Empresa</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PetApp_Empresa.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @if (!ViewData.ContainsKey("HideLayout") || !(bool)ViewData["HideLayout"])
+    {
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="DashboardAdmin">AdoptIt</a>
+                    }
+                    else if (User.IsInRole("Admin") || User.IsInRole("Cliente"))
+                    {
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="DashboardCliente">AdoptIt</a>
+                    }
+                    else if (User.IsInRole("Admin") || User.IsInRole("Vendedor"))
+                    {
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="DashboardVendedor">AdoptIt</a>
+                    }
+                    else if (User.IsInRole("Admin") || User.IsInRole("Refugio"))
+                    {
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="DashboardRefugio">AdoptIt</a>
+                    }
+                    else
+                    {
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AdoptIt</a>
+                    }
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="UsuarioRols" asp-action="Index">UsuarioRols</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="CarritoAccesorios" asp-action="Index">CarritoAccesorios</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="CarritoDeCompras" asp-action="Index">CarritoDeCompras</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Mascotas" asp-action="VistaMascota">VistaMascota</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Admin") || User.IsInRole("Refugio"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Mascotas" asp-action="Index">Mascotas</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Refugios" asp-action="Index">Refugios</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Donaciones" asp-action="Index">Donaciones</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Admin") || User.IsInRole("Cliente"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Mascotas" asp-action="VistaMascota">VistaMascota</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="DashboardCliente">Usuario</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Admin") || User.IsInRole("Vendedor"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Accesorios" asp-action="Index">Accesorios</a>
+                                </li>
+                            }
+                        </ul>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <form asp-controller="Auth" asp-action="Logout" method="post">
+                                <button type="submit" class="btn btn-link nav-link text-dark">Cerrar sesión</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </nav>
+        </header>
+    }
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    @if (!ViewData.ContainsKey("HideLayout") || !(bool)ViewData["HideLayout"])
+    {
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2024 - gestionCitas - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    }
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

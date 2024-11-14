@@ -1,0 +1,23 @@
+﻿@model IEnumerable<PetApp_Empresa.Models.Mascota>
+<h2>Mis Mascotas</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Raza</th>
+            <th>Edad</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var mascota in Model)
+        {
+            <tr>
+                <td>@mascota.Nombre</td>
+                <td>@mascota.Raza</td>
+                <td>@mascota.Edad</td>
+                <td>@mascota.EstadoAdopcion</td>
+            </tr>
+        }
+    </tbody>
+</table>

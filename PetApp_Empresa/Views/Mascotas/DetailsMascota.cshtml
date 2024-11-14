@@ -1,0 +1,86 @@
+﻿@model PetApp_Empresa.Models.Mascota
+
+@{
+    ViewData["Title"] = "Detalles de la Mascota";
+}
+
+<h1>Detalles de @Model.Nombre</h1>
+
+<div>
+    <h4>Información de la Mascota</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Raza</dt>
+        <dd class="col-sm-10">@Model.Raza</dd>
+
+        <dt class="col-sm-2">Edad</dt>
+        <dd class="col-sm-10">@Model.Edad años</dd>
+
+        <dt class="col-sm-2">Sexo</dt>
+        <dd class="col-sm-10">@Model.Sexo</dd>
+
+        <dt class="col-sm-2">Descripción</dt>
+        <dd class="col-sm-10">@Model.Descripcion</dd>
+
+        <dt class="col-sm-2">Estado</dt>
+        <dd class="col-sm-10">@Model.EstadoAdopcion</dd>
+    </dl>
+
+    <!-- Si la mascota está disponible, mostrar botón para iniciar solicitud de adopción -->
+    @if (Model.EstadoAdopcion == "Disponible")
+    {
+        <a asp-action="SolicitarAdopcion" asp-route-id="@Model.MascotaId" class="btn btn-primary mt-3">Solicitar Adopción</a>
+    }
+    else
+    {
+        <p>Esta mascota ya ha sido adoptada.</p>
+    }
+</div>
+
+<div>
+    <a asp-action="VistaMascota">Volver a la lista</a>
+</div>
+
+<style>
+    .mascota-detalles {
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-top: 20px;
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        color: #333;
+    }
+
+        .mascota-detalles p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .mascota-detalles h1 {
+            font-size: 2.5rem;
+            color: #ffdf91;
+        }
+
+        .mascota-detalles .descripcion {
+            color: #555;
+        }
+
+        .mascota-detalles .estado {
+            font-weight: bold;
+            color: #ff0000;
+        }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+</style>

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<PetApp_Empresa.Models.Donacione>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Monto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaDonacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Refugio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Usuario)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaDonacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Refugio.RefugioId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Usuario.UsuarioId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.DonacionId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.DonacionId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.DonacionId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
