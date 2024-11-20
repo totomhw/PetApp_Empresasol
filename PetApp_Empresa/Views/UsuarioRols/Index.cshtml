@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Usuarios Roles</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -45,3 +45,98 @@
 }
     </tbody>
 </table>
+
+<style>
+    /* Estilo general */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f7f7f7; /* Fondo claro */
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    /* Estilo del título */
+    h1 {
+        background-color: #BA0C2F; /* Rojo Univalle */
+        color: white;
+        text-align: center;
+        padding: 15px;
+        margin: 0 0 20px;
+        font-size: 2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    /* Contenedor */
+    .container {
+        margin: 20px auto;
+        max-width: 80%;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    /* Tabla */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 16px;
+        text-align: left;
+        background-color: black;
+    }
+
+    thead {
+        background-color: #BA0C2F; /* Rojo Univalle */
+        color: ;
+        text-transform: uppercase;
+    }
+
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9; /* Fondo claro para filas alternas */
+    }
+
+    tbody tr:hover {
+        background-color: #f2f2f2; /* Resalte al pasar el ratón */
+    }
+
+    td {
+        vertical-align: middle; /* Alinear texto verticalmente */
+    }
+
+    /* Links */
+    a {
+        color: #BA0C2F; /* Rojo Univalle */
+        text-decoration: none;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Botón Crear Nuevo */
+        a[asp-action="Create"] {
+            display: inline-block;
+            background-color: #007BFF; /* Azul */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+            a[asp-action="Create"]:hover {
+                background-color: #0056b3;
+            }
+
+</style>
