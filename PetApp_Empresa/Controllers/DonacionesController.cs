@@ -229,5 +229,34 @@ namespace Pettapp2.Controllers
         {
             return _context.Donaciones.Any(e => e.DonacionId == id);
         }
+
+
+        // Acción para ver las donaciones realizadas al refugio del usuario autenticado
+        public async Task<IActionResult> DonacionesPorRefugio()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            // Obtener los refugios administrados por el usuario
+            var refugiosDelUsuario = await _context.Refugios
+                .Where(r => r.UsuarioId == userId)
+                .Select(r => r.RefugioId)
+                .ToListAsync();
+
+            // Obtener las donaciones realizadas a los refugios del usuario
+            var donaciones = await _context.Donaciones
+                .Include(d => d.Refugio)
+                .Include(d => d.Usuario)
+                .Where(d => refugiosDelUsuario.Contains(d.RefugioId))
+                .ToListAsync();
+
+            return View(donaciones);
+        }
+
     }
 }
