@@ -11,6 +11,8 @@ public partial class CarritoAccesorio
 
     public int AccesorioId { get; set; }
 
+    public int Cantidad { get; set; }
+
     public virtual Accesorio Accesorio { get; set; } = null!;
 
     public virtual CarritoDeCompra Carrito { get; set; } = null!;

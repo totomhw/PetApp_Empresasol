@@ -1,0 +1,39 @@
+﻿@model PetApp_Empresa.Models.CarritoDeCompra
+
+<h2>Resumen del Carrito</h2>
+
+@if (Model.CarritoAccesorios != null && Model.CarritoAccesorios.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CarritoAccesorios)
+            {
+                <tr>
+                    <td>@item.Accesorio.Nombre</td>
+                    <td>@item.Cantidad</td>
+                    <td>@item.Accesorio.Precio.ToString("C")</td>
+                    <td>@(item.Accesorio.Precio * item.Cantidad).ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Total: @(Model.Total.HasValue ? Model.Total.Value.ToString("C") : "N/A")</h3>
+
+    <form id="formProcesarPago" asp-action="ProcesarPago" method="post">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-success">Realizar Pago</button>
+    </form>
+}
+else
+{
+    <h3>El carrito está vacío.</h3>
+}
