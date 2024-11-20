@@ -1,0 +1,158 @@
+﻿/* General reset and layout */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: white; /* Fondo blanco del contenido */
+}
+
+/* Header styles */
+header {
+    background-color: #a81c1c; /* Rojo de Univalle */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 1000;
+}
+
+    header .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+    }
+
+        header .navbar-brand:hover {
+            text-decoration: underline;
+        }
+
+    header .nav-link {
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+        header .nav-link:hover {
+            color: #f5f5f5;
+        }
+
+/* Sidebar styles */
+.sidebar {
+    background-color: #a81c1c; /* Rojo del sidebar */
+    color: white;
+    width: 220px;
+    height: 100%;
+    position: fixed;
+    top: 60px; /* Justo debajo del header */
+    left: 0;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0px 6px rgba(0, 0, 0, 0.1);
+}
+
+    .sidebar .nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar .nav-link {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 0.75rem 1.5rem;
+        font-weight: bold;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: white;
+            color: #a81c1c; /* Rojo para texto en hover */
+            border-radius: 4px;
+        }
+
+/* Main content styles */
+.main-content {
+    margin-left: 220px; /* Espacio reservado para el sidebar */
+    margin-top: 60px; /* Espacio reservado para el header */
+    padding: 2rem;
+    background-color: white; /* Fondo blanco del contenido */
+    color: #444; /* Texto oscuro */
+    overflow-y: auto;
+    height: calc(100vh - 60px); /* Altura restante después del header */
+}
+
+/* Table styles */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: white; /* Fondo blanco de tablas */
+    color: #444; /* Texto oscuro */
+}
+
+    .table th,
+    .table td {
+        padding: 0.75rem;
+        text-align: left;
+        border: 1px solid #dcdcdc;
+    }
+
+    .table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f9ecec;
+    }
+
+/* Buttons */
+button, .btn {
+    background-color: white;
+    color: #a81c1c; /* Texto rojo */
+    border: 2px solid #a81c1c;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    button:hover, .btn:hover {
+        background-color: #a81c1c;
+        color: white;
+    }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 180px;
+    }
+
+    .main-content {
+        margin-left: 180px;
+    }
+
+    header {
+        padding: 0.75rem 1rem;
+    }
+
+        header .navbar-brand {
+            font-size: 1.2rem;
+        }
+}

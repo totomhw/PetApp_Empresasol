@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetApp_Empresa.Models;
 
@@ -18,146 +17,138 @@ namespace PetApp_Empresa.Controllers
             _context = context;
         }
 
-        // GET: CarritoDeCompras
+        // GET: CarritoDeCompras/Index
         public async Task<IActionResult> Index()
         {
-            var pettappPruebaContext = _context.CarritoDeCompras.Include(c => c.Usuario);
-            return View(await pettappPruebaContext.ToListAsync());
+            var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
+
+            // Incluir los detalles de los accesorios en el carrito
+            carrito = await _context.CarritoDeCompras
+                .Include(c => c.CarritoAccesorios)
+                .ThenInclude(ca => ca.Accesorio)
+                .FirstOrDefaultAsync(c => c.CarritoId == carrito.CarritoId);
+
+            return View(carrito);
         }
 
-        // GET: CarritoDeCompras/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AgregarAlCarrito(int accesorioId, int cantidad)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                var accesorio = await _context.Accesorios.FindAsync(accesorioId);
+                if (accesorio == null)
+                {
+                    return BadRequest(new { message = "El accesorio no existe." });
+                }
 
-            var carritoDeCompra = await _context.CarritoDeCompras
-                .Include(c => c.Usuario)
-                .FirstOrDefaultAsync(m => m.CarritoId == id);
-            if (carritoDeCompra == null)
+                if (accesorio.CantidadDisponible < cantidad)
+                {
+                    return BadRequest(new { message = "Stock insuficiente para la cantidad solicitada." });
+                }
+
+                var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
+
+                // Verificar si el accesorio ya está en el carrito
+                var carritoAccesorio = carrito.CarritoAccesorios.FirstOrDefault(ca => ca.AccesorioId == accesorioId);
+                if (carritoAccesorio == null)
+                {
+                    carritoAccesorio = new CarritoAccesorio
+                    {
+                        CarritoId = carrito.CarritoId,
+                        AccesorioId = accesorioId,
+                        Cantidad = cantidad
+                    };
+                    _context.CarritoAccesorios.Add(carritoAccesorio);
+                }
+                else
+                {
+                    carritoAccesorio.Cantidad += cantidad;
+                }
+
+                // Reducir el stock del accesorio
+                accesorio.CantidadDisponible -= cantidad;
+
+                // Guardar los cambios
+                await _context.SaveChangesAsync();
+
+                var cantidadCarrito = carrito.CarritoAccesorios.Sum(ca => ca.Cantidad);
+                return Json(new { message = "Producto añadido al carrito", cantidadCarrito });
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(new { message = "Error al agregar el producto al carrito.", error = ex.Message });
             }
-
-            return View(carritoDeCompra);
         }
 
-        // GET: CarritoDeCompras/Create
-        public IActionResult Create()
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProcesarPago()
         {
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId");
+            try
+            {
+                var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
+
+                if (carrito.CarritoAccesorios == null || !carrito.CarritoAccesorios.Any())
+                {
+                    TempData["ErrorMessage"] = "El carrito está vacío.";
+                    return RedirectToAction("ResumenCarrito");
+                }
+
+                carrito.Total = carrito.CarritoAccesorios
+                    .Where(item => item.Accesorio != null)
+                    .Sum(item => item.Accesorio.Precio * item.Cantidad);
+
+                _context.CarritoAccesorios.RemoveRange(carrito.CarritoAccesorios);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("ConfirmacionPago");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Hubo un error al procesar el pago. Intenta nuevamente.";
+                return RedirectToAction("ResumenCarrito");
+            }
+        }
+
+
+
+        // GET: CarritoDeCompras/ResumenCarrito
+        public async Task<IActionResult> ResumenCarrito()
+        {
+            var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
+
+            carrito = await _context.CarritoDeCompras
+                .Include(c => c.CarritoAccesorios)
+                .ThenInclude(ca => ca.Accesorio)
+                .FirstOrDefaultAsync(c => c.CarritoId == carrito.CarritoId);
+
+            return View(carrito);
+        }
+
+        // GET: CarritoDeCompras/ObtenerCantidadCarrito
+        [HttpGet]
+        public async Task<IActionResult> ObtenerCantidadCarrito()
+        {
+            var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
+            var cantidad = carrito.CarritoAccesorios?.Sum(item => item.Cantidad) ?? 0;
+            return Json(new { cantidad });
+        }
+
+        // GET: CarritoDeCompras/ConfirmacionPago
+        public IActionResult ConfirmacionPago()
+        {
             return View();
         }
 
-        // POST: CarritoDeCompras/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CarritoId,UsuarioId,Total")] CarritoDeCompra carritoDeCompra)
+        // GET: CarritoDeCompras/ContarProductosEnCarrito
+        [HttpGet]
+        public async Task<int> ContarProductosEnCarrito()
         {
-            if (true)
-            {
-                _context.Add(carritoDeCompra);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", carritoDeCompra.UsuarioId);
-            return View(carritoDeCompra);
-        }
-
-        // GET: CarritoDeCompras/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var carritoDeCompra = await _context.CarritoDeCompras.FindAsync(id);
-            if (carritoDeCompra == null)
-            {
-                return NotFound();
-            }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", carritoDeCompra.UsuarioId);
-            return View(carritoDeCompra);
-        }
-
-        // POST: CarritoDeCompras/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CarritoId,UsuarioId,Total")] CarritoDeCompra carritoDeCompra)
-        {
-            if (id != carritoDeCompra.CarritoId)
-            {
-                return NotFound();
-            }
-
-            if (true)
-            {
-                try
-                {
-                    _context.Update(carritoDeCompra);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CarritoDeCompraExists(carritoDeCompra.CarritoId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", carritoDeCompra.UsuarioId);
-            return View(carritoDeCompra);
-        }
-
-        // GET: CarritoDeCompras/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var carritoDeCompra = await _context.CarritoDeCompras
-                .Include(c => c.Usuario)
-                .FirstOrDefaultAsync(m => m.CarritoId == id);
-            if (carritoDeCompra == null)
-            {
-                return NotFound();
-            }
-
-            return View(carritoDeCompra);
-        }
-
-        // POST: CarritoDeCompras/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var carritoDeCompra = await _context.CarritoDeCompras.FindAsync(id);
-            if (carritoDeCompra != null)
-            {
-                _context.CarritoDeCompras.Remove(carritoDeCompra);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool CarritoDeCompraExists(int id)
-        {
-            return _context.CarritoDeCompras.Any(e => e.CarritoId == id);
+            var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
+            return carrito.CarritoAccesorios.Sum(ca => ca.Cantidad);
         }
     }
 }

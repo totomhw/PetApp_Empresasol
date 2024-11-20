@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using PetApp_Empresa.Models;
+using PetApp_Empresa.Models; 
 
 namespace PetApp_Empresa.Controllers
 {
@@ -52,11 +51,9 @@ namespace PetApp_Empresa.Controllers
         }
 
         // POST: Accesorios/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AccesorioId,Nombre,Descripcion,Precio,VendedorId")] Accesorio accesorio)
+        public async Task<IActionResult> Create([Bind("AccesorioId,Nombre,Descripcion,Precio,VendedorId,CantidadDisponible")] Accesorio accesorio)
         {
             if (ModelState.IsValid)
             {
@@ -86,11 +83,9 @@ namespace PetApp_Empresa.Controllers
         }
 
         // POST: Accesorios/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AccesorioId,Nombre,Descripcion,Precio,VendedorId")] Accesorio accesorio)
+        public async Task<IActionResult> Edit(int id, [Bind("AccesorioId,Nombre,Descripcion,Precio,VendedorId,CantidadDisponible")] Accesorio accesorio)
         {
             if (id != accesorio.AccesorioId)
             {
@@ -158,6 +153,21 @@ namespace PetApp_Empresa.Controllers
         private bool AccesorioExists(int id)
         {
             return _context.Accesorios.Any(e => e.AccesorioId == id);
+        }
+
+        // GET: Accesorios/ListadoAccesorios
+        public async Task<IActionResult> ListadoAccesorios()
+        {
+            var accesorios = await _context.Accesorios.ToListAsync();
+
+            // Usar el helper para obtener el carrito del usuario autenticado
+            var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
+
+            // Calcular la cantidad total de artículos en el carrito
+            var carritoCount = carrito.CarritoAccesorios.Sum(ca => ca.Cantidad);
+
+            ViewData["CarritoCount"] = carritoCount; // Pasar el valor a la vista
+            return View(accesorios);
         }
     }
 }

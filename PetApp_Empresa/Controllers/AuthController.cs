@@ -27,6 +27,8 @@ namespace Pettapp2.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+
+            ViewData["HideLayout"] = true; // Ocultar el layout en la vista de Login
             return View();
         }
 
@@ -34,39 +36,41 @@ namespace Pettapp2.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(Usuario loginModel)
+        public async Task<IActionResult> Login(string nombre, string password)
         {
-            // Verificar si el modelo es válido antes de continuar
-            if (ModelState.IsValid)
+            ViewData["HideLayout"] = true;
+
+            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(password))
             {
-                return View(loginModel);
+                ModelState.AddModelError("", "El nombre de usuario y la contraseña son obligatorios.");
+                return View();
             }
 
             var user = await _context.Usuarios
                 .Include(u => u.UsuarioRols)
                 .ThenInclude(ur => ur.Rol)
-                .FirstOrDefaultAsync(u => u.Nombre == loginModel.Nombre && u.Activo == true);
+                .FirstOrDefaultAsync(u => u.Nombre == nombre && u.Activo == true);
 
-            if (user != null && VerifyPassword(loginModel.Password, user.Password))
+            if (user != null && VerifyPassword(password, user.Password))
             {
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Nombre),
                     new Claim(ClaimTypes.NameIdentifier, user.UsuarioId.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email)
+                    new Claim(ClaimTypes.Email, user.Email ?? "")
                 };
 
                 foreach (var userRole in user.UsuarioRols)
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, userRole.Rol.Nombre)); // Agregar rol como claim
+                    claims.Add(new Claim(ClaimTypes.Role, userRole.Rol.Nombre)); // Agregar roles como claims
                 }
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
                 {
                     AllowRefresh = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(20),
-                    IsPersistent = false,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30),
+                    IsPersistent = true,
                 };
 
                 await HttpContext.SignInAsync(
@@ -87,14 +91,15 @@ namespace Pettapp2.Controllers
             }
 
             ModelState.AddModelError("", "Usuario o contraseña incorrectos.");
-            return View(loginModel);
+            return View();
         }
 
         // GET: Auth/Register
         [AllowAnonymous]
         public IActionResult Register()
         {
-            ViewBag.Roles = _context.Roles.ToList(); // Cargar lista de roles para el dropdown en la vista
+            ViewData["HideLayout"] = true; // Ocultar el layout en la vista de Registro
+            ViewBag.Roles = _context.Roles.ToList(); // Cargar lista de roles para el dropdown
             return View();
         }
 
@@ -104,12 +109,14 @@ namespace Pettapp2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("Nombre,Password,Email")] Usuario usuario, int rolId)
         {
+            ViewData["HideLayout"] = true;
+
             if (ModelState.IsValid)
             {
                 // Verificar si el usuario o el email ya están en uso
                 if (await _context.Usuarios.AnyAsync(u => u.Nombre == usuario.Nombre || u.Email == usuario.Email))
                 {
-                    ModelState.AddModelError("", "El usuario o email ya está en uso.");
+                    ModelState.AddModelError("", "El nombre de usuario o el email ya están en uso.");
                     ViewBag.Roles = _context.Roles.ToList(); // Recargar roles en caso de error
                     return View(usuario);
                 }
@@ -119,7 +126,7 @@ namespace Pettapp2.Controllers
                 usuario.Activo = true;
 
                 // Guardar el usuario en la base de datos
-                _context.Add(usuario);
+                _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
 
                 // Asignar el rol seleccionado al usuario
@@ -129,13 +136,13 @@ namespace Pettapp2.Controllers
                     RolId = rolId,
                     FechaAsignacion = DateTime.Now
                 };
-                _context.Add(usuarioRol);
+                _context.UsuarioRols.Add(usuarioRol);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Login));
             }
 
-            ViewBag.Roles = _context.Roles.ToList();
+            ViewBag.Roles = _context.Roles.ToList(); // Recargar roles en caso de error
             return View(usuario);
         }
 
@@ -148,7 +155,7 @@ namespace Pettapp2.Controllers
             return RedirectToAction(nameof(Login));
         }
 
-        // Verificación de la contraseña ingresada contra la almacenada
+        // Verificar la contraseña ingresada contra la almacenada
         private bool VerifyPassword(string enteredPassword, string storedHash)
         {
             var hashedEnteredPassword = HashPassword(enteredPassword);

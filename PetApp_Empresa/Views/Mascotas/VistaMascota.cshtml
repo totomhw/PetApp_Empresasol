@@ -4,15 +4,19 @@
     ViewData["Title"] = "Lista de Mascotas Disponibles";
 }
 
-<h1>Mascotas Disponibles para Adopción</h1>
+<!-- Contenedor del encabezado estático -->
+<div class="header-fixed">
+    <h1>Mascotas Disponibles para Adopción</h1>
 
-<!-- Formulario para filtrar por edad -->
-<form method="get" asp-action="VistaMascota" class="form-inline mb-4">
-    <label for="edadFiltro" class="mr-2">Filtrar por Edad:</label>
-    <input type="number" name="edadFiltro" id="edadFiltro" class="form-control mr-2" placeholder="Edad" />
-    <button type="submit" class="btn btn-primary">Aplicar Filtro</button>
-</form>
+    <!-- Formulario para filtrar por edad -->
+    <form method="get" asp-action="VistaMascota" class="form-inline">
+        <label for="edadFiltro" class="mr-2">Filtrar por Edad:</label>
+        <input type="number" name="edadFiltro" id="edadFiltro" class="form-control mr-2" placeholder="Edad" />
+        <button type="submit" class="btn btn-primary">Aplicar Filtro</button>
+    </form>
+</div>
 
+<!-- Contenedor desplazable para las tarjetas -->
 <div class="mascotas-container">
     @foreach (var mascota in Model.OrderBy(m => m.EstadoAdopcion == "Adoptado"))
     {
@@ -22,37 +26,70 @@
             <p><strong>Raza:</strong> @mascota.Raza</p>
             <p><strong>Edad:</strong> @mascota.Edad años</p>
             <p><strong>Sexo:</strong> @mascota.Sexo</p>
-            <a href="@Url.Action("DetailsMascota", new { id = mascota.MascotaId })" class="btn btn-primary">Ver detalles</a>
+            <a href="@Url.Action("DetailsMascota", new { id = mascota.MascotaId })" class="btn btn-primary">Adoptar</a>
         </div>
     }
 </div>
 
 <style>
-    h1 {
-        font-size: 3rem;
-        color: #ffdf91;
-        margin-bottom: 20px;
+    /* Header fijo (título y filtro) */
+    .header-fixed {
+        position: fixed;
+        top: 60px; /* Espacio reservado para el header del layout */
+        left: 220px; /* Ajuste para evitar el sidebar */
+        width: calc(100% - 220px); /* Ajuste del ancho según el sidebar */
+        background-color: #a81c1c; /* Rojo de Univalle */
+        z-index: 1000;
+        padding: 10px 0;
         text-align: center;
-        margin-top: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        color: white;
     }
 
-    .form-inline {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
+        .header-fixed h1 {
+            font-size: 2rem;
+            margin: 10px 0;
+            color: #ffdf91; /* Color amarillo cálido */
+        }
 
+        .header-fixed .form-inline {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .header-fixed .form-control {
+            width: 150px;
+            margin-right: 10px;
+        }
+
+        .header-fixed .btn-primary {
+            background-color: white;
+            color: #a81c1c;
+            border: 1px solid #a81c1c;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            .header-fixed .btn-primary:hover {
+                background-color: #a81c1c;
+                color: white;
+            }
+
+    /* Contenedor desplazable */
     .mascotas-container {
+        margin-top: 140px; /* Espacio reservado para el header fijo y principal */
+        margin-left: 220px; /* Espacio reservado para el sidebar */
+        padding: 20px;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
-        width: 100%;
-        padding: 20px;
-        box-sizing: border-box;
-        overflow-y: auto;
-        height: calc(100vh - 200px);
+        height: calc(100vh - 140px); /* Altura ajustada para que sea desplazable */
+        overflow-y: auto; /* Sólo una barra de desplazamiento */
     }
 
+    /* Estilo de tarjetas */
     .mascota-card {
         border: 1px solid #ddd;
         padding: 20px;
@@ -63,71 +100,51 @@
         border-radius: 8px;
         box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s, box-shadow 0.3s;
+        position: relative;
     }
+
+        .mascota-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+        }
 
         .mascota-card img {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
             border-radius: 8px 8px 0 0;
+            margin-bottom: 10px;
         }
 
+        .mascota-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .mascota-card p {
+            font-size: 1rem;
+            margin: 5px 0;
+        }
+
+        .mascota-card .btn-primary {
+            background-color: #a81c1c;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+
+            .mascota-card .btn-primary:hover {
+                background-color: #7f1414;
+            }
+
+    /* Tarjetas de mascotas adoptadas */
     .adopted-card {
-        background-color: rgba(255, 0, 0, 0.2); /* Fondo rojo claro para mascotas adoptadas */
+        background-color: rgba(168, 28, 28, 0.2); /* Fondo rojo suave */
         order: 1; /* Coloca las tarjetas adoptadas al final */
-    }
-
-    footer {
-        margin-top: 20px;
-        text-align: center;
-    }
-
-    .btn-primary {
-        background-color: #007BFF;
-        color: white;
-        padding: 8px 16px;
-        text-decoration: none;
-        border-radius: 4px;
-        display: inline-block;
-        font-weight: bold;
-        margin-top: 10px;
-        transition: background-color 0.3s ease;
-    }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-    body {
-        font-family: 'Arial', sans-serif;
-        color: #fff;
-        overflow-y: auto;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        position: relative;
-    }
-
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 0;
-        }
-
-    header, main, footer {
-        position: relative;
-        z-index: 1;
     }
 </style>

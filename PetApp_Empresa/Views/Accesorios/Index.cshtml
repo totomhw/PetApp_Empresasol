@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<PetApp_Empresa.Models.Accesorio>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tienda de Accesorios";
 }
 
-<h1>Index</h1>
+<h1>Tienda de Accesorios</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Crear Nuevo</a>
 </p>
 <table class="table">
     <thead>
@@ -24,30 +24,37 @@
             <th>
                 @Html.DisplayNameFor(model => model.Vendedor)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CantidadDisponible) <!-- Nueva columna -->
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vendedor.UsuarioId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AccesorioId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AccesorioId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AccesorioId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Precio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Vendedor.UsuarioId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CantidadDisponible) <!-- Mostrar cantidad disponible -->
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.AccesorioId" class="btn btn-sm btn-primary">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.AccesorioId" class="btn btn-sm btn-info">Detalles</a> |
+                    <a asp-action="Delete" asp-route-id="@item.AccesorioId" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

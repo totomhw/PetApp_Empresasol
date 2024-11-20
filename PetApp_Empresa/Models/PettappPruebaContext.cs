@@ -41,6 +41,10 @@ public partial class PettappPruebaContext : DbContext
             entity.Property(e => e.Nombre).HasMaxLength(100);
             entity.Property(e => e.Precio).HasColumnType("decimal(10, 2)");
 
+            // Configuración para la propiedad CantidadDisponible con valor predeterminado de 0
+            entity.Property(e => e.CantidadDisponible)
+                  .HasDefaultValue(0);
+
             entity.HasOne(d => d.Vendedor).WithMany(p => p.Accesorios)
                 .HasForeignKey(d => d.VendedorId)
                 .OnDelete(DeleteBehavior.SetNull)
@@ -80,6 +84,9 @@ public partial class PettappPruebaContext : DbContext
         {
             entity.HasKey(e => e.CarritoAccesorioId).HasName("PK__CarritoA__ABF0DCE15F7E6066");
 
+            entity.Property(e => e.Cantidad)
+                  .HasDefaultValue(1);  // Puedes establecer un valor predeterminado de 1 para la cantidad
+
             entity.HasOne(d => d.Accesorio).WithMany(p => p.CarritoAccesorios)
                 .HasForeignKey(d => d.AccesorioId)
                 .HasConstraintName("FK__CarritoAc__Acces__5629CD9C");
@@ -88,6 +95,7 @@ public partial class PettappPruebaContext : DbContext
                 .HasForeignKey(d => d.CarritoId)
                 .HasConstraintName("FK__CarritoAc__Carri__5535A963");
         });
+
 
         modelBuilder.Entity<CarritoDeCompra>(entity =>
         {
