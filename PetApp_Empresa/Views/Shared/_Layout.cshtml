@@ -75,15 +75,31 @@
                 }
                 @if (User.IsInRole("Admin") || User.IsInRole("Refugio"))
                 {
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Mascotas" asp-action="Index">Mascotas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Refugios" asp-action="Index">Refugios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Donaciones" asp-action="Index">Donaciones</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Mascotas" asp-action="VistaMascota">
+                                <i class="fas fa-box-open"></i> VistaMascota
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Mascotas" asp-action="Index">
+                                <i class="fas fa-box-open"></i> MascotasGeneral
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Mascotas" asp-action="MisMascotas">
+                                <i class="fas fa-box-open"></i> MisMascotas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Mascotas" asp-action="MisDonaciones">
+                                <i class="fas fa-paw"></i> MisDonaciones
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Refugios" asp-action="Index">
+                                <i class="fas fa-paw"></i> MisRefuios
+                            </a>
+                        </li>
                 }
                 @if (User.IsInRole("Admin") || User.IsInRole("Cliente"))
                 {

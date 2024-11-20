@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetApp_Empresa.Models;
 
-
 namespace Pettapp2.Controllers
 {
     public class DonacionesController : Controller
@@ -19,8 +18,6 @@ namespace Pettapp2.Controllers
         {
             _context = context;
         }
-
-        
 
         // Método para mostrar la vista de donación global
         public IActionResult DonacionGlobal()
@@ -33,7 +30,6 @@ namespace Pettapp2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DonacionGlobal(decimal monto)
         {
-            // Obtener todos los refugios existentes
             var refugios = await _context.Refugios.ToListAsync();
 
             if (refugios.Count == 0)
@@ -42,10 +38,8 @@ namespace Pettapp2.Controllers
                 return View();
             }
 
-            // Calcular el monto a donar a cada refugio
             var montoPorRefugio = monto / refugios.Count;
 
-            // Crear la donación para cada refugio
             foreach (var refugio in refugios)
             {
                 var donacion = new Donacione
@@ -93,26 +87,32 @@ namespace Pettapp2.Controllers
         // GET: Donaciones/Create
         public IActionResult Create()
         {
-            ViewData["RefugioId"] = new SelectList(_context.Refugios, "RefugioId", "RefugioId");
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId");
+            ViewData["RefugioId"] = new SelectList(_context.Refugios, "RefugioId", "Nombre");
             return View();
         }
 
         // POST: Donaciones/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DonacionId,UsuarioId,RefugioId,Monto,FechaDonacion")] Donacione donacione)
+        public async Task<IActionResult> Create([Bind("DonacionId,RefugioId,Monto,FechaDonacion")] Donacione donacione)
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            donacione.UsuarioId = int.Parse(userIdClaim.Value); // Asigna el usuario autenticado
+            donacione.FechaDonacion = DateTime.Now; // Fecha de donación actual
+
             if (true)
             {
                 _context.Add(donacione);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RefugioId"] = new SelectList(_context.Refugios, "RefugioId", "RefugioId", donacione.RefugioId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", donacione.UsuarioId);
+
+            ViewData["RefugioId"] = new SelectList(_context.Refugios, "RefugioId", "Nombre", donacione.RefugioId);
             return View(donacione);
         }
 
@@ -129,22 +129,41 @@ namespace Pettapp2.Controllers
             {
                 return NotFound();
             }
-            ViewData["RefugioId"] = new SelectList(_context.Refugios, "RefugioId", "RefugioId", donacione.RefugioId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", donacione.UsuarioId);
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || donacione.UsuarioId != int.Parse(userIdClaim.Value))
+            {
+                return Unauthorized("No puedes editar donaciones que no te pertenecen.");
+            }
+
+            ViewData["RefugioId"] = new SelectList(_context.Refugios, "RefugioId", "Nombre", donacione.RefugioId);
             return View(donacione);
         }
 
         // POST: Donaciones/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DonacionId,UsuarioId,RefugioId,Monto,FechaDonacion")] Donacione donacione)
+        public async Task<IActionResult> Edit(int id, [Bind("DonacionId,RefugioId,Monto,FechaDonacion")] Donacione donacione)
         {
             if (id != donacione.DonacionId)
             {
                 return NotFound();
             }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            var originalDonacion = await _context.Donaciones.FindAsync(id);
+            if (originalDonacion == null || originalDonacion.UsuarioId != int.Parse(userIdClaim.Value))
+            {
+                return Unauthorized("No puedes editar donaciones que no te pertenecen.");
+            }
+
+            donacione.UsuarioId = originalDonacion.UsuarioId; // Mantén el usuario original
+            donacione.FechaDonacion = originalDonacion.FechaDonacion; // Mantén la fecha original si es necesario
 
             if (true)
             {
@@ -166,8 +185,8 @@ namespace Pettapp2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RefugioId"] = new SelectList(_context.Refugios, "RefugioId", "RefugioId", donacione.RefugioId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", donacione.UsuarioId);
+
+            ViewData["RefugioId"] = new SelectList(_context.Refugios, "RefugioId", "Nombre", donacione.RefugioId);
             return View(donacione);
         }
 
@@ -210,5 +229,34 @@ namespace Pettapp2.Controllers
         {
             return _context.Donaciones.Any(e => e.DonacionId == id);
         }
+
+
+        // Acción para ver las donaciones realizadas al refugio del usuario autenticado
+        public async Task<IActionResult> DonacionesPorRefugio()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            // Obtener los refugios administrados por el usuario
+            var refugiosDelUsuario = await _context.Refugios
+                .Where(r => r.UsuarioId == userId)
+                .Select(r => r.RefugioId)
+                .ToListAsync();
+
+            // Obtener las donaciones realizadas a los refugios del usuario
+            var donaciones = await _context.Donaciones
+                .Include(d => d.Refugio)
+                .Include(d => d.Usuario)
+                .Where(d => refugiosDelUsuario.Contains(d.RefugioId))
+                .ToListAsync();
+
+            return View(donaciones);
+        }
+
     }
 }

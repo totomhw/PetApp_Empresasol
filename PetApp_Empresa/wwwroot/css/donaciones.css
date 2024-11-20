@@ -1,0 +1,65 @@
+﻿/* Estilos generales */
+body {
+    background-color: #f9f9f9;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Encabezado principal */
+h1 {
+    color: #a81c1c;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Botones */
+.btn {
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-success {
+    background-color: #a81c1c;
+    border-color: #a81c1c;
+    color: white;
+}
+
+    .btn-success:hover {
+        background-color: #860f0f;
+    }
+
+.btn-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Tablas */
+.table {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+    .table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+    }
+
+.table-hover tbody tr:hover {
+    background-color: rgba(168, 28, 28, 0.1);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(168, 28, 28, 0.05);
+}
