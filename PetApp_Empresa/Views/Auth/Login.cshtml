@@ -33,24 +33,32 @@
     </div>
 </div>
 
+<div class="carousel-container">
+    <div class="carousel">
+        <img src="https://p4.wallpaperbetter.com/wallpaper/842/447/739/dogs-1366x768-animals-dogs-hd-art-wallpaper-preview.jpg" alt="Imagen 1">
+        <img src="https://img3.wallspic.com/crops/5/1/6/4/7/174615/174615-perro-gran_dans-perro_pug-pug-bulldog-1366x768.jpg" alt="Imagen 2">
+        <img src="https://img1.wallspic.com/crops/1/1/6/5/5/155611/155611-ridgeback_de_rodesia-pastor_aleman-cane_corso-raza_de_perro-cachorro-1366x768.jpg" alt="Imagen 3">
+        <img src="https://img1.wallspic.com/crops/5/8/1/5/95185/95185-cachorro_de_husky_siberiano_blanco_tirado_en_el_suelo-1366x768.jpg" alt="Imagen 4">
+        <img src="https://img3.wallspic.com/crops/2/6/5/6/5/156562/156562-perro-pastor_australiano-raza_de_perro-gato-canidae-1366x768.jpg" alt="Imagen 5">
+    </div>
+</div>
+
 @section Scripts {
     <script>
-        const images = [
-            'https://wallpapercave.com/wp/wp2789234.jpg',
-            'https://images.pexels.com/photos/4587996/pexels-photo-4587996.jpeg',
-            'https://images.pexels.com/photos/4587994/pexels-photo-4587994.jpeg',
-            'https://images.pexels.com/photos/4587995/pexels-photo-4587995.jpeg',
-            'https://images.pexels.com/photos/4587993/pexels-photo-4587993.jpeg'
-        ];
-
+        const carousel = document.querySelector('.carousel');
+        const images = carousel.children;
         let currentIndex = 0;
 
-        function changeBackground() {
-            document.body.style.backgroundImage = `url('${images[currentIndex]}')`;
+        function moveToNextImage() {
+            for (let i = 0; i < images.length; i++) {
+                images[i].style.opacity = '0';
+            }
+
+            images[currentIndex].style.opacity = '1';
             currentIndex = (currentIndex + 1) % images.length;
         }
 
-        setInterval(changeBackground, 5000); // Cambia cada 5 segundos
+        setInterval(moveToNextImage, 4000); // Cambia cada 4 segundos
     </script>
 }
 
@@ -59,19 +67,53 @@
         margin: 0;
         padding: 0;
         height: 100vh;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+        display: flex;
+        flex-direction: column;
+        background-color: #C03540;
+        color: white;
+        overflow: hidden;
     }
+
+    .carousel-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        z-index: -1;
+    }
+
+    .carousel {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+        .carousel img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1s ease-in-out;
+            opacity: 0;
+            /* Filtro más rojo */
+            filter: brightness(30%) sepia(1) hue-rotate(-30deg) saturate(3);
+        }
+
+            .carousel img:first-child {
+                opacity: 1;
+            }
 
     .card {
         border-radius: 10px;
-        background-color: #C03540; /* Rojo UNIVALLE */
+        background-color: #C03540;
         padding: 20px;
+        z-index: 1;
     }
 
     .custom-border {
-        border: 4px solid #FFFFFF; /* Blanco */
+        border: 4px solid #FFFFFF;
         position: relative;
     }
 
@@ -81,8 +123,8 @@
             top: -20px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #C03540; /* Rojo UNIVALLE */
-            color: #FFFFFF; /* Blanco */
+            background-color: #C03540;
+            color: #FFFFFF;
             font-weight: bold;
             font-size: 0.9rem;
             padding: 2px 10px;
@@ -94,13 +136,13 @@
     }
 
     .custom-input {
-        background-color: #FFFFFF; /* Blanco */
-        color: #C03540; /* Rojo UNIVALLE */
-        border: 1px solid #FFFFFF; /* Blanco */
+        background-color: #FFFFFF;
+        color: #C03540;
+        border: 1px solid #FFFFFF;
     }
 
         .custom-input::placeholder {
-            color: #C03540; /* Rojo UNIVALLE */
+            color: #C03540;
         }
 
         .custom-input:focus {
@@ -110,14 +152,14 @@
         }
 
     .btn-primary {
-        background-color: #FFFFFF; /* Blanco */
-        color: #C03540; /* Rojo UNIVALLE */
+        background-color: #FFFFFF;
+        color: #C03540;
         border: none;
         transition: background-color 0.3s, transform 0.2s;
     }
 
         .btn-primary:hover {
-            background-color: #F7F7F7; /* Blanco más claro */
+            background-color: #F7F7F7;
             transform: scale(1.05);
         }
 </style>
