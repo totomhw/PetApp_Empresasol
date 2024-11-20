@@ -104,7 +104,7 @@ namespace PetApp_Empresa.Controllers
         // POST: Mascotas/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MascotaId,Nombre,Raza,Sexo,Descripcion,EstadoAdopcion,RefugioId,Edad,ImagenUrl")] Mascota mascota)
+        public async Task<IActionResult> Create([Bind("MascotaId,Nombre,Raza,Sexo,Descripcion,EstadoAdopcion,RefugioId,Edad")] Mascota mascota, IFormFile ImagenArchivo)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null)
@@ -122,9 +122,50 @@ namespace PetApp_Empresa.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Add(mascota);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    // Verificar si se subió un archivo de imagen
+                    if (ImagenArchivo != null && ImagenArchivo.Length > 0)
+                    {
+                        // Extensiones permitidas
+                        var extensionesPermitidas = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                        var extensionArchivo = Path.GetExtension(ImagenArchivo.FileName).ToLower();
+
+                        if (!extensionesPermitidas.Contains(extensionArchivo))
+                        {
+                            ModelState.AddModelError("", "El archivo debe ser una imagen con extensión .jpg, .jpeg, .png o .gif.");
+                            return View(mascota);
+                        }
+
+                        // Ruta para guardar la imagen
+                        var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imagenes");
+                        if (!Directory.Exists(rutaCarpeta))
+                        {
+                            Directory.CreateDirectory(rutaCarpeta);
+                        }
+
+                        // Nombre único para la imagen
+                        var nombreArchivo = Guid.NewGuid().ToString() + extensionArchivo;
+                        var rutaCompleta = Path.Combine(rutaCarpeta, nombreArchivo);
+
+                        // Guardar la imagen en el servidor
+                        using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+                        {
+                            await ImagenArchivo.CopyToAsync(stream);
+                        }
+
+                        // Asignar la URL de la imagen al modelo
+                        mascota.ImagenUrl = "/imagenes/" + nombreArchivo;
+                    }
+
+                    _context.Add(mascota);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Ocurrió un error al guardar la mascota: {ex.Message}");
+                }
             }
 
             var refugiosUsuario = await _context.Refugios
@@ -135,41 +176,6 @@ namespace PetApp_Empresa.Controllers
             return View(mascota);
         }
 
-        // GET: Mascotas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var mascota = await _context.Mascotas
-                .Include(m => m.Refugio)
-                .FirstOrDefaultAsync(m => m.MascotaId == id);
-            if (mascota == null)
-            {
-                return NotFound();
-            }
-
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
-            {
-                return Unauthorized();
-            }
-            int userId = int.Parse(userIdClaim.Value);
-
-            if (mascota.Refugio.UsuarioId != userId)
-            {
-                return Unauthorized("No puedes editar una mascota que no pertenece a tus refugios.");
-            }
-
-            var refugiosUsuario = await _context.Refugios
-                .Where(r => r.UsuarioId == userId)
-                .ToListAsync();
-            ViewData["RefugioId"] = new SelectList(refugiosUsuario, "RefugioId", "Nombre", mascota.RefugioId);
-
-            return View(mascota);
-        }
 
         // POST: Mascotas/Edit/5
         [HttpPost]
@@ -199,40 +205,48 @@ namespace PetApp_Empresa.Controllers
             {
                 try
                 {
+                    // Verificar si se subió un archivo de imagen
                     if (ImagenArchivo != null && ImagenArchivo.Length > 0)
                     {
+                        // Extensiones permitidas
+                        var extensionesPermitidas = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                        var extensionArchivo = Path.GetExtension(ImagenArchivo.FileName).ToLower();
+
+                        if (!extensionesPermitidas.Contains(extensionArchivo))
+                        {
+                            ModelState.AddModelError("", "El archivo debe ser una imagen con extensión .jpg, .jpeg, .png o .gif.");
+                            return View(mascota);
+                        }
+
+                        // Ruta para guardar la imagen
                         var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imagenes");
                         if (!Directory.Exists(rutaCarpeta))
                         {
                             Directory.CreateDirectory(rutaCarpeta);
                         }
 
-                        var nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(ImagenArchivo.FileName);
+                        // Nombre único para la imagen
+                        var nombreArchivo = Guid.NewGuid().ToString() + extensionArchivo;
                         var rutaCompleta = Path.Combine(rutaCarpeta, nombreArchivo);
 
+                        // Guardar la imagen en el servidor
                         using (var stream = new FileStream(rutaCompleta, FileMode.Create))
                         {
                             await ImagenArchivo.CopyToAsync(stream);
                         }
 
+                        // Actualizar la URL de la imagen en el modelo
                         mascota.ImagenUrl = "/imagenes/" + nombreArchivo;
                     }
 
                     _context.Update(mascota);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!MascotaExists(mascota.MascotaId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError("", $"Ocurrió un error al guardar la mascota: {ex.Message}");
                 }
-                return RedirectToAction(nameof(Index));
             }
 
             var refugiosUsuario = await _context.Refugios
@@ -242,6 +256,7 @@ namespace PetApp_Empresa.Controllers
 
             return View(mascota);
         }
+
 
         private bool MascotaExists(int id)
         {
