@@ -6,142 +6,60 @@
 }
 
 <div class="panel-container">
-    <!-- Galerías de Bienvenida -->
-    <div class="gallery-container">
-        <h2 class="gallery-title">¡Bienvenido al Panel de Cliente, @Model.Nombre!</h2>
-
-        <!-- Primera Galería -->
-        <div class="gallery-grid">
-            <div class="card">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img src="https://media.istockphoto.com/id/513133900/es/foto/oro-retriever-sentado-en-frente-de-un-fondo-blanco.jpg?s=612x612&w=0&k=20&c=0lRWImB8Y4p6X6YGt06c6q8I3AqBgKD-OGQxjLCI5EY=" alt="Perro 1" class="gallery-item">
-                    </div>
-                    <div class="card-back">
-                        <p><strong>Nombre:</strong> Max</p>
-                        <p><strong>Edad:</strong> 2 años</p>
-                        <p><strong>Raza:</strong> Golden Retriever</p>
-                        <p><strong>Sexo:</strong> Macho</p>
-                    </div>
+    <!-- Carrusel de Bienvenida -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://media.istockphoto.com/id/513133900/es/foto/oro-retriever-sentado-en-frente-de-un-fondo-blanco.jpg?s=612x612&w=0&k=20&c=0lRWImB8Y4p6X6YGt06c6q8I3AqBgKD-OGQxjLCI5EY=" class="d-block w-100" alt="Adoptar">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>¿Quieres adoptar?</h5>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREzFFwrXe2kl1G7W4uLmLS-z5mESml63nI3Q&s" alt="Perro 2" class="gallery-item">
-                    </div>
-                    <div class="card-back">
-                        <p><strong>Nombre:</strong> Bella</p>
-                        <p><strong>Edad:</strong> 3 años</p>
-                        <p><strong>Raza:</strong> Beagle</p>
-                        <p><strong>Sexo:</strong> Hembra</p>
-                    </div>
+            <div class="carousel-item">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREzFFwrXe2kl1G7W4uLmLS-z5mESml63nI3Q&s" class="d-block w-100" alt="Accesorios">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>¿Quieres comprar accesorios para tu mascota?</h5>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img src="https://images.ecestaticos.com/h34TvzTFVdrau9Un4Wdmwhed_e4=/0x115:2265x1390/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F8ec%2F08c%2F85c%2F8ec08c85c866ccb70c4f1c36492d890f.jpg" alt="Perro 3" class="gallery-item">
-                    </div>
-                    <div class="card-back">
-                        <p><strong>Nombre:</strong> Rocky</p>
-                        <p><strong>Edad:</strong> 4 años</p>
-                        <p><strong>Raza:</strong> Pastor Alemán</p>
-                        <p><strong>Sexo:</strong> Macho</p>
-                    </div>
+            <div class="carousel-item">
+                <img src="https://images.ecestaticos.com/h34TvzTFVdrau9Un4Wdmwhed_e4=/0x115:2265x1390/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F8ec%2F08c%2F85c%2F8ec08c85c866ccb70c4f1c36492d890f.jpg" class="d-block w-100" alt="Donar">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>¿Quieres donar a nuestros refugios?</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://s1.elespanol.com/2022/04/05/actualidad/662693884_223269248_1024x576.jpg" class="d-block w-100" alt="Quienes somos">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>¿Quiénes somos?</h5>
+                    <p>Somos un grupo universitario de 3 personas que impulsamos este proyecto para ayudar a la sociedad que desea adoptar mascotas de una manera más sencilla, digital y ágil.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://atriainnovation.com/uploads/2023/11/Vista_perro-900x743-c-center.jpg" class="d-block w-100" alt="Empresa">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Somos la mejor empresa para agilizar trámites de adopciones de mascotas</h5>
                 </div>
             </div>
         </div>
-
-        <!-- Segunda Galería -->
-        <div class="gallery-grid">
-            <div class="card">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img src="https://s1.elespanol.com/2022/04/05/actualidad/662693884_223269248_1024x576.jpg" alt="Perro 4" class="gallery-item">
-                    </div>
-                    <div class="card-back">
-                        <p><strong>Nombre:</strong> Luna</p>
-                        <p><strong>Edad:</strong> 1 año</p>
-                        <p><strong>Raza:</strong> Labrador</p>
-                        <p><strong>Sexo:</strong> Hembra</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img src="https://atriainnovation.com/uploads/2023/11/Vista_perro-900x743-c-center.jpg" alt="Perro 5" class="gallery-item">
-                    </div>
-                    <div class="card-back">
-                        <p><strong>Nombre:</strong> Charlie</p>
-                        <p><strong>Edad:</strong> 2 años</p>
-                        <p><strong>Raza:</strong> Shih Tzu</p>
-                        <p><strong>Sexo:</strong> Macho</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img src="https://nupec.com/wp-content/uploads/2023/09/brown-chihuahua-2021-08-26-19-05-45-utc.jpg" alt="Perro 6" class="gallery-item">
-                    </div>
-                    <div class="card-back">
-                        <p><strong>Nombre:</strong> Coco</p>
-                        <p><strong>Edad:</strong> 3 años</p>
-                        <p><strong>Raza:</strong> Chihuahua</p>
-                        <p><strong>Sexo:</strong> Hembra</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tercera Galería -->
-        <div class="gallery-grid">
-            <div class="card">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img src="https://i.pinimg.com/236x/0f/d3/a7/0fd3a743ad2b0454e0e9431a80f266b7.jpg" alt="Perro 7" class="gallery-item">
-                    </div>
-                    <div class="card-back">
-                        <p><strong>Nombre:</strong> Toby</p>
-                        <p><strong>Edad:</strong> 1 año</p>
-                        <p><strong>Raza:</strong> Cocker Spaniel</p>
-                        <p><strong>Sexo:</strong> Macho</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtFtr2eYlhEeObhUbKx7pOrtN96Qaws-nUsQ&s" alt="Perro 8" class="gallery-item">
-                    </div>
-                    <div class="card-back">
-                        <p><strong>Nombre:</strong> Daisy</p>
-                        <p><strong>Edad:</strong> 5 años</p>
-                        <p><strong>Raza:</strong> Boxer</p>
-                        <p><strong>Sexo:</strong> Hembra</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-inner">
-                    <div class="card-front">
-                        <img src="https://es.mypet.com/wp-content/uploads/sites/23/2022/06/small-dog-being-adorable-portrait-in-studio-1-scaled-1.jpg" alt="Perro 9" class="gallery-item">
-                    </div>
-                    <div class="card-back">
-                        <p><strong>Nombre:</strong> Milo</p>
-                        <p><strong>Edad:</strong> 6 meses</p>
-                        <p><strong>Raza:</strong> Bulldog Francés</p>
-                        <p><strong>Sexo:</strong> Macho</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
     </div>
 
     <!-- Opciones para el Cliente -->
-    <div class="client-options mb-4">
+    <div class="client-options mt-4 mb-4">
         <a class="btn btn-primary" asp-action="Adoptar">Adoptar una mascota</a>
         <a class="btn btn-secondary" asp-controller="Accesorios" asp-action="ListadoAccesorios">Comprar Accesorios</a>
         <a class="btn btn-success" asp-action="Donar">Hacer una Donación</a>
@@ -200,85 +118,20 @@
 </div>
 
 <style>
-    body {
-        background-color: #FFFFFF;
-        color: #000000;
-        font-family: 'Arial', sans-serif;
+    .carousel {
+        width: 80%;
+        margin: 0 auto;
     }
 
-    .panel-container {
-        padding: 20px;
-    }
-
-    .gallery-container {
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    .gallery-title {
-        font-size: 2rem;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .gallery-grid {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        margin-bottom: 30px;
-    }
-
-    .card {
-        perspective: 1000px;
-    }
-
-    .card-inner {
-        position: relative;
-        width: 200px;
-        height: 200px;
-        transform-style: preserve-3d;
-        transition: transform 0.6s;
-    }
-
-    .card:hover .card-inner {
-        transform: rotateY(180deg);
-    }
-
-    .card-front,
-    .card-back {
-        position: absolute;
-        backface-visibility: hidden;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border-radius: 8px;
-    }
-
-        .card-front img {
-            width: 100%;
-            height: 100%;
+        .carousel img {
+            height: 300px;
             object-fit: cover;
-            border-radius: 8px;
         }
 
-    .card-back {
-        background-color: #f7f7f7;
-        color: #000;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        transform: rotateY(180deg);
-        border: 1px solid #ddd;
-        border-radius: 8px;
+    .carousel-caption h5,
+    .carousel-caption p {
+        background-color: rgba(0, 0, 0, 0.6);
         padding: 10px;
-    }
-
-    .client-options {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin: 30px 0;
+        border-radius: 5px;
     }
 </style>
