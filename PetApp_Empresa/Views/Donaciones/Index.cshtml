@@ -1,53 +1,41 @@
 ﻿@model IEnumerable<PetApp_Empresa.Models.Donacione>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Donaciones Realizadas";
 }
 
-<h1>Index</h1>
+<link rel="stylesheet" href="~/css/donaciones.css" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<div class="text-center mb-4">
+    <h1 class="display-4">Donaciones Realizadas</h1>
+</div>
+
+<div class="text-center mb-4">
+    <a asp-action="Create" class="btn btn-success btn-lg">¡Realiza una Nueva Donación!</a>
+</div>
+
+<table class="table table-hover table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Monto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaDonacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Refugio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario)
-            </th>
-            <th></th>
+            <th>Monto</th>
+            <th>Fecha de Donación</th>
+            <th>Refugio</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Monto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaDonacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Refugio.RefugioId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.UsuarioId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.DonacionId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.DonacionId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.DonacionId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Monto.ToString("C")</td>
+                <td>@item.FechaDonacion?.ToString("dd/MM/yyyy")</td>
+                <td>@item.Refugio.Nombre</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.DonacionId" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.DonacionId" class="btn btn-info btn-sm">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.DonacionId" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
