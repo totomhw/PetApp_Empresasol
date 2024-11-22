@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace PetApp_Empresa.Controllers
 {
+    [Authorize]
     public class RefugiosController : Controller
     {
         private readonly PettappPruebaContext _context;

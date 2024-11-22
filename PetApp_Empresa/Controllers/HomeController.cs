@@ -18,64 +18,72 @@ namespace PetApp_Empresa.Controllers
             _context = context;
         }
 
+        // Acción raíz: Redirige al DashboardCliente
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToDashboard();
+            }
+            return RedirectToAction("DashboardCliente"); // Redirección por defecto si no está autenticado
         }
 
+        // Página de privacidad (Ejemplo de una página pública)
         public IActionResult Privacy()
         {
             return View();
         }
 
+        // Manejo de errores
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        // Información del usuario autenticado (Ejemplo)
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Usuario()
         {
-            // Obtener el ID del usuario autenticado
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null)
             {
-                return Unauthorized(); // Verificar si el usuario está autenticado
+                return Unauthorized(); // Si no está autenticado
             }
             int userId = int.Parse(userIdClaim.Value);
 
-            // Consultar las adopciones del usuario autenticado
             var adopciones = await _context.Adopciones
                 .Include(a => a.Mascota)
-                .Where(a => a.UsuarioId == userId) // Filtrar por id de usuario autenticado
+                .Where(a => a.UsuarioId == userId)
                 .ToListAsync();
 
-            // Pasar las adopciones a la vista
             ViewData["Mensaje"] = adopciones.Any() ? null : "No has adoptado ninguna mascota aún.";
             ViewData["Adopciones"] = adopciones;
 
             return View();
         }
 
+        // Redirección a la página de adopción
         public IActionResult Adoptar()
         {
             return RedirectToAction("VistaMascota", "Mascotas");
         }
 
+        // Redirección a la página de accesorios
         public IActionResult ComprarAccesorios()
         {
             return RedirectToAction("Index", "Accesorios");
         }
 
+        // Redirección a la página de donaciones
         public IActionResult Donar()
         {
             return RedirectToAction("Index", "Donaciones");
         }
 
         // Dashboard para Administrador
-        [Authorize(Roles = "Admin,Refugio,Vendedor,Cliente")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DashboardAdmin()
         {
             return View();
@@ -95,19 +103,20 @@ namespace PetApp_Empresa.Controllers
             return View();
         }
 
-        // Dashboard para Cliente
-        [Authorize(Roles = "Cliente,Admin")]
+        [AllowAnonymous]
         public async Task<IActionResult> DashboardCliente()
         {
-            // Obtener el ID del usuario autenticado
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
+            // Permitir acceso al Dashboard sin autenticación
+            if (!User.Identity?.IsAuthenticated ?? false)
             {
-                return Unauthorized();
+                // Vista básica sin datos personalizados
+                return View();
             }
+
+            // Si el usuario está autenticado, mostrar datos personalizados
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             int userId = int.Parse(userIdClaim.Value);
 
-            // Obtener adopciones y donaciones del cliente autenticado
             var adopciones = await _context.Adopciones
                 .Include(a => a.Mascota)
                 .Where(a => a.UsuarioId == userId)
@@ -118,11 +127,24 @@ namespace PetApp_Empresa.Controllers
                 .Where(d => d.UsuarioId == userId)
                 .ToListAsync();
 
-            // Pasar los datos a la vista
             ViewData["Adopciones"] = adopciones;
             ViewData["Donaciones"] = donaciones;
 
-            return View("DashboardCliente", await _context.Usuarios.FindAsync(userId));
+            return View(await _context.Usuarios.FindAsync(userId));
+        }
+
+        // Redirigir al Dashboard según el rol
+        private IActionResult RedirectToDashboard()
+        {
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            return userRole switch
+            {
+                "Admin" => RedirectToAction("DashboardAdmin"),
+                "Vendedor" => RedirectToAction("DashboardVendedor"),
+                "Refugio" => RedirectToAction("DashboardRefugio"),
+                "Cliente" => RedirectToAction("DashboardCliente"),
+                _ => RedirectToAction("DashboardCliente")
+            };
         }
     }
 }

@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetApp_Empresa.Models;
 
 namespace PetApp_Empresa.Controllers
 {
+    [Authorize]
     public class CarritoDeComprasController : Controller
     {
         private readonly PettappPruebaContext _context;
@@ -130,12 +132,25 @@ namespace PetApp_Empresa.Controllers
 
         // GET: CarritoDeCompras/ObtenerCantidadCarrito
         [HttpGet]
-        public async Task<IActionResult> ObtenerCantidadCarrito()
+        [Authorize]
+        public async Task<IActionResult> ObtenerCantidadElementosCarrito()
         {
-            var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
-            var cantidad = carrito.CarritoAccesorios?.Sum(item => item.Cantidad) ?? 0;
-            return Json(new { cantidad });
+            try
+            {
+                // Obtener el carrito del usuario autenticado
+                var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
+
+                // Usar el helper para contar elementos únicos
+                int cantidadElementos = CarritoHelper.ContarElementosEnCarrito(carrito);
+
+                return Json(new { cantidad = cantidadElementos });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Error al obtener la cantidad de elementos: " + ex.Message });
+            }
         }
+
 
         // GET: CarritoDeCompras/ConfirmacionPago
         public IActionResult ConfirmacionPago()

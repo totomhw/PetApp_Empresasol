@@ -43,19 +43,22 @@
                         }
                     </div>
 
-                    <!-- Botón Cerrar Sesión a la derecha -->
-                    <div class="d-flex align-items-center">
+                    <!-- Botones a la derecha -->
+                    <div class="d-flex align-items-center ms-auto">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline ms-auto">
-                                <button type="submit" class="btn btn-red">Cerrar sesión</button>
+                            <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-red me-2">Cerrar sesión</button>
                             </form>
+                        }
+                        else
+                        {
+                            <a class="btn btn-red me-2" asp-controller="Auth" asp-action="Login">Iniciar sesión</a>
                         }
                     </div>
                 </div>
             </nav>
         </header>
-
 
     @if (User.Identity.IsAuthenticated)
     {
