@@ -8,7 +8,9 @@
 <div class="panel-container">
     <!-- Galerías de Bienvenida -->
     <div class="gallery-container">
-        <h2 class="gallery-title">¡Bienvenido al Panel de Cliente, @Model.Nombre!</h2>
+        <h2 class="gallery-title">
+            Bienvenido al Panel de Cliente, @Model?.Nombre ?? "Invitado"!
+        </h2>
 
         <!-- Primera Galería -->
         <div class="gallery-grid">

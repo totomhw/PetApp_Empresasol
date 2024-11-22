@@ -12,6 +12,7 @@ using PetApp_Empresa.Models;
 
 namespace PetApp_Empresa.Controllers
 {
+    [Authorize]
     public class MascotasController : Controller
     {
         private readonly PettappPruebaContext _context;
@@ -310,6 +311,7 @@ namespace PetApp_Empresa.Controllers
         }
 
         // Solicitar Adopción - POST
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SolicitarAdopcion(SolicitudAdopcionViewModel solicitud)

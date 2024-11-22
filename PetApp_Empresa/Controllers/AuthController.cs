@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using PetApp_Empresa.Models;
 
-namespace Pettapp2.Controllers
+namespace PetApp_Empresa.Controllers
 {
     public class AuthController : Controller
     {
@@ -19,27 +19,23 @@ namespace Pettapp2.Controllers
             _context = context;
         }
 
-        // GET: Auth/Login
         [AllowAnonymous]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl = null)
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated == true)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToDashboard();
             }
 
-            ViewData["HideLayout"] = true; // Ocultar el layout en la vista de Login
+            ViewData["ReturnUrl"] = returnUrl ?? "/Home/DashboardCliente";
             return View();
         }
 
-        // POST: Auth/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string nombre, string password)
+        public async Task<IActionResult> Login(string nombre, string password, string? returnUrl = null)
         {
-            ViewData["HideLayout"] = true;
-
             if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(password))
             {
                 ModelState.AddModelError("", "El nombre de usuario y la contraseña son obligatorios.");
@@ -56,13 +52,12 @@ namespace Pettapp2.Controllers
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Nombre),
-                    new Claim(ClaimTypes.NameIdentifier, user.UsuarioId.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email ?? "")
+                    new Claim(ClaimTypes.NameIdentifier, user.UsuarioId.ToString())
                 };
 
-                foreach (var userRole in user.UsuarioRols)
+                foreach (var role in user.UsuarioRols)
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, userRole.Rol.Nombre)); // Agregar roles como claims
+                    claims.Add(new Claim(ClaimTypes.Role, role.Rol.Nombre));
                 }
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -78,91 +73,45 @@ namespace Pettapp2.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
 
-                // Redirigir según el rol del usuario
-                string userRoleName = user.UsuarioRols.FirstOrDefault()?.Rol.Nombre;
-                return userRoleName switch
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
-                    "Admin" => RedirectToAction("DashboardAdmin", "Home"),
-                    "Vendedor" => RedirectToAction("DashboardVendedor", "Home"),
-                    "Refugio" => RedirectToAction("DashboardRefugio", "Home"),
-                    "Cliente" => RedirectToAction("DashboardCliente", "Home"),
-                    _ => RedirectToAction("Index", "Home")
-                };
+                    return Redirect(returnUrl);
+                }
+
+                return RedirectToDashboard();
             }
 
             ModelState.AddModelError("", "Usuario o contraseña incorrectos.");
             return View();
         }
 
-        // GET: Auth/Register
-        [AllowAnonymous]
-        public IActionResult Register()
-        {
-            ViewData["HideLayout"] = true; // Ocultar el layout en la vista de Registro
-            ViewBag.Roles = _context.Roles.ToList(); // Cargar lista de roles para el dropdown
-            return View();
-        }
-
-        // POST: Auth/Register
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register([Bind("Nombre,Password,Email")] Usuario usuario, int rolId)
-        {
-            ViewData["HideLayout"] = true;
-
-            if (ModelState.IsValid)
-            {
-                // Verificar si el usuario o el email ya están en uso
-                if (await _context.Usuarios.AnyAsync(u => u.Nombre == usuario.Nombre || u.Email == usuario.Email))
-                {
-                    ModelState.AddModelError("", "El nombre de usuario o el email ya están en uso.");
-                    ViewBag.Roles = _context.Roles.ToList(); // Recargar roles en caso de error
-                    return View(usuario);
-                }
-
-                // Encriptar la contraseña antes de almacenarla
-                usuario.Password = HashPassword(usuario.Password);
-                usuario.Activo = true;
-
-                // Guardar el usuario en la base de datos
-                _context.Usuarios.Add(usuario);
-                await _context.SaveChangesAsync();
-
-                // Asignar el rol seleccionado al usuario
-                var usuarioRol = new UsuarioRol
-                {
-                    UsuarioId = usuario.UsuarioId,
-                    RolId = rolId,
-                    FechaAsignacion = DateTime.Now
-                };
-                _context.UsuarioRols.Add(usuarioRol);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Login));
-            }
-
-            ViewBag.Roles = _context.Roles.ToList(); // Recargar roles en caso de error
-            return View(usuario);
-        }
-
-        // POST: Auth/Logout
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction(nameof(Login));
+            return RedirectToAction("DashboardCliente", "Home");
         }
 
-        // Verificar la contraseña ingresada contra la almacenada
+        private IActionResult RedirectToDashboard()
+        {
+            var userRole = User.FindFirstValue(ClaimTypes.Role);
+            return userRole switch
+            {
+                "Admin" => RedirectToAction("DashboardAdmin", "Home"),
+                "Vendedor" => RedirectToAction("DashboardVendedor", "Home"),
+                "Refugio" => RedirectToAction("DashboardRefugio", "Home"),
+                "Cliente" => RedirectToAction("DashboardCliente", "Home"),
+                _ => RedirectToAction("DashboardCliente", "Home")
+            };
+        }
+
         private bool VerifyPassword(string enteredPassword, string storedHash)
         {
             var hashedEnteredPassword = HashPassword(enteredPassword);
             return storedHash == hashedEnteredPassword;
         }
 
-        // Función para encriptar la contraseña
         private string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())

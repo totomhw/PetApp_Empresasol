@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetApp_Empresa.Models;
 
-namespace Pettapp2.Controllers
+namespace PetApp_Empresa.Controllers
 {
     public class DonacionesController : Controller
     {

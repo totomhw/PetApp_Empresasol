@@ -36,4 +36,9 @@ public static class CarritoHelper
         return carrito;
     }
 
+    // Nuevo método: Contar elementos únicos en el carrito
+    public static int ContarElementosEnCarrito(CarritoDeCompra carrito)
+    {
+        return carrito.CarritoAccesorios.Count; // Cada accesorio único cuenta como un elemento
+    }
 }
