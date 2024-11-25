@@ -25,25 +25,40 @@
                 <div class="card-body">
                     <h5 class="card-title">@accesorio.Nombre</h5>
                     <p class="card-text">@accesorio.Descripcion</p>
-                    <p><strong>Precio:</strong> @accesorio.Precio.ToString("C")</p>
-                    <p><strong>Disponible:</strong> <span id="stock-@accesorio.AccesorioId">@accesorio.CantidadDisponible</span></p>
-
-                    <div class="input-group">
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-outline-secondary" onclick="ajustarCantidad(@accesorio.AccesorioId, -1)">-</button>
+                    <p>
+                        <strong>Precio:</strong> @accesorio.Precio.ToString("C")
+                    </p>
+                    <p>
+                        <strong>Disponible:</strong>
+                        <span id="stock-@accesorio.AccesorioId" class="@((accesorio.CantidadDisponible == 0) ? "text-danger" : "")">
+                            @(accesorio.CantidadDisponible > 0 ? accesorio.CantidadDisponible.ToString() : "Out of Stock")
                         </span>
-                        <input type="text" id="cantidad-@accesorio.AccesorioId" class="form-control text-center" value="0" readonly>
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-outline-secondary" onclick="ajustarCantidad(@accesorio.AccesorioId, 1)">+</button>
-                        </span>
-                    </div>
+                    </p>
 
-                    <button class="btn btn-success mt-2" onclick="agregarAlCarrito(@accesorio.AccesorioId)">Agregar al carrito</button>
+                    @if (accesorio.CantidadDisponible > 0)
+                    {
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-outline-secondary" onclick="ajustarCantidad(@accesorio.AccesorioId, -1)">-</button>
+                            </span>
+                            <input type="text" id="cantidad-@accesorio.AccesorioId" class="form-control text-center" value="0" readonly>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-outline-secondary" onclick="ajustarCantidad(@accesorio.AccesorioId, 1)">+</button>
+                            </span>
+                        </div>
+
+                        <button class="btn btn-success mt-2" onclick="agregarAlCarrito(@accesorio.AccesorioId)">Agregar al carrito</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-danger mt-2" disabled>Agotado</button>
+                    }
                 </div>
             </div>
         </div>
     }
 </div>
+
 
 <!-- Token antifalsificación -->
 <form id="antiForgeryForm" method="post" style="display:none;">
@@ -85,25 +100,15 @@
             }).then(response => {
                 if (response.ok) {
                     alert('Producto añadido al carrito');
-
                     // Actualizar el contador de elementos únicos en el carrito
                     fetch('/CarritoDeCompras/ObtenerCantidadElementosCarrito')
                         .then(response => response.json())
                         .then(data => {
                             const carritoCount = document.getElementById("carrito-count");
-                            carritoCount.innerText = data.cantidad; // Mostrar número actualizado
+                            carritoCount.innerText = data.cantidad;
                         });
 
                     document.getElementById(`cantidad-${accesorioId}`).value = 0;
-
-                    // Actualizar stock visualmente después de agregar al carrito
-                    const stockElement = document.getElementById(`stock-${accesorioId}`);
-                    let nuevoStock = parseInt(stockElement.innerText) - cantidad;
-                    stockElement.innerText = nuevoStock >= 0 ? nuevoStock : "Out of stock";
-
-                    if (nuevoStock <= 0) {
-                        alert("Este producto está agotado.");
-                    }
                 } else {
                     response.json().then(data => {
                         alert('Error al añadir el producto al carrito: ' + (data.message || 'Error desconocido'));

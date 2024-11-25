@@ -4,6 +4,7 @@
 
 @if (Model.CarritoAccesorios != null && Model.CarritoAccesorios.Any())
 {
+    <!-- Resumen del carrito -->
     <table class="table">
         <thead>
             <tr>
@@ -28,12 +29,115 @@
 
     <h3>Total: @(Model.Total.HasValue ? Model.Total.Value.ToString("C") : "N/A")</h3>
 
-    <form id="formProcesarPago" asp-action="ProcesarPago" method="post">
+    <!-- Formulario para confirmar la compra -->
+    <form id="formConfirmarCompra" asp-action="ConfirmarCompra" method="post">
         @Html.AntiForgeryToken()
-        <button type="submit" class="btn btn-success">Realizar Pago</button>
+
+        <!-- Selección de tarjeta -->
+        <div class="form-group">
+            <label>¿Deseas usar una tarjeta guardada o ingresar una nueva?</label>
+            <div>
+                <input type="radio" id="opcionTarjetaGuardada" name="opcionTarjeta" value="guardada" checked />
+                <label for="opcionTarjetaGuardada">Usar tarjeta guardada</label>
+            </div>
+            <div>
+                <input type="radio" id="opcionTarjetaNueva" name="opcionTarjeta" value="nueva" />
+                <label for="opcionTarjetaNueva">Ingresar nueva tarjeta</label>
+            </div>
+        </div>
+
+        <!-- Selección de tarjeta guardada -->
+        <div id="tarjetasGuardadas" class="form-group">
+            @if (ViewBag.Tarjetas != null && ((List<PetApp_Empresa.Models.Tarjeta>)ViewBag.Tarjetas).Any())
+            {
+                <label for="tarjetaId">Selecciona una tarjeta guardada:</label>
+                <select class="form-control" id="tarjetaId" name="tarjetaId" required>
+                    <option value="">-- Seleccione una tarjeta --</option>
+                    @foreach (var tarjeta in ViewBag.Tarjetas as List<PetApp_Empresa.Models.Tarjeta>)
+                    {
+                        <option value="@tarjeta.TarjetaId">
+                            Número: **** **** **** @tarjeta.Numero.Substring(tarjeta.Numero.Length - 4) - Vence: @tarjeta.FechaVencimiento
+                        </option>
+                    }
+                </select>
+            }
+            else
+            {
+                <p class="text-danger">No hay tarjetas guardadas disponibles.</p>
+            }
+        </div>
+
+        <!-- Ingresar nueva tarjeta -->
+        <div id="nuevaTarjeta" class="form-group" style="display: none;">
+            <label for="numeroTarjeta">Número de Tarjeta</label>
+            <input type="text" class="form-control" id="numeroTarjeta" name="numeroTarjeta" maxlength="16" pattern="\d{16}"
+                   placeholder="Ej. 1234567812345678" title="Debe contener 16 dígitos numéricos" />
+
+            <label for="mesVencimiento">Mes de Vencimiento</label>
+            <select class="form-control" id="mesVencimiento" name="mesVencimiento">
+                <option value="" disabled selected>-- Mes --</option>
+                @for (int mes = 1; mes <= 12; mes++)
+                {
+                    <option value="@mes">@mes.ToString("D2")</option>
+                }
+            </select>
+
+            <label for="anioVencimiento">Año de Vencimiento</label>
+            <select class="form-control" id="anioVencimiento" name="anioVencimiento">
+                <option value="" disabled selected>-- Año --</option>
+                @for (int anio = DateTime.Now.Year; anio <= DateTime.Now.Year + 10; anio++)
+                {
+                    <option value="@anio">@anio</option>
+                }
+            </select>
+
+            <label for="cvv">CVV</label>
+            <input type="text" class="form-control" id="cvv" name="cvv" maxlength="3" pattern="\d{3}"
+                   placeholder="Ej. 123" title="Debe contener 3 dígitos numéricos" />
+
+            <div class="form-check mt-3">
+                <input type="checkbox" class="form-check-input" id="guardarTarjeta" name="guardarTarjeta" />
+                <label class="form-check-label" for="guardarTarjeta">Guardar tarjeta para futuras compras</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Realizar Pago</button>
     </form>
 }
 else
 {
     <h3>El carrito está vacío.</h3>
 }
+
+<script>
+    document.querySelectorAll('input[name="opcionTarjeta"]').forEach(option => {
+        option.addEventListener('change', () => {
+            const tarjetasGuardadas = document.getElementById('tarjetasGuardadas');
+            const nuevaTarjeta = document.getElementById('nuevaTarjeta');
+
+            if (document.getElementById('opcionTarjetaGuardada').checked) {
+                tarjetasGuardadas.style.display = 'block';
+                nuevaTarjeta.style.display = 'none';
+            } else {
+                tarjetasGuardadas.style.display = 'none';
+                nuevaTarjeta.style.display = 'block';
+            }
+        });
+    });
+
+    document.getElementById('formConfirmarCompra').addEventListener('submit', (event) => {
+        const tarjetaId = document.getElementById('tarjetaId').value;
+        const opcionGuardada = document.getElementById('opcionTarjetaGuardada').checked;
+        const nuevaTarjeta = document.getElementById('numeroTarjeta').value;
+
+        if (opcionGuardada && !tarjetaId) {
+            event.preventDefault();
+            alert("Debes seleccionar una tarjeta guardada antes de realizar la compra.");
+        }
+
+        if (!opcionGuardada && nuevaTarjeta.trim() === '') {
+            event.preventDefault();
+            alert("Debes ingresar los datos de la nueva tarjeta.");
+        }
+    });
+</script>

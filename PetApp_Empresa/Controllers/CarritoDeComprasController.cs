@@ -24,7 +24,6 @@ namespace PetApp_Empresa.Controllers
         {
             var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
 
-            // Incluir los detalles de los accesorios en el carrito
             carrito = await _context.CarritoDeCompras
                 .Include(c => c.CarritoAccesorios)
                 .ThenInclude(ca => ca.Accesorio)
@@ -33,6 +32,7 @@ namespace PetApp_Empresa.Controllers
             return View(carrito);
         }
 
+        // POST: CarritoDeCompras/AgregarAlCarrito
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AgregarAlCarrito(int accesorioId, int cantidad)
@@ -45,14 +45,8 @@ namespace PetApp_Empresa.Controllers
                     return BadRequest(new { message = "El accesorio no existe." });
                 }
 
-                if (accesorio.CantidadDisponible < cantidad)
-                {
-                    return BadRequest(new { message = "Stock insuficiente para la cantidad solicitada." });
-                }
-
                 var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
 
-                // Verificar si el accesorio ya está en el carrito
                 var carritoAccesorio = carrito.CarritoAccesorios.FirstOrDefault(ca => ca.AccesorioId == accesorioId);
                 if (carritoAccesorio == null)
                 {
@@ -69,14 +63,9 @@ namespace PetApp_Empresa.Controllers
                     carritoAccesorio.Cantidad += cantidad;
                 }
 
-                // Reducir el stock del accesorio
-                accesorio.CantidadDisponible -= cantidad;
-
-                // Guardar los cambios
                 await _context.SaveChangesAsync();
 
-                var cantidadCarrito = carrito.CarritoAccesorios.Sum(ca => ca.Cantidad);
-                return Json(new { message = "Producto añadido al carrito", cantidadCarrito });
+                return Json(new { message = "Producto añadido al carrito" });
             }
             catch (Exception ex)
             {
@@ -84,10 +73,16 @@ namespace PetApp_Empresa.Controllers
             }
         }
 
-
+        // POST: CarritoDeCompras/ConfirmarCompra
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ProcesarPago()
+        public async Task<IActionResult> ConfirmarCompra(
+            int? tarjetaId,
+            string? numeroTarjeta,
+            int? mesVencimiento,
+            int? anioVencimiento,
+            string? cvv,
+            bool guardarTarjeta)
         {
             try
             {
@@ -99,23 +94,100 @@ namespace PetApp_Empresa.Controllers
                     return RedirectToAction("ResumenCarrito");
                 }
 
-                carrito.Total = carrito.CarritoAccesorios
-                    .Where(item => item.Accesorio != null)
-                    .Sum(item => item.Accesorio.Precio * item.Cantidad);
+                // Validar si se usa una tarjeta guardada
+                if (tarjetaId.HasValue)
+                {
+                    var tarjeta = await _context.Tarjetas.FindAsync(tarjetaId.Value);
+                    if (tarjeta == null)
+                    {
+                        TempData["ErrorMessage"] = "La tarjeta seleccionada no es válida.";
+                        return RedirectToAction("ResumenCarrito");
+                    }
 
-                _context.CarritoAccesorios.RemoveRange(carrito.CarritoAccesorios);
-                await _context.SaveChangesAsync();
+                    return await ProcesarCompra(carrito, tarjetaId.Value);
+                }
 
-                return RedirectToAction("ConfirmacionPago");
+                // Validar datos de nueva tarjeta
+                if (!string.IsNullOrEmpty(numeroTarjeta) && mesVencimiento.HasValue && anioVencimiento.HasValue && !string.IsNullOrEmpty(cvv))
+                {
+                    var nuevaTarjeta = new Tarjeta
+                    {
+                        UsuarioId = carrito.UsuarioId,
+                        Numero = numeroTarjeta,
+                        FechaVencimiento = $"{mesVencimiento.Value:D2}/{anioVencimiento.Value % 100:D2}",
+                        CVV = cvv,
+                        FechaRegistro = DateTime.Now
+                    };
+
+                    _context.Tarjetas.Add(nuevaTarjeta);
+                    await _context.SaveChangesAsync();
+
+                    return await ProcesarCompra(carrito, nuevaTarjeta.TarjetaId);
+                }
+
+                TempData["ErrorMessage"] = "Debe seleccionar una tarjeta válida o ingresar una nueva.";
+                return RedirectToAction("ResumenCarrito");
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Hubo un error al procesar el pago. Intenta nuevamente.";
+                TempData["ErrorMessage"] = "Hubo un error al confirmar la compra. Intenta nuevamente.";
                 return RedirectToAction("ResumenCarrito");
             }
         }
 
+        private async Task<IActionResult> ProcesarCompra(CarritoDeCompra carrito, int tarjetaId)
+        {
+            try
+            {
+                decimal totalCompra = carrito.CarritoAccesorios.Sum(item => (item.Accesorio?.Precio ?? 0) * item.Cantidad);
 
+                var compra = new Compra
+                {
+                    UsuarioId = carrito.UsuarioId,
+                    TarjetaId = tarjetaId,
+                    FechaCompra = DateTime.Now,
+                    Total = totalCompra,
+                    DetallesCompra = carrito.CarritoAccesorios.Select(item => new DetalleCompra
+                    {
+                        AccesorioId = item.AccesorioId,
+                        Cantidad = item.Cantidad,
+                        PrecioUnitario = item.Accesorio?.Precio ?? 0
+                    }).ToList()
+                };
+
+                _context.Compras.Add(compra);
+
+                _context.CarritoAccesorios.RemoveRange(carrito.CarritoAccesorios);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "¡Compra realizada con éxito!";
+                return RedirectToAction("ConfirmacionPago", "CarritoDeCompras");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error al procesar la compra. Intenta nuevamente.";
+                return RedirectToAction("ResumenCarrito");
+            }
+        }
+
+        // GET: CarritoDeCompras/HistorialCompras
+        public async Task<IActionResult> HistorialCompras()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized();
+            }
+
+            var compras = await _context.Compras
+                .Include(c => c.Tarjeta)
+                .Include(c => c.DetallesCompra)
+                .ThenInclude(d => d.Accesorio)
+                .Where(c => c.UsuarioId == userId)
+                .ToListAsync();
+
+            return View(compras);
+        }
 
         // GET: CarritoDeCompras/ResumenCarrito
         public async Task<IActionResult> ResumenCarrito()
@@ -127,21 +199,23 @@ namespace PetApp_Empresa.Controllers
                 .ThenInclude(ca => ca.Accesorio)
                 .FirstOrDefaultAsync(c => c.CarritoId == carrito.CarritoId);
 
+            var tarjetasGuardadas = await _context.Tarjetas
+                .Where(t => t.UsuarioId == carrito.UsuarioId)
+                .ToListAsync();
+
+            ViewBag.Tarjetas = tarjetasGuardadas;
+
             return View(carrito);
         }
 
-        // GET: CarritoDeCompras/ObtenerCantidadCarrito
+        // GET: CarritoDeCompras/ObtenerCantidadElementosCarrito
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> ObtenerCantidadElementosCarrito()
         {
             try
             {
-                // Obtener el carrito del usuario autenticado
                 var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
-
-                // Usar el helper para contar elementos únicos
-                int cantidadElementos = CarritoHelper.ContarElementosEnCarrito(carrito);
+                int cantidadElementos = carrito.CarritoAccesorios.Count;
 
                 return Json(new { cantidad = cantidadElementos });
             }
@@ -150,7 +224,6 @@ namespace PetApp_Empresa.Controllers
                 return BadRequest(new { message = "Error al obtener la cantidad de elementos: " + ex.Message });
             }
         }
-
 
         // GET: CarritoDeCompras/ConfirmacionPago
         public IActionResult ConfirmacionPago()
