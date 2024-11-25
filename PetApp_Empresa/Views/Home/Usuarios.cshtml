@@ -1,0 +1,41 @@
+﻿@model IEnumerable<PetApp_Empresa.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Lista de Usuarios";
+}
+
+<h2>Lista de Usuarios</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Correo Electrónico</th>
+            <th>Roles</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usuario in Model)
+        {
+            <tr>
+                <td>@usuario.Nombre</td>
+                <td>@usuario.Email</td>
+                <td>
+                    @if (usuario.UsuarioRols != null && usuario.UsuarioRols.Any())
+                    {
+                        <ul>
+                            @foreach (var rol in usuario.UsuarioRols)
+                            {
+                                <li>@rol.Rol.Nombre</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Sin rol asignado</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
