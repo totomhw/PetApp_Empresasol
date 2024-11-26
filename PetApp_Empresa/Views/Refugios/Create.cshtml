@@ -35,3 +35,108 @@
 <div>
     <a asp-action="Index">Volver a la lista</a>
 </div>
+
+<style>
+    /* Fondo general */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    /* Título del formulario */
+    h2 {
+        color: #BA0C2F; /* Rojo Univalle */
+        text-align: center;
+        font-size: 2rem;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    /* Estilo del formulario */
+    form {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #BA0C2F;
+        box-shadow: 0 0 5px rgba(186, 12, 47, 0.5);
+    }
+
+    .text-danger {
+        color: #BA0C2F;
+        font-size: 0.9rem;
+    }
+
+    /* Botón Crear */
+    .btn-primary {
+        background-color: #BA0C2F; /* Rojo Univalle */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+        width: 100%;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .btn-primary:hover {
+        background-color: #A50A29; /* Más oscuro en hover */
+    }
+
+    /* Enlace Volver */
+    a {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        text-decoration: none;
+        color: #BA0C2F;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsividad */
+
+        form {
+            padding: 15px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+    
+</style>

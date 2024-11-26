@@ -36,3 +36,117 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<style>
+    /* Estilo general */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f7f7f7; /* Fondo claro */
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    /* Estilo del título */
+    h1 {
+        background-color: #BA0C2F; /* Rojo Univalle */
+        color: white;
+        text-align: center;
+        padding: 15px;
+        margin: 0 0 20px;
+        font-size: 2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    h4 {
+        color: #333;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    hr {
+        border: 1px solid #BA0C2F; /* Rojo Univalle */
+        margin: 20px 0;
+    }
+
+    /* Contenedor */
+    .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .col-md-4 {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    /* Estilo del formulario */
+    form {
+        width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    select, input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    select {
+        background-color: #f9f9f9;
+    }
+
+    input[type="submit"] {
+        background-color: #BA0C2F; /* Rojo Univalle */
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #8a0a22; /* Tonalidad más oscura */
+    }
+
+    .text-danger {
+        color: #BA0C2F; /* Rojo para los mensajes de error */
+        font-size: 0.9rem;
+        margin-top: -10px;
+        margin-bottom: 10px;
+    }
+
+    /* Link "Back to List" */
+    div > a {
+        color: #007BFF;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    div > a:hover {
+        text-decoration: underline;
+    }
+
+</style>

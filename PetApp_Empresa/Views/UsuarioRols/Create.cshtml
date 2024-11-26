@@ -34,3 +34,101 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<style>
+    /* General Styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    /* Header (Título principal) */
+    h1 {
+        background-color: #BA0C2F; /* Rojo Univalle */
+        color: white;
+        text-align: center;
+        padding: 20px;
+        margin-bottom: 30px;
+        font-size: 2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    /* Botón de creación */
+    a[asp-action="Create"] {
+        background-color: #BA0C2F;
+        color: white;
+        text-transform: uppercase;
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    a[asp-action="Create"]:hover {
+        background-color: #A50A29; /* Un tono más oscuro para hover */
+    }
+
+    /* Tabla */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 auto;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #BA0C2F; /* Rojo Univalle */
+        color: black; /* Cambiamos el texto de blanco a negro */
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    td {
+        font-size: 0.9rem;
+        color: black; /* Texto negro para las celdas del cuerpo */
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    /* Enlaces de acciones */
+    a {
+        color: #BA0C2F;
+        font-weight: bold;
+        text-decoration: none;
+        margin-right: 10px;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsiveness */
+    
+        table {
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+    
+</style>
+
+

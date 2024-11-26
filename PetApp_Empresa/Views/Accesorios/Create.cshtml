@@ -52,3 +52,112 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+<style>
+    /* General styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    /* Título de la página */
+    h1 {
+        background-color: #00457C; /* Azul institucional */
+        color: white;
+        text-align: center;
+        padding: 20px;
+        margin-bottom: 30px;
+        font-size: 2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    h4 {
+        color: #00457C;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    hr {
+        border: 1px solid #00457C;
+    }
+
+    /* Formulario contenedor */
+    .row {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+    }
+
+    .col-md-4 {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+    }
+
+    /* Input y Select */
+    .form-control {
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .form-control:focus {
+        border-color: #00457C;
+        box-shadow: 0 0 5px rgba(0, 71, 124, 0.5);
+    }
+
+    label {
+        font-weight: bold;
+        color: #00457C;
+        margin-bottom: 5px;
+    }
+
+    /* Botón */
+    .btn-primary {
+        background-color: #00457C; /* Azul institucional */
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #003b5c; /* Azul más oscuro */
+    }
+
+    /* Enlace de volver */
+    a {
+        color: #00457C;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 20px;
+        font-size: 1rem;
+    }
+
+    a:hover {
+        text-decoration: underline;
+        color: #003b5c;
+    }
+
+    /* Mensajes de validación */
+    .text-danger {
+        font-size: 0.9rem;
+        color: #d9534f;
+    }
+</style>

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Roles</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -39,3 +39,121 @@
 }
     </tbody>
 </table>
+<style>
+    /* Estilo general */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f7f7f7; /* Fondo claro */
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    /* Estilo del título */
+    h1 {
+        background-color: #BA0C2F; /* Rojo Univalle */
+        color: white;
+        text-align: center;
+        padding: 15px;
+        margin: 0 0 20px;
+        font-size: 2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-radius: 5px 5px 0 0;
+    }
+
+    /* Contenedor principal */
+    .container {
+        margin: 20px auto;
+        max-width: 90%;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    /* Botón "Create New" */
+    a[asp-action="Create"] {
+        display: inline-block;
+        background-color: #007BFF; /* Azul */
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 1rem;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    a[asp-action="Create"]:hover {
+        background-color: #0056b3;
+    }
+
+    /* Tabla */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 16px;
+        background-color: black;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    thead {
+        background-color: #BA0C2F; /* Rojo Univalle */
+        color: white;
+        text-transform: uppercase;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f9f9f9; /* Fondo alterno */
+    }
+
+    tbody tr:hover {
+        background-color: #f2f2f2; /* Resalte */
+    }
+
+    td {
+        vertical-align: middle;
+    }
+
+    /* Links de acciones */
+    a {
+        color: #BA0C2F; /* Azul */
+        text-decoration: none;
+        font-weight: bold;
+        margin: 0 5px;
+    }
+
+
+    thead th {
+        color: black; /* Negro para el encabezado */
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* Resposividad */
+ 
+        table {
+            font-size: 14px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+        }
+
+        a[asp-action="Create"] {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+        }
+    
+</style>
