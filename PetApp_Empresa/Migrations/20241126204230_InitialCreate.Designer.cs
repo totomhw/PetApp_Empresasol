@@ -12,7 +12,7 @@ using PetApp_Empresa.Models;
 namespace PetApp_Empresa.Migrations
 {
     [DbContext(typeof(PettappPruebaContext))]
-    [Migration("20241120182207_InitialCreate")]
+    [Migration("20241126204230_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
