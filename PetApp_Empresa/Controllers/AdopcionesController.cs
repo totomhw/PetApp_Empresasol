@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,36 @@ namespace PetApp_Empresa.Controllers
         {
             _context = context;
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> MisAdopciones()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized("Usuario no autenticado.");
+            }
+
+            // Obtener adopciones completadas
+            var adopcionesCompletadas = await _context.Adopciones
+                .Include(a => a.Mascota)
+                .Where(a => a.UsuarioId == userId && a.Estado == "Adoptado")
+                .ToListAsync();
+
+            // Obtener adopciones pendientes
+            var adopcionesPendientes = await _context.Adopciones
+                .Include(a => a.Mascota)
+                .Where(a => a.UsuarioId == userId && a.Estado == "Pendiente")
+                .ToListAsync();
+
+            // Pasar los datos a la vista
+            ViewData["AdopcionesCompletadas"] = adopcionesCompletadas;
+            ViewData["AdopcionesPendientes"] = adopcionesPendientes;
+
+            return View();
+        }
+
 
         // GET: Adopciones
         public async Task<IActionResult> Index()

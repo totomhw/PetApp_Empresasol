@@ -25,14 +25,106 @@ public partial class PettappPruebaContext : DbContext
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<Usuario> Usuarios { get; set; }
     public virtual DbSet<UsuarioRol> UsuarioRols { get; set; }
+    public virtual DbSet<Compra> Compras { get; set; }
+    public virtual DbSet<DetalleCompra> DetallesCompra { get; set; }
+    public virtual DbSet<Tarjeta> Tarjetas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=totomhw\\TOTOMHW;Database=PettappPrueba;User Id=sa;Password='12345';Trusted_connection=true;TrustServerCertificate=true;");
+        optionsBuilder.UseSqlServer("Server=SERG\\SQLEXPRESS;Database=PettappPrueba;Trusted_connection=true;TrustServerCertificate=true;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+
+        // Configuración de la entidad Compra
+        modelBuilder.Entity<Compra>(entity =>
+        {
+            entity.HasKey(e => e.CompraId);
+
+            entity.Property(e => e.FechaCompra)
+                .HasColumnType("datetime")
+                .IsRequired();
+
+            entity.Property(e => e.Total)
+                .HasColumnType("decimal(10, 2)")
+                .IsRequired();
+
+            entity.HasOne(d => d.Usuario)
+                .WithMany(p => p.Compras)
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Tarjeta)
+                .WithMany(p => p.Compras)
+                .HasForeignKey(d => d.TarjetaId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        // Configuración de la entidad DetalleCompra
+        modelBuilder.Entity<DetalleCompra>(entity =>
+        {
+            entity.HasKey(e => e.DetalleCompraId);
+
+            entity.Property(e => e.PrecioUnitario)
+                .HasColumnType("decimal(10, 2)");
+
+            entity.HasOne(e => e.Compra)
+                .WithMany(c => c.DetallesCompra)
+                .HasForeignKey(e => e.CompraId);
+
+            entity.HasOne(e => e.Accesorio)
+                .WithMany(a => a.DetallesCompra)
+                .HasForeignKey(e => e.AccesorioId);
+        });
+
+        // Configuración de la entidad Tarjeta
+        modelBuilder.Entity<Tarjeta>(entity =>
+        {
+            entity.HasKey(e => e.TarjetaId);
+
+            entity.Property(e => e.Numero)
+                .IsRequired()
+                .HasMaxLength(16);
+
+            entity.Property(e => e.FechaVencimiento)
+                .IsRequired()
+                .HasMaxLength(5);
+
+            entity.Property(e => e.CVV)
+                .IsRequired()
+                .HasMaxLength(3);
+
+            entity.Property(e => e.FechaRegistro)
+                .HasColumnType("datetime")
+                .HasDefaultValueSql("GETDATE()");
+
+            entity.HasOne(e => e.Usuario)
+                .WithMany(u => u.Tarjetas)
+                .HasForeignKey(e => e.UsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        // Configuración de la entidad Accesorio
+        modelBuilder.Entity<Accesorio>(entity =>
+        {
+            entity.HasKey(e => e.AccesorioId);
+
+            entity.Property(e => e.Descripcion).HasMaxLength(255);
+            entity.Property(e => e.Nombre).HasMaxLength(100);
+            entity.Property(e => e.Precio).HasColumnType("decimal(10, 2)");
+
+            entity.Property(e => e.CantidadDisponible)
+                .HasDefaultValue(0);
+
+            entity.HasOne(d => d.Vendedor)
+                .WithMany(p => p.Accesorios)
+                .HasForeignKey(d => d.VendedorId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+
         modelBuilder.Entity<Accesorio>(entity =>
         {
             entity.HasKey(e => e.AccesorioId).HasName("PK__Accesori__4BCD4E498BF95DEF");

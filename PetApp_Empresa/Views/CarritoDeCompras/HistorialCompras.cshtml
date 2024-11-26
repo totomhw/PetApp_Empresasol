@@ -1,0 +1,79 @@
+﻿@model List<PetApp_Empresa.Models.Compra>
+
+<h2>Historial de Compras</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Tarjeta</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var compra in Model)
+            {
+                <tr>
+                    <td>@compra.FechaCompra.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@compra.Total.ToString("C")</td>
+                    <td>
+                        @if (compra.Tarjeta != null && !string.IsNullOrEmpty(compra.Tarjeta.Numero) && compra.Tarjeta.Numero.Length >= 4)
+                        {
+                            <span>************ @compra.Tarjeta.Numero</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Sin tarjeta asociada</span>
+                        }
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detalles-@compra.CompraId" aria-expanded="false" aria-controls="detalles-@compra.CompraId">
+                            Ver Detalles
+                        </button>
+                    </td>
+                </tr>
+                <tr class="collapse" id="detalles-@compra.CompraId">
+                    <td colspan="4">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (compra.DetallesCompra != null && compra.DetallesCompra.Any())
+                                {
+                                    @foreach (var detalle in compra.DetallesCompra)
+                                    {
+                                        <tr>
+                                            <td>@(detalle.Accesorio?.Nombre ?? "Producto no disponible")</td>
+                                            <td>@detalle.Cantidad</td>
+                                            <td>@detalle.PrecioUnitario.ToString("C")</td>
+                                            <td>@(detalle.PrecioUnitario * detalle.Cantidad)</td>
+                                        </tr>
+                                    }
+                                }   
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-warning">No hay detalles disponibles para esta compra.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-warning">No se encontraron compras realizadas.</p>
+}

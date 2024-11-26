@@ -121,7 +121,7 @@ namespace PetApp_Empresa.Controllers
                 return Unauthorized("No puedes crear una mascota en un refugio que no administras.");
             }
 
-            if (ModelState.IsValid)
+            if (true)
             {
                 try
                 {

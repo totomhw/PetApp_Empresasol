@@ -18,6 +18,19 @@ namespace PetApp_Empresa.Controllers
             _context = context;
         }
 
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Usuarios()
+        {
+            var usuarios = await _context.Usuarios
+                .Include(u => u.UsuarioRols)
+                .ThenInclude(ur => ur.Rol)
+                .ToListAsync();
+
+            return View(usuarios);
+        }
+
+
         // Acción raíz: Redirige al DashboardCliente
         public IActionResult Index()
         {

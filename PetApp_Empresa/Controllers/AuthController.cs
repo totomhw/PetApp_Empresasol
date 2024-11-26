@@ -93,6 +93,55 @@ namespace PetApp_Empresa.Controllers
             return RedirectToAction("DashboardCliente", "Home");
         }
 
+        // GET: Auth/Register
+        [AllowAnonymous]
+        public IActionResult Register()
+        {
+            ViewBag.Roles = _context.Roles.ToList(); // Cargar lista de roles para el dropdown en la vista
+            return View();
+        }
+
+        // POST: Auth/Register
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register([Bind("Nombre,Password,Email")] Usuario usuario, int rolId)
+        {
+            if (ModelState.IsValid)
+            {
+                // Verificar si el usuario o el email ya están en uso
+                if (await _context.Usuarios.AnyAsync(u => u.Nombre == usuario.Nombre || u.Email == usuario.Email))
+                {
+                    ModelState.AddModelError("", "El usuario o email ya está en uso.");
+                    ViewBag.Roles = _context.Roles.ToList(); // Recargar roles en caso de error
+                    return View(usuario);
+                }
+
+                // Encriptar la contraseña antes de almacenarla
+                usuario.Password = HashPassword(usuario.Password);
+                usuario.Activo = true;
+
+                // Guardar el usuario en la base de datos
+                _context.Add(usuario);
+                await _context.SaveChangesAsync();
+
+                // Asignar el rol seleccionado al usuario
+                var usuarioRol = new UsuarioRol
+                {
+                    UsuarioId = usuario.UsuarioId,
+                    RolId = rolId,
+                    FechaAsignacion = DateTime.Now
+                };
+                _context.Add(usuarioRol);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Login));
+            }
+
+            ViewBag.Roles = _context.Roles.ToList();
+            return View(usuario);
+        }
+
         private IActionResult RedirectToDashboard()
         {
             var userRole = User.FindFirstValue(ClaimTypes.Role);

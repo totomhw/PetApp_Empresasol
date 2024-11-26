@@ -67,13 +67,7 @@
                 @if (User.IsInRole("Admin"))
                 {
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="UsuarioRols" asp-action="Index">Usuario Roles</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Usuarios">Usuarios</a>
                     </li>
                 }
                 @if (User.IsInRole("Admin") || User.IsInRole("Refugio"))
@@ -103,6 +97,11 @@
                                 <i class="fas fa-paw"></i> MisRefuios
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Refugios" asp-action="VerificarSolicitudes">
+                                <i class="fas fa-paw"></i> VerificarSolicitudes
+                            </a>
+                        </li>
                 }
                 @if (User.IsInRole("Admin") || User.IsInRole("Cliente"))
                 {
@@ -111,6 +110,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="DashboardCliente">Usuario</a>
+                    </li>
+                    <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="CarritoDeCompras" asp-action="HistorialCompras">HistorialCompras</a>
                     </li>
                 }
                 @if (User.IsInRole("Admin") || User.IsInRole("Vendedor"))
