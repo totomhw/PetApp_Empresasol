@@ -83,10 +83,13 @@ public partial class PettappPruebaContext : DbContext
         modelBuilder.Entity<Tarjeta>(entity =>
         {
             entity.HasKey(e => e.TarjetaId);
+            entity.Property(e => e.TarjetaId).ValueGeneratedOnAdd();
 
             entity.Property(e => e.Numero)
                 .IsRequired()
                 .HasMaxLength(16);
+
+            entity.Property(e => e.EsVisible).IsRequired();
 
             entity.Property(e => e.FechaVencimiento)
                 .IsRequired()

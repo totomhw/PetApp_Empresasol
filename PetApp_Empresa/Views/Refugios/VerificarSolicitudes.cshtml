@@ -6,32 +6,53 @@
 
 <h1>Solicitudes de Adopción en Proceso</h1>
 
-<table class="table">
-    <thead>
+<table class="table table-bordered">
+    <thead class="thead-dark">
         <tr>
             <th>Mascota</th>
+            <th>Raza</th>
+            <th>Edad</th>
             <th>Solicitante</th>
+            <th>Correo Electrónico</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
             <th>Fecha de Solicitud</th>
+            <th>Estado</th>
             <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var adopcion in Model)
+        @if (Model.Any())
+        {
+            @foreach (var adopcion in Model)
+            {
+                <tr>
+                    <td>@adopcion.Mascota.Nombre</td>
+                    <td>@adopcion.Mascota.Raza</td>
+                    <td>@adopcion.Mascota.Edad años</td>
+                    <td>@adopcion.NombreCompleto</td>
+                    <td>@adopcion.CorreoElectronico</td>
+                    <td>@adopcion.Telefono</td>
+                    <td>@adopcion.Direccion</td>
+                    <td>@adopcion.FechaSolicitud?.ToString("dd/MM/yyyy")</td>
+                    <td>@adopcion.Estado</td>
+                    <td>
+                        <form asp-action="AprobarAdopcion" method="post" style="display:inline">
+                            <input type="hidden" name="adopcionId" value="@adopcion.AdopcionId" />
+                            <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
+                        </form>
+                        <form asp-action="RechazarAdopcion" method="post" style="display:inline">
+                            <input type="hidden" name="adopcionId" value="@adopcion.AdopcionId" />
+                            <button type="submit" class="btn btn-danger btn-sm">Rechazar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@adopcion.Mascota.Nombre</td>
-                <td>@adopcion.Usuario.Nombre</td>
-                <td>@adopcion.FechaSolicitud?.ToString("dd/MM/yyyy")</td>
-                <td>
-                    <form asp-action="AprobarAdopcion" method="post" style="display:inline">
-                        <input type="hidden" name="adopcionId" value="@adopcion.AdopcionId" />
-                        <button type="submit" class="btn btn-success">Aprobar</button>
-                    </form>
-                    <form asp-action="RechazarAdopcion" method="post" style="display:inline">
-                        <input type="hidden" name="adopcionId" value="@adopcion.AdopcionId" />
-                        <button type="submit" class="btn btn-danger">Rechazar</button>
-                    </form>
-                </td>
+                <td colspan="10" class="text-center">No hay solicitudes de adopción en proceso.</td>
             </tr>
         }
     </tbody>

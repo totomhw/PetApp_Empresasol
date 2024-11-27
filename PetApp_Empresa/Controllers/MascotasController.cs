@@ -298,7 +298,7 @@ namespace PetApp_Empresa.Controllers
             return View("DetailsMascota", mascota);
         }
 
-        // Solicitar Adopción - GET
+        // GET: Mascotas/SolicitarAdopcion
         public async Task<IActionResult> SolicitarAdopcion(int id)
         {
             var mascota = await _context.Mascotas.FindAsync(id);
@@ -307,47 +307,53 @@ namespace PetApp_Empresa.Controllers
                 return NotFound("La mascota no está disponible para adopción.");
             }
 
-            return View("FormularioAdopcion", new SolicitudAdopcionViewModel { MascotaId = id });
+            var adopcion = new Adopcione
+            {
+                MascotaId = id,
+                FechaSolicitud = DateTime.Now
+            };
+
+            return View("FormularioAdopcion", adopcion);
         }
 
-        // Solicitar Adopción - POST
-        [Authorize]
+        // POST: Mascotas/SolicitarAdopcion
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SolicitarAdopcion(SolicitudAdopcionViewModel solicitud)
+        public async Task<IActionResult> SolicitarAdopcion(Adopcione adopcion)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View("FormularioAdopcion", solicitud);
+                return View("FormularioAdopcion", adopcion);
             }
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            var adopcion = new Adopcione
-            {
-                MascotaId = solicitud.MascotaId,
-                UsuarioId = userId,
-                Estado = "Pendiente",
-                NombreCompleto = solicitud.NombreCompleto,
-                CorreoElectronico = solicitud.CorreoElectronico,
-                Telefono = solicitud.Telefono,
-                Direccion = solicitud.Direccion
-            };
+            adopcion.UsuarioId = userId;
+            adopcion.Estado = "Pendiente";
+            adopcion.FechaSolicitud = DateTime.Now;
 
             _context.Adopciones.Add(adopcion);
             await _context.SaveChangesAsync();
 
-            // Redirige a la vista de contrato después de completar la solicitud de adopción
-            return RedirectToAction(nameof(ContratoAdopcion), new { mascotaId = solicitud.MascotaId });
+            return RedirectToAction(nameof(ContratoAdopcion), new { mascotaId = adopcion.MascotaId });
         }
 
-        // GET: Contrato de Adopción
-        public IActionResult ContratoAdopcion(int mascotaId)
+        // GET: Mascotas/ContratoAdopcion
+        public async Task<IActionResult> ContratoAdopcion(int mascotaId)
         {
-            return View("ContratoAdopcion", mascotaId);
+            var adopcion = await _context.Adopciones
+                .Include(a => a.Mascota)
+                .FirstOrDefaultAsync(a => a.MascotaId == mascotaId && a.Estado == "Pendiente");
+
+            if (adopcion == null)
+            {
+                return NotFound("No se encontró la solicitud de adopción.");
+            }
+
+            return View("ContratoAdopcion", adopcion);
         }
 
-        // POST: Confirmar Contrato
+        // POST: Mascotas/ConfirmarAdopcion
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmarAdopcion(int mascotaId)
@@ -360,8 +366,8 @@ namespace PetApp_Empresa.Controllers
                 return NotFound("No se encontró la solicitud de adopción.");
             }
 
-            // Cambia el estado de la adopción y la mascota a "En Proceso"
             adopcion.Estado = "En Proceso";
+
             var mascota = await _context.Mascotas.FindAsync(mascotaId);
             if (mascota != null)
             {
@@ -372,7 +378,6 @@ namespace PetApp_Empresa.Controllers
             _context.Adopciones.Update(adopcion);
             await _context.SaveChangesAsync();
 
-            // Redirige a la lista de mascotas
             return RedirectToAction("VistaMascota", "Mascotas");
         }
 

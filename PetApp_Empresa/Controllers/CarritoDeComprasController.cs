@@ -73,19 +73,19 @@ namespace PetApp_Empresa.Controllers
             }
         }
 
-        // POST: CarritoDeCompras/ConfirmarCompra
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmarCompra(
-            int? tarjetaId,
-            string? numeroTarjeta,
-            int? mesVencimiento,
-            int? anioVencimiento,
-            string? cvv,
-            bool guardarTarjeta)
+     int? tarjetaId,
+     string? numeroTarjeta,
+     int? mesVencimiento,
+     int? anioVencimiento,
+     string? cvv,
+     bool guardarTarjeta = false)
         {
             try
             {
+                // Obtener el carrito del usuario
                 var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
 
                 if (carrito.CarritoAccesorios == null || !carrito.CarritoAccesorios.Any())
@@ -94,7 +94,9 @@ namespace PetApp_Empresa.Controllers
                     return RedirectToAction("ResumenCarrito");
                 }
 
-                // Validar si se usa una tarjeta guardada
+                int tarjetaAUsarId;
+
+                // Caso 1: Usar una tarjeta guardada
                 if (tarjetaId.HasValue)
                 {
                     var tarjeta = await _context.Tarjetas.FindAsync(tarjetaId.Value);
@@ -104,36 +106,51 @@ namespace PetApp_Empresa.Controllers
                         return RedirectToAction("ResumenCarrito");
                     }
 
-                    return await ProcesarCompra(carrito, tarjetaId.Value);
+                    tarjetaAUsarId = tarjeta.TarjetaId; // Usar la tarjeta seleccionada
                 }
-
-                // Validar datos de nueva tarjeta
-                if (!string.IsNullOrEmpty(numeroTarjeta) && mesVencimiento.HasValue && anioVencimiento.HasValue && !string.IsNullOrEmpty(cvv))
+                // Caso 2: Ingresar una nueva tarjeta
+                else if (!string.IsNullOrEmpty(numeroTarjeta) && mesVencimiento.HasValue && anioVencimiento.HasValue && !string.IsNullOrEmpty(cvv))
                 {
+                    if (numeroTarjeta.Length != 16 || !numeroTarjeta.All(char.IsDigit) ||
+                        cvv.Length != 3 || !cvv.All(char.IsDigit))
+                    {
+                        TempData["ErrorMessage"] = "La tarjeta ingresada no es válida.";
+                        return RedirectToAction("ResumenCarrito");
+                    }
+
+                    // Crear una nueva tarjeta
                     var nuevaTarjeta = new Tarjeta
                     {
                         UsuarioId = carrito.UsuarioId,
                         Numero = numeroTarjeta,
                         FechaVencimiento = $"{mesVencimiento.Value:D2}/{anioVencimiento.Value % 100:D2}",
                         CVV = cvv,
-                        FechaRegistro = DateTime.Now
+                        FechaRegistro = DateTime.Now,
+                        EsVisible = guardarTarjeta // Si el checkbox está marcado, será visible
                     };
 
+                    // Agregar tarjeta a la base de datos
                     _context.Tarjetas.Add(nuevaTarjeta);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); // Guardar tarjeta
 
-                    return await ProcesarCompra(carrito, nuevaTarjeta.TarjetaId);
+                    tarjetaAUsarId = nuevaTarjeta.TarjetaId; // Usar la nueva tarjeta
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Debe seleccionar o ingresar una tarjeta válida.";
+                    return RedirectToAction("ResumenCarrito");
                 }
 
-                TempData["ErrorMessage"] = "Debe seleccionar una tarjeta válida o ingresar una nueva.";
-                return RedirectToAction("ResumenCarrito");
+                // Procesar la compra
+                return await ProcesarCompra(carrito, tarjetaAUsarId);
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Hubo un error al confirmar la compra. Intenta nuevamente.";
+                TempData["ErrorMessage"] = $"Hubo un error al confirmar la compra: {ex.Message}";
                 return RedirectToAction("ResumenCarrito");
             }
         }
+
 
         private async Task<IActionResult> ProcesarCompra(CarritoDeCompra carrito, int tarjetaId)
         {
@@ -157,6 +174,24 @@ namespace PetApp_Empresa.Controllers
 
                 _context.Compras.Add(compra);
 
+                // Actualizar la cantidad disponible de los accesorios
+                foreach (var item in carrito.CarritoAccesorios)
+                {
+                    var accesorio = await _context.Accesorios.FindAsync(item.AccesorioId);
+                    if (accesorio != null)
+                    {
+                        if (accesorio.CantidadDisponible < item.Cantidad)
+                        {
+                            TempData["ErrorMessage"] = $"El accesorio {accesorio.Nombre} no tiene suficiente stock.";
+                            return RedirectToAction("ResumenCarrito");
+                        }
+
+                        accesorio.CantidadDisponible -= item.Cantidad; // Disminuir el stock
+                        _context.Accesorios.Update(accesorio);
+                    }
+                }
+
+                // Vaciar el carrito
                 _context.CarritoAccesorios.RemoveRange(carrito.CarritoAccesorios);
                 await _context.SaveChangesAsync();
 
@@ -165,10 +200,13 @@ namespace PetApp_Empresa.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Error al procesar la compra. Intenta nuevamente.";
+                TempData["ErrorMessage"] = $"Error al procesar la compra: {ex.Message}";
                 return RedirectToAction("ResumenCarrito");
             }
         }
+
+
+
 
         // GET: CarritoDeCompras/HistorialCompras
         public async Task<IActionResult> HistorialCompras()
@@ -199,14 +237,16 @@ namespace PetApp_Empresa.Controllers
                 .ThenInclude(ca => ca.Accesorio)
                 .FirstOrDefaultAsync(c => c.CarritoId == carrito.CarritoId);
 
+            // Filtrar solo tarjetas visibles
             var tarjetasGuardadas = await _context.Tarjetas
-                .Where(t => t.UsuarioId == carrito.UsuarioId)
+                .Where(t => t.UsuarioId == carrito.UsuarioId && t.EsVisible)
                 .ToListAsync();
 
             ViewBag.Tarjetas = tarjetasGuardadas;
 
             return View(carrito);
         }
+
 
         // GET: CarritoDeCompras/ObtenerCantidadElementosCarrito
         [HttpGet]

@@ -10,6 +10,7 @@ public class Tarjeta
     public string Numero { get; set; } // Número de tarjeta
     public string FechaVencimiento { get; set; } // Fecha de vencimiento (formato MM/YY)
     public string CVV { get; set; } // Código de seguridad (3 dígitos)
+    public bool EsVisible { get; set; } = true;
 
     public DateTime FechaRegistro { get; set; } = DateTime.Now; // Fecha de registro de la tarjeta
 
