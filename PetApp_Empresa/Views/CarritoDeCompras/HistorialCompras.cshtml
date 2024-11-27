@@ -4,12 +4,12 @@
 
 @if (Model != null && Model.Any())
 {
-    <table class="table table-bordered">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Fecha</th>
                 <th>Total</th>
-                <th>Tarjeta</th>
+                <th>Método de Pago</th>
                 <th>Detalles</th>
             </tr>
         </thead>
@@ -20,22 +20,26 @@
                     <td>@compra.FechaCompra.ToString("dd/MM/yyyy HH:mm")</td>
                     <td>@compra.Total.ToString("C")</td>
                     <td>
-                        @if (compra.Tarjeta != null && !string.IsNullOrEmpty(compra.Tarjeta.Numero) && compra.Tarjeta.Numero.Length >= 4)
+                        @if (compra.Tarjeta != null)
                         {
-                            <span>************ @compra.Tarjeta.Numero[^4..]</span>
+                            <span>Tarjeta: **** **** **** @compra.Tarjeta.Numero.Substring(compra.Tarjeta.Numero.Length - 4)</span>
+                        }
+                        else if (compra.QR != null)
+                        {
+                            <span>QR</span>
                         }
                         else
                         {
-                            <span class="text-danger">Sin tarjeta asociada</span>
+                            <span class="text-danger">Desconocido</span>
                         }
                     </td>
                     <td>
-                        <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detalles-@compra.CompraId" aria-expanded="false" aria-controls="detalles-@compra.CompraId">
+                        <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detalles-@compra.CompraId">
                             Ver Detalles
                         </button>
                     </td>
                 </tr>
-                <tr class="collapse" id="detalles-@compra.CompraId">
+                <tr id="detalles-@compra.CompraId" class="collapse">
                     <td colspan="4">
                         <table class="table">
                             <thead>
@@ -47,22 +51,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (compra.DetallesCompra != null && compra.DetallesCompra.Any())
-                                {
-                                    @foreach (var detalle in compra.DetallesCompra)
-                                    {
-                                        <tr>
-                                            <td>@(detalle.Accesorio?.Nombre ?? "Producto no disponible")</td>
-                                            <td>@detalle.Cantidad</td>
-                                            <td>@detalle.PrecioUnitario.ToString("C")</td>
-                                            <td>@(detalle.PrecioUnitario * detalle.Cantidad).ToString("C")</td>
-                                        </tr>
-                                    }
-                                }
-                                else
+                                @foreach (var detalle in compra.DetallesCompra)
                                 {
                                     <tr>
-                                        <td colspan="4" class="text-warning">No hay detalles disponibles para esta compra.</td>
+                                        <td>@detalle.Accesorio?.Nombre</td>
+                                        <td>@detalle.Cantidad</td>
+                                        <td>@detalle.PrecioUnitario.ToString("C")</td>
+                                        <td>@(detalle.Cantidad * detalle.PrecioUnitario).ToString("C")</td>
                                     </tr>
                                 }
                             </tbody>
@@ -75,5 +70,5 @@
 }
 else
 {
-    <p class="text-warning">No se encontraron compras realizadas.</p>
+    <p>No se encontraron compras registradas.</p>
 }

@@ -12,6 +12,21 @@ namespace PetApp_Empresa.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "QRs",
+                columns: table => new
+                {
+                    QRId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Codigo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImagenPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaGeneracion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QRs", x => x.QRId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -22,7 +37,7 @@ namespace PetApp_Empresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Roles__F92302F12633B530", x => x.RolId);
+                    table.PrimaryKey("PK_Roles", x => x.RolId);
                 });
 
             migrationBuilder.CreateTable(
@@ -39,7 +54,7 @@ namespace PetApp_Empresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Usuarios__2B3DE7B8FB44ABF2", x => x.UsuarioId);
+                    table.PrimaryKey("PK_Usuarios", x => x.UsuarioId);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,9 +71,9 @@ namespace PetApp_Empresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Accesori__4BCD4E498BF95DEF", x => x.AccesorioId);
+                    table.PrimaryKey("PK_Accesorios", x => x.AccesorioId);
                     table.ForeignKey(
-                        name: "FK__Accesorio__Vende__4E88ABD4",
+                        name: "FK_Accesorios_Usuarios_VendedorId",
                         column: x => x.VendedorId,
                         principalTable: "Usuarios",
                         principalColumn: "UsuarioId",
@@ -76,9 +91,9 @@ namespace PetApp_Empresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__CarritoD__778D586BBD48FB94", x => x.CarritoId);
+                    table.PrimaryKey("PK_CarritoDeCompras", x => x.CarritoId);
                     table.ForeignKey(
-                        name: "FK__CarritoDe__Usuar__52593CB8",
+                        name: "FK_CarritoDeCompras_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuarios",
                         principalColumn: "UsuarioId",
@@ -99,9 +114,55 @@ namespace PetApp_Empresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Refugios__AD4F9CA2861619D7", x => x.RefugioId);
+                    table.PrimaryKey("PK_Refugios", x => x.RefugioId);
                     table.ForeignKey(
                         name: "FK_Refugios_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tarjetas",
+                columns: table => new
+                {
+                    TarjetaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Numero = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
+                    FechaVencimiento = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    CVV = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    FechaRegistro = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "GETDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tarjetas", x => x.TarjetaId);
+                    table.ForeignKey(
+                        name: "FK_Tarjetas_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TransaccionesBancarias",
+                columns: table => new
+                {
+                    TransaccionBancariaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Apellido = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NumeroTransaccion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    BancoOrigen = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ComprobantePath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    FechaTransaccion = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransaccionesBancarias", x => x.TransaccionBancariaId);
+                    table.ForeignKey(
+                        name: "FK_TransaccionesBancarias_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuarios",
                         principalColumn: "UsuarioId");
@@ -119,15 +180,15 @@ namespace PetApp_Empresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__UsuarioR__C869CDCA96DA8FAB", x => x.UsuarioRolId);
+                    table.PrimaryKey("PK_UsuarioRol", x => x.UsuarioRolId);
                     table.ForeignKey(
-                        name: "FK__UsuarioRo__RolId__412EB0B6",
+                        name: "FK_UsuarioRol_Roles_RolId",
                         column: x => x.RolId,
                         principalTable: "Roles",
                         principalColumn: "RolId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__UsuarioRo__Usuar__403A8C7D",
+                        name: "FK_UsuarioRol_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuarios",
                         principalColumn: "UsuarioId",
@@ -146,15 +207,15 @@ namespace PetApp_Empresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__CarritoA__ABF0DCE15F7E6066", x => x.CarritoAccesorioId);
+                    table.PrimaryKey("PK_CarritoAccesorios", x => x.CarritoAccesorioId);
                     table.ForeignKey(
-                        name: "FK__CarritoAc__Acces__5629CD9C",
+                        name: "FK_CarritoAccesorios_Accesorios_AccesorioId",
                         column: x => x.AccesorioId,
                         principalTable: "Accesorios",
                         principalColumn: "AccesorioId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__CarritoAc__Carri__5535A963",
+                        name: "FK_CarritoAccesorios_CarritoDeCompras_CarritoId",
                         column: x => x.CarritoId,
                         principalTable: "CarritoDeCompras",
                         principalColumn: "CarritoId",
@@ -174,15 +235,15 @@ namespace PetApp_Empresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Donacion__9F5DEE875969A9BC", x => x.DonacionId);
+                    table.PrimaryKey("PK_Donaciones", x => x.DonacionId);
                     table.ForeignKey(
-                        name: "FK__Donacione__Refug__59FA5E80",
+                        name: "FK_Donaciones_Refugios_RefugioId",
                         column: x => x.RefugioId,
                         principalTable: "Refugios",
                         principalColumn: "RefugioId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__Donacione__Usuar__5AEE82B9",
+                        name: "FK_Donaciones_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuarios",
                         principalColumn: "UsuarioId",
@@ -206,13 +267,45 @@ namespace PetApp_Empresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Mascotas__8DBC413C68F2B033", x => x.MascotaId);
+                    table.PrimaryKey("PK_Mascotas", x => x.MascotaId);
                     table.ForeignKey(
-                        name: "FK__Mascotas__Refugi__46E78A0C",
+                        name: "FK_Mascotas_Refugios_RefugioId",
                         column: x => x.RefugioId,
                         principalTable: "Refugios",
                         principalColumn: "RefugioId",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Compras",
+                columns: table => new
+                {
+                    CompraId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    TarjetaId = table.Column<int>(type: "int", nullable: true),
+                    QRId = table.Column<int>(type: "int", nullable: true),
+                    FechaCompra = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Total = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Compras", x => x.CompraId);
+                    table.ForeignKey(
+                        name: "FK_Compras_QRs_QRId",
+                        column: x => x.QRId,
+                        principalTable: "QRs",
+                        principalColumn: "QRId");
+                    table.ForeignKey(
+                        name: "FK_Compras_Tarjetas_TarjetaId",
+                        column: x => x.TarjetaId,
+                        principalTable: "Tarjetas",
+                        principalColumn: "TarjetaId");
+                    table.ForeignKey(
+                        name: "FK_Compras_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioId");
                 });
 
             migrationBuilder.CreateTable(
@@ -233,18 +326,46 @@ namespace PetApp_Empresa.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Adopcion__AAEE3F47EBDDAE63", x => x.AdopcionId);
+                    table.PrimaryKey("PK_Adopciones", x => x.AdopcionId);
                     table.ForeignKey(
-                        name: "FK__Adopcione__Masco__4AB81AF0",
+                        name: "FK_Adopciones_Mascotas_MascotaId",
                         column: x => x.MascotaId,
                         principalTable: "Mascotas",
                         principalColumn: "MascotaId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__Adopcione__Usuar__4BAC3F29",
+                        name: "FK_Adopciones_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuarios",
                         principalColumn: "UsuarioId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DetallesCompra",
+                columns: table => new
+                {
+                    DetalleCompraId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CompraId = table.Column<int>(type: "int", nullable: false),
+                    AccesorioId = table.Column<int>(type: "int", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    PrecioUnitario = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DetallesCompra", x => x.DetalleCompraId);
+                    table.ForeignKey(
+                        name: "FK_DetallesCompra_Accesorios_AccesorioId",
+                        column: x => x.AccesorioId,
+                        principalTable: "Accesorios",
+                        principalColumn: "AccesorioId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DetallesCompra_Compras_CompraId",
+                        column: x => x.CompraId,
+                        principalTable: "Compras",
+                        principalColumn: "CompraId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -279,6 +400,31 @@ namespace PetApp_Empresa.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Compras_QRId",
+                table: "Compras",
+                column: "QRId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Compras_TarjetaId",
+                table: "Compras",
+                column: "TarjetaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Compras_UsuarioId",
+                table: "Compras",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DetallesCompra_AccesorioId",
+                table: "DetallesCompra",
+                column: "AccesorioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DetallesCompra_CompraId",
+                table: "DetallesCompra",
+                column: "CompraId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Donaciones_RefugioId",
                 table: "Donaciones",
                 column: "RefugioId");
@@ -299,18 +445,28 @@ namespace PetApp_Empresa.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tarjetas_UsuarioId",
+                table: "Tarjetas",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransaccionesBancarias_UsuarioId",
+                table: "TransaccionesBancarias",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UsuarioRol_RolId",
                 table: "UsuarioRol",
                 column: "RolId");
 
             migrationBuilder.CreateIndex(
-                name: "UQ_Usuario_Rol",
+                name: "IX_UsuarioRol_UsuarioId_RolId",
                 table: "UsuarioRol",
                 columns: new[] { "UsuarioId", "RolId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "UQ__Usuarios__A9D105345CB187E6",
+                name: "IX_Usuarios_Email",
                 table: "Usuarios",
                 column: "Email",
                 unique: true);
@@ -326,7 +482,13 @@ namespace PetApp_Empresa.Migrations
                 name: "CarritoAccesorios");
 
             migrationBuilder.DropTable(
+                name: "DetallesCompra");
+
+            migrationBuilder.DropTable(
                 name: "Donaciones");
+
+            migrationBuilder.DropTable(
+                name: "TransaccionesBancarias");
 
             migrationBuilder.DropTable(
                 name: "UsuarioRol");
@@ -335,16 +497,25 @@ namespace PetApp_Empresa.Migrations
                 name: "Mascotas");
 
             migrationBuilder.DropTable(
+                name: "CarritoDeCompras");
+
+            migrationBuilder.DropTable(
                 name: "Accesorios");
 
             migrationBuilder.DropTable(
-                name: "CarritoDeCompras");
+                name: "Compras");
 
             migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Refugios");
+
+            migrationBuilder.DropTable(
+                name: "QRs");
+
+            migrationBuilder.DropTable(
+                name: "Tarjetas");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");

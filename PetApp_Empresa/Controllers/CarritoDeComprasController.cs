@@ -41,17 +41,29 @@ namespace PetApp_Empresa.Controllers
         {
             try
             {
+                // Validar que el accesorio existe
                 var accesorio = await _context.Accesorios.FindAsync(accesorioId);
                 if (accesorio == null)
                 {
-                    return BadRequest(new { message = "El accesorio no existe." });
+                    return Json(new { success = false, message = "El accesorio no existe." });
                 }
 
+                // Validar que la cantidad sea válida
+                if (cantidad <= 0)
+                {
+                    return Json(new { success = false, message = "La cantidad debe ser mayor a 0." });
+                }
+
+                // Obtener o crear el carrito del usuario
                 var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
 
-                var carritoAccesorio = carrito.CarritoAccesorios.FirstOrDefault(ca => ca.AccesorioId == accesorioId);
+                // Comprobar si el accesorio ya está en el carrito
+                var carritoAccesorio = await _context.CarritoAccesorios
+                    .FirstOrDefaultAsync(ca => ca.CarritoId == carrito.CarritoId && ca.AccesorioId == accesorioId);
+
                 if (carritoAccesorio == null)
                 {
+                    // Agregar un nuevo accesorio al carrito
                     carritoAccesorio = new CarritoAccesorio
                     {
                         CarritoId = carrito.CarritoId,
@@ -62,20 +74,23 @@ namespace PetApp_Empresa.Controllers
                 }
                 else
                 {
+                    // Actualizar la cantidad del accesorio en el carrito
                     carritoAccesorio.Cantidad += cantidad;
                 }
 
+                // Guardar los cambios en la base de datos
                 await _context.SaveChangesAsync();
 
-                return Json(new { message = "Producto añadido al carrito" });
+                return Json(new { success = true, message = "Accesorio agregado al carrito correctamente." });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = "Error al agregar el producto al carrito.", error = ex.Message });
+                return Json(new { success = false, message = "Ocurrió un error al agregar el accesorio al carrito.", error = ex.Message });
             }
         }
 
         // GET: CarritoDeCompras/ResumenCarrito
+        [HttpGet]
         public async Task<IActionResult> ResumenCarrito()
         {
             try
@@ -90,7 +105,7 @@ namespace PetApp_Empresa.Controllers
                 if (carrito == null)
                 {
                     TempData["ErrorMessage"] = "No se pudo encontrar el carrito.";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 var tarjetasGuardadas = await _context.Tarjetas
@@ -103,166 +118,118 @@ namespace PetApp_Empresa.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Ocurrió un error al cargar el resumen del carrito: " + ex.Message;
-                return RedirectToAction("Index");
+                TempData["ErrorMessage"] = $"Error al cargar el carrito: {ex.Message}";
+                return RedirectToAction("Index", "Home");
             }
         }
 
-        // POST: CarritoDeCompras/ConfirmarCompra
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmarCompra(
-            int? tarjetaId,
-            string? numeroTarjeta,
-            int? mesVencimiento,
-            int? anioVencimiento,
-            string? cvv,
-            bool guardarTarjeta)
+        // GET: CarritoDeCompras/PagarConQR
+        [HttpGet]
+        public IActionResult PagarConQR()
         {
             try
             {
-                var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
-
-                if (carrito.CarritoAccesorios == null || !carrito.CarritoAccesorios.Any())
-                {
-                    TempData["ErrorMessage"] = "El carrito está vacío.";
-                    return RedirectToAction("ResumenCarrito");
-                }
-
-                if (tarjetaId.HasValue)
-                {
-                    var tarjeta = await _context.Tarjetas.FindAsync(tarjetaId.Value);
-                    if (tarjeta == null)
-                    {
-                        TempData["ErrorMessage"] = "La tarjeta seleccionada no es válida.";
-                        return RedirectToAction("ResumenCarrito");
-                    }
-
-                    return await ProcesarCompra(carrito, tarjetaId.Value);
-                }
-
-                if (!string.IsNullOrEmpty(numeroTarjeta) && mesVencimiento.HasValue && anioVencimiento.HasValue && !string.IsNullOrEmpty(cvv))
-                {
-                    var nuevaTarjeta = new Tarjeta
-                    {
-                        UsuarioId = carrito.UsuarioId,
-                        Numero = numeroTarjeta,
-                        FechaVencimiento = $"{mesVencimiento.Value:D2}/{anioVencimiento.Value % 100:D2}",
-                        CVV = cvv,
-                        FechaRegistro = DateTime.Now
-                    };
-
-                    _context.Tarjetas.Add(nuevaTarjeta);
-                    await _context.SaveChangesAsync();
-
-                    return await ProcesarCompra(carrito, nuevaTarjeta.TarjetaId);
-                }
-
-                TempData["ErrorMessage"] = "Debe seleccionar una tarjeta válida o ingresar una nueva.";
-                return RedirectToAction("ResumenCarrito");
+                ViewBag.QRImagePath = "/comprobantes/QR.jpeg";
+                return View();
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Hubo un error al confirmar la compra. Intenta nuevamente.";
+                TempData["ErrorMessage"] = $"Error al cargar la vista de QR: {ex.Message}";
                 return RedirectToAction("ResumenCarrito");
             }
         }
 
-        private async Task<IActionResult> ProcesarCompra(CarritoDeCompra carrito, int tarjetaId)
+        // GET: CarritoDeCompras/FormularioTransaccionBancaria
+        [HttpGet]
+        public IActionResult FormularioTransaccionBancaria()
         {
             try
             {
-                decimal totalCompra = carrito.CarritoAccesorios.Sum(item => (item.Accesorio?.Precio ?? 0) * item.Cantidad);
-
-                var compra = new Compra
+                ViewBag.Bancos = new string[]
                 {
-                    UsuarioId = carrito.UsuarioId,
-                    TarjetaId = tarjetaId,
-                    FechaCompra = DateTime.Now,
-                    Total = totalCompra,
-                    DetallesCompra = carrito.CarritoAccesorios.Select(item => new DetalleCompra
-                    {
-                        AccesorioId = item.AccesorioId,
-                        Cantidad = item.Cantidad,
-                        PrecioUnitario = item.Accesorio?.Precio ?? 0
-                    }).ToList()
+                    "Banco Nacional de Bolivia",
+                    "Banco Mercantil Santa Cruz",
+                    "Banco Unión",
+                    "Banco Bisa",
+                    "Banco Económico",
+                    "Banco FIE",
+                    "Banco Fortaleza",
+                    "Banco Ganadero",
+                    "BancoSol",
+                    "Banco Prodem",
+                    "Banco de Crédito de Bolivia"
                 };
 
-                _context.Compras.Add(compra);
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al cargar la vista del formulario: {ex.Message}";
+                return RedirectToAction("ResumenCarrito");
+            }
+        }
 
-                _context.CarritoAccesorios.RemoveRange(carrito.CarritoAccesorios);
+        // POST: CarritoDeCompras/GuardarTransaccion
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GuardarTransaccion(
+            string nombre,
+            string apellido,
+            string numeroTransaccion,
+            string bancoOrigen,
+            IFormFile comprobante)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(apellido) ||
+                    string.IsNullOrEmpty(numeroTransaccion) || string.IsNullOrEmpty(bancoOrigen))
+                {
+                    TempData["ErrorMessage"] = "Todos los campos son obligatorios.";
+                    return RedirectToAction("FormularioTransaccionBancaria");
+                }
+
+                string comprobantePath = null;
+
+                if (comprobante != null && comprobante.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "comprobantes");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    comprobantePath = Path.Combine(uploadsFolder, comprobante.FileName);
+                    using (var stream = new FileStream(comprobantePath, FileMode.Create))
+                    {
+                        await comprobante.CopyToAsync(stream);
+                    }
+                }
+
+                var transaccion = new TransaccionBancaria
+                {
+                    Nombre = nombre,
+                    Apellido = apellido,
+                    NumeroTransaccion = numeroTransaccion,
+                    BancoOrigen = bancoOrigen,
+                    ComprobantePath = comprobante != null ? $"/comprobantes/{comprobante.FileName}" : null,
+                    FechaTransaccion = DateTime.Now
+                };
+
+                _context.TransaccionesBancarias.Add(transaccion);
                 await _context.SaveChangesAsync();
 
-                TempData["SuccessMessage"] = "¡Compra realizada con éxito!";
+                TempData["SuccessMessage"] = "Transacción guardada exitosamente.";
                 return RedirectToAction("HistorialCompras");
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Error al procesar la compra. Intenta nuevamente.";
-                return RedirectToAction("ResumenCarrito");
-            }
-        }
-
-        // NUEVA VISTA: Pagar con QR
-        public IActionResult PagarConQR()
-        {
-            ViewBag.QRImagePath = "/images/QR.jpeg";
-            return View();
-        }
-
-        // NUEVA VISTA: Formulario de transacción bancaria
-        public IActionResult FormularioTransaccionBancaria()
-        {
-            ViewBag.Bancos = new string[]
-            {
-                "Banco Nacional de Bolivia",
-                "Banco Mercantil Santa Cruz",
-                "Banco Unión",
-                "Banco Bisa",
-                "Banco Económico",
-                "Banco FIE",
-                "Banco Fortaleza",
-                "Banco Ganadero",
-                "BancoSol",
-                "Banco Prodem",
-                "Banco de Crédito de Bolivia"
-            };
-
-            return View();
-        }
-
-        // POST: Guardar transacción bancaria
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult GuardarTransaccion(string nombre, string apellido, string numeroTransaccion, string bancoOrigen, IFormFile comprobante)
-        {
-            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(apellido) || string.IsNullOrEmpty(numeroTransaccion) || string.IsNullOrEmpty(bancoOrigen))
-            {
-                TempData["ErrorMessage"] = "Todos los campos son obligatorios.";
+                TempData["ErrorMessage"] = $"Error al guardar la transacción: {ex.Message}";
                 return RedirectToAction("FormularioTransaccionBancaria");
             }
-
-            if (comprobante != null && comprobante.Length > 0)
-            {
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/comprobantes", comprobante.FileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    comprobante.CopyTo(stream);
-                }
-            }
-
-            TempData["SuccessMessage"] = "Transacción realizada con éxito.";
-            return RedirectToAction("ConfirmacionCompra");
-        }
-
-        // NUEVA VISTA: Confirmación de compra
-        public IActionResult ConfirmacionCompra()
-        {
-            ViewBag.Mensaje = "Gracias por comprar en nuestra tienda, vuelva pronto.";
-            return View();
         }
 
         // GET: CarritoDeCompras/HistorialCompras
+        [HttpGet]
         public async Task<IActionResult> HistorialCompras()
         {
             try
@@ -275,6 +242,7 @@ namespace PetApp_Empresa.Controllers
 
                 var compras = await _context.Compras
                     .Include(c => c.Tarjeta)
+                    .Include(c => c.QR)
                     .Include(c => c.DetallesCompra)
                     .ThenInclude(d => d.Accesorio)
                     .Where(c => c.UsuarioId == userId)
@@ -284,8 +252,8 @@ namespace PetApp_Empresa.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Ocurrió un error al cargar el historial de compras: " + ex.Message;
-                return RedirectToAction("Index");
+                TempData["ErrorMessage"] = $"Error al cargar el historial de compras: {ex.Message}";
+                return RedirectToAction("ResumenCarrito");
             }
         }
     }

@@ -38,7 +38,11 @@ namespace PetApp_Empresa.Models
 
         public virtual ICollection<Refugio> Refugios { get; set; } = new List<Refugio>();
 
-        public virtual ICollection<Compra> Compras { get; set; } = new List<Compra>(); // Agregado
-        public virtual ICollection<Tarjeta> Tarjetas { get; set; } = new List<Tarjeta>(); // Agregado
+        public virtual ICollection<Compra> Compras { get; set; } = new List<Compra>();
+
+        public virtual ICollection<Tarjeta> Tarjetas { get; set; } = new List<Tarjeta>();
+
+        public virtual ICollection<TransaccionBancaria> TransaccionesBancarias { get; set; } = new List<TransaccionBancaria>();
+
     }
 }

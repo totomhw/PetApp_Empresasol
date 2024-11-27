@@ -12,7 +12,7 @@ using PetApp_Empresa.Models;
 namespace PetApp_Empresa.Migrations
 {
     [DbContext(typeof(PettappPruebaContext))]
-    [Migration("20241126204230_InitialCreate")]
+    [Migration("20241127030228_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -53,8 +53,7 @@ namespace PetApp_Empresa.Migrations
                     b.Property<int?>("VendedorId")
                         .HasColumnType("int");
 
-                    b.HasKey("AccesorioId")
-                        .HasName("PK__Accesori__4BCD4E498BF95DEF");
+                    b.HasKey("AccesorioId");
 
                     b.HasIndex("VendedorId");
 
@@ -110,8 +109,7 @@ namespace PetApp_Empresa.Migrations
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("AdopcionId")
-                        .HasName("PK__Adopcion__AAEE3F47EBDDAE63");
+                    b.HasKey("AdopcionId");
 
                     b.HasIndex("MascotaId");
 
@@ -139,8 +137,7 @@ namespace PetApp_Empresa.Migrations
                     b.Property<int>("CarritoId")
                         .HasColumnType("int");
 
-                    b.HasKey("CarritoAccesorioId")
-                        .HasName("PK__CarritoA__ABF0DCE15F7E6066");
+                    b.HasKey("CarritoAccesorioId");
 
                     b.HasIndex("AccesorioId");
 
@@ -165,12 +162,74 @@ namespace PetApp_Empresa.Migrations
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("CarritoId")
-                        .HasName("PK__CarritoD__778D586BBD48FB94");
+                    b.HasKey("CarritoId");
 
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("CarritoDeCompras");
+                });
+
+            modelBuilder.Entity("PetApp_Empresa.Models.Compra", b =>
+                {
+                    b.Property<int>("CompraId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompraId"));
+
+                    b.Property<DateTime>("FechaCompra")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("QRId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TarjetaId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CompraId");
+
+                    b.HasIndex("QRId");
+
+                    b.HasIndex("TarjetaId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Compras");
+                });
+
+            modelBuilder.Entity("PetApp_Empresa.Models.DetalleCompra", b =>
+                {
+                    b.Property<int>("DetalleCompraId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleCompraId"));
+
+                    b.Property<int>("AccesorioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompraId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PrecioUnitario")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.HasKey("DetalleCompraId");
+
+                    b.HasIndex("AccesorioId");
+
+                    b.HasIndex("CompraId");
+
+                    b.ToTable("DetallesCompra");
                 });
 
             modelBuilder.Entity("PetApp_Empresa.Models.Donacione", b =>
@@ -195,8 +254,7 @@ namespace PetApp_Empresa.Migrations
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("DonacionId")
-                        .HasName("PK__Donacion__9F5DEE875969A9BC");
+                    b.HasKey("DonacionId");
 
                     b.HasIndex("RefugioId");
 
@@ -248,12 +306,35 @@ namespace PetApp_Empresa.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.HasKey("MascotaId")
-                        .HasName("PK__Mascotas__8DBC413C68F2B033");
+                    b.HasKey("MascotaId");
 
                     b.HasIndex("RefugioId");
 
                     b.ToTable("Mascotas");
+                });
+
+            modelBuilder.Entity("PetApp_Empresa.Models.QR", b =>
+                {
+                    b.Property<int>("QRId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QRId"));
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaGeneracion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImagenPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("QRId");
+
+                    b.ToTable("QRs");
                 });
 
             modelBuilder.Entity("PetApp_Empresa.Models.Refugio", b =>
@@ -284,8 +365,7 @@ namespace PetApp_Empresa.Migrations
                     b.Property<int?>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("RefugioId")
-                        .HasName("PK__Refugios__AD4F9CA2861619D7");
+                    b.HasKey("RefugioId");
 
                     b.HasIndex("UsuarioId");
 
@@ -309,10 +389,92 @@ namespace PetApp_Empresa.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("RolId")
-                        .HasName("PK__Roles__F92302F12633B530");
+                    b.HasKey("RolId");
 
                     b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("PetApp_Empresa.Models.Tarjeta", b =>
+                {
+                    b.Property<int>("TarjetaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TarjetaId"));
+
+                    b.Property<string>("CVV")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("FechaVencimiento")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TarjetaId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Tarjetas");
+                });
+
+            modelBuilder.Entity("PetApp_Empresa.Models.TransaccionBancaria", b =>
+                {
+                    b.Property<int>("TransaccionBancariaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransaccionBancariaId"));
+
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("BancoOrigen")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ComprobantePath")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("FechaTransaccion")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NumeroTransaccion")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TransaccionBancariaId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("TransaccionesBancarias");
                 });
 
             modelBuilder.Entity("PetApp_Empresa.Models.Usuario", b =>
@@ -348,10 +510,9 @@ namespace PetApp_Empresa.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.HasKey("UsuarioId")
-                        .HasName("PK__Usuarios__2B3DE7B8FB44ABF2");
+                    b.HasKey("UsuarioId");
 
-                    b.HasIndex(new[] { "Email" }, "UQ__Usuarios__A9D105345CB187E6")
+                    b.HasIndex("Email")
                         .IsUnique();
 
                     b.ToTable("Usuarios");
@@ -376,12 +537,11 @@ namespace PetApp_Empresa.Migrations
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("UsuarioRolId")
-                        .HasName("PK__UsuarioR__C869CDCA96DA8FAB");
+                    b.HasKey("UsuarioRolId");
 
                     b.HasIndex("RolId");
 
-                    b.HasIndex(new[] { "UsuarioId", "RolId" }, "UQ_Usuario_Rol")
+                    b.HasIndex("UsuarioId", "RolId")
                         .IsUnique();
 
                     b.ToTable("UsuarioRol", (string)null);
@@ -392,8 +552,7 @@ namespace PetApp_Empresa.Migrations
                     b.HasOne("PetApp_Empresa.Models.Usuario", "Vendedor")
                         .WithMany("Accesorios")
                         .HasForeignKey("VendedorId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("FK__Accesorio__Vende__4E88ABD4");
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Vendedor");
                 });
@@ -404,15 +563,13 @@ namespace PetApp_Empresa.Migrations
                         .WithMany("Adopciones")
                         .HasForeignKey("MascotaId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__Adopcione__Masco__4AB81AF0");
+                        .IsRequired();
 
                     b.HasOne("PetApp_Empresa.Models.Usuario", "Usuario")
                         .WithMany("Adopciones")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__Adopcione__Usuar__4BAC3F29");
+                        .IsRequired();
 
                     b.Navigation("Mascota");
 
@@ -425,15 +582,13 @@ namespace PetApp_Empresa.Migrations
                         .WithMany("CarritoAccesorios")
                         .HasForeignKey("AccesorioId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__CarritoAc__Acces__5629CD9C");
+                        .IsRequired();
 
                     b.HasOne("PetApp_Empresa.Models.CarritoDeCompra", "Carrito")
                         .WithMany("CarritoAccesorios")
                         .HasForeignKey("CarritoId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__CarritoAc__Carri__5535A963");
+                        .IsRequired();
 
                     b.Navigation("Accesorio");
 
@@ -446,10 +601,50 @@ namespace PetApp_Empresa.Migrations
                         .WithMany("CarritoDeCompras")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__CarritoDe__Usuar__52593CB8");
+                        .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("PetApp_Empresa.Models.Compra", b =>
+                {
+                    b.HasOne("PetApp_Empresa.Models.QR", "QR")
+                        .WithMany()
+                        .HasForeignKey("QRId");
+
+                    b.HasOne("PetApp_Empresa.Models.Tarjeta", "Tarjeta")
+                        .WithMany("Compras")
+                        .HasForeignKey("TarjetaId");
+
+                    b.HasOne("PetApp_Empresa.Models.Usuario", "Usuario")
+                        .WithMany("Compras")
+                        .HasForeignKey("UsuarioId")
+                        .IsRequired();
+
+                    b.Navigation("QR");
+
+                    b.Navigation("Tarjeta");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("PetApp_Empresa.Models.DetalleCompra", b =>
+                {
+                    b.HasOne("PetApp_Empresa.Models.Accesorio", "Accesorio")
+                        .WithMany("DetallesCompra")
+                        .HasForeignKey("AccesorioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetApp_Empresa.Models.Compra", "Compra")
+                        .WithMany("DetallesCompra")
+                        .HasForeignKey("CompraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accesorio");
+
+                    b.Navigation("Compra");
                 });
 
             modelBuilder.Entity("PetApp_Empresa.Models.Donacione", b =>
@@ -458,15 +653,13 @@ namespace PetApp_Empresa.Migrations
                         .WithMany("Donaciones")
                         .HasForeignKey("RefugioId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__Donacione__Refug__59FA5E80");
+                        .IsRequired();
 
                     b.HasOne("PetApp_Empresa.Models.Usuario", "Usuario")
                         .WithMany("Donaciones")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__Donacione__Usuar__5AEE82B9");
+                        .IsRequired();
 
                     b.Navigation("Refugio");
 
@@ -478,8 +671,7 @@ namespace PetApp_Empresa.Migrations
                     b.HasOne("PetApp_Empresa.Models.Refugio", "Refugio")
                         .WithMany("Mascota")
                         .HasForeignKey("RefugioId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("FK__Mascotas__Refugi__46E78A0C");
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Refugio");
                 });
@@ -494,21 +686,39 @@ namespace PetApp_Empresa.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("PetApp_Empresa.Models.Tarjeta", b =>
+                {
+                    b.HasOne("PetApp_Empresa.Models.Usuario", "Usuario")
+                        .WithMany("Tarjetas")
+                        .HasForeignKey("UsuarioId")
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("PetApp_Empresa.Models.TransaccionBancaria", b =>
+                {
+                    b.HasOne("PetApp_Empresa.Models.Usuario", "Usuario")
+                        .WithMany("TransaccionesBancarias")
+                        .HasForeignKey("UsuarioId")
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("PetApp_Empresa.Models.UsuarioRol", b =>
                 {
                     b.HasOne("PetApp_Empresa.Models.Role", "Rol")
                         .WithMany("UsuarioRols")
                         .HasForeignKey("RolId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__UsuarioRo__RolId__412EB0B6");
+                        .IsRequired();
 
                     b.HasOne("PetApp_Empresa.Models.Usuario", "Usuario")
                         .WithMany("UsuarioRols")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__UsuarioRo__Usuar__403A8C7D");
+                        .IsRequired();
 
                     b.Navigation("Rol");
 
@@ -518,11 +728,18 @@ namespace PetApp_Empresa.Migrations
             modelBuilder.Entity("PetApp_Empresa.Models.Accesorio", b =>
                 {
                     b.Navigation("CarritoAccesorios");
+
+                    b.Navigation("DetallesCompra");
                 });
 
             modelBuilder.Entity("PetApp_Empresa.Models.CarritoDeCompra", b =>
                 {
                     b.Navigation("CarritoAccesorios");
+                });
+
+            modelBuilder.Entity("PetApp_Empresa.Models.Compra", b =>
+                {
+                    b.Navigation("DetallesCompra");
                 });
 
             modelBuilder.Entity("PetApp_Empresa.Models.Mascota", b =>
@@ -542,6 +759,11 @@ namespace PetApp_Empresa.Migrations
                     b.Navigation("UsuarioRols");
                 });
 
+            modelBuilder.Entity("PetApp_Empresa.Models.Tarjeta", b =>
+                {
+                    b.Navigation("Compras");
+                });
+
             modelBuilder.Entity("PetApp_Empresa.Models.Usuario", b =>
                 {
                     b.Navigation("Accesorios");
@@ -550,9 +772,15 @@ namespace PetApp_Empresa.Migrations
 
                     b.Navigation("CarritoDeCompras");
 
+                    b.Navigation("Compras");
+
                     b.Navigation("Donaciones");
 
                     b.Navigation("Refugios");
+
+                    b.Navigation("Tarjetas");
+
+                    b.Navigation("TransaccionesBancarias");
 
                     b.Navigation("UsuarioRols");
                 });

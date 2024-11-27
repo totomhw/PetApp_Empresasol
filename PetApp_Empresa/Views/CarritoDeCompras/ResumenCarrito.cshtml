@@ -17,12 +17,12 @@
             <tbody>
             @foreach (var item in Model.CarritoAccesorios)
             {
-                        <tr>
-                            <td>@item.Accesorio.Nombre</td>
-                            <td>@item.Cantidad</td>
-                            <td>@item.Accesorio.Precio.ToString("C")</td>
-                            <td>@(item.Accesorio.Precio * item.Cantidad).ToString("C")</td>
-                        </tr>
+                    <tr>
+                        <td>@item.Accesorio.Nombre</td>
+                        <td>@item.Cantidad</td>
+                        <td>@item.Accesorio.Precio.ToString("C")</td>
+                        <td>@(item.Accesorio.Precio * item.Cantidad).ToString("C")</td>
+                    </tr>
             }
             </tbody>
         </table>
@@ -33,9 +33,9 @@
         <form id="formConfirmarCompra" asp-action="ConfirmarCompra" method="post">
         @Html.AntiForgeryToken()
 
-            <!-- Selección de tarjeta -->
+            <!-- Selección de método de pago -->
             <div class="form-group">
-                <label>¿Deseas usar una tarjeta guardada o ingresar una nueva?</label>
+                <label>¿Cómo deseas realizar el pago?</label>
                 <div>
                     <input type="radio" id="opcionTarjetaGuardada" name="opcionTarjeta" value="guardada" checked />
                     <label for="opcionTarjetaGuardada">Usar tarjeta guardada</label>
