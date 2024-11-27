@@ -22,7 +22,7 @@
                     <td>
                         @if (compra.Tarjeta != null && !string.IsNullOrEmpty(compra.Tarjeta.Numero) && compra.Tarjeta.Numero.Length >= 4)
                         {
-                            <span>************ @compra.Tarjeta.Numero</span>
+                            <span>************ @compra.Tarjeta.Numero[^4..]</span>
                         }
                         else
                         {
@@ -55,10 +55,10 @@
                                             <td>@(detalle.Accesorio?.Nombre ?? "Producto no disponible")</td>
                                             <td>@detalle.Cantidad</td>
                                             <td>@detalle.PrecioUnitario.ToString("C")</td>
-                                            <td>@(detalle.PrecioUnitario * detalle.Cantidad)</td>
+                                            <td>@(detalle.PrecioUnitario * detalle.Cantidad).ToString("C")</td>
                                         </tr>
                                     }
-                                }   
+                                }
                                 else
                                 {
                                     <tr>

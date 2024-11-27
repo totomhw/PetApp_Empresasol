@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Pagar con QR";
+}
+
+<h2>Pagar con QR</h2>
+<p>Por favor, descarga la imagen para proceder a realizar el pago.</p>
+
+<div style="text-align: center;">
+    <!-- Actualiza la ruta de la imagen -->
+    <img src="/comprobantes/QR.jpeg" alt="Código QR" style="width: 300px; height: 340px;" />
+</div>
+
+<div style="text-align: center; margin-top: 20px;">
+    <a href="/comprobantes/QR.jpeg" download="QR_Pago.jpeg" class="btn btn-primary">Descargar imagen</a>
+    <a href="/CarritoDeCompras/FormularioTransaccionBancaria" class="btn btn-success">Siguiente paso</a>
+</div>
