@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetApp_Empresa.Migrations
 {
     /// <inheritdoc />
-    public partial class juan : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,7 +51,8 @@ namespace PetApp_Empresa.Migrations
                     Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Precio = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    VendedorId = table.Column<int>(type: "int", nullable: true)
+                    VendedorId = table.Column<int>(type: "int", nullable: true),
+                    CantidadDisponible = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -140,7 +141,8 @@ namespace PetApp_Empresa.Migrations
                     CarritoAccesorioId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CarritoId = table.Column<int>(type: "int", nullable: false),
-                    AccesorioId = table.Column<int>(type: "int", nullable: false)
+                    AccesorioId = table.Column<int>(type: "int", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
                 {
