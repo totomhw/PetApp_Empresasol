@@ -181,7 +181,7 @@ namespace PetApp_Empresa.Migrations
                     b.Property<DateTime>("FechaCompra")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("TarjetaId")
+                    b.Property<int?>("TarjetaId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Total")
@@ -549,8 +549,7 @@ namespace PetApp_Empresa.Migrations
                 {
                     b.HasOne("PetApp_Empresa.Models.Tarjeta", "Tarjeta")
                         .WithMany("Compras")
-                        .HasForeignKey("TarjetaId")
-                        .IsRequired();
+                        .HasForeignKey("TarjetaId");
 
                     b.HasOne("PetApp_Empresa.Models.Usuario", "Usuario")
                         .WithMany("Compras")

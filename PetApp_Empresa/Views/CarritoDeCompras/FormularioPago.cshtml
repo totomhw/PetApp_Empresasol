@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Formulario de Pago";
+}
+
+<h2>Formulario de Pago</h2>
+
+<form asp-action="EnviarFormularioPago" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" required />
+    </div>
+
+    <div class="form-group">
+        <label for="apellido">Apellido:</label>
+        <input type="text" class="form-control" id="apellido" name="apellido" required />
+    </div>
+
+    <div class="form-group">
+        <label for="bancoDestino">Banco de destino:</label>
+        <select class="form-control" id="bancoDestino" name="bancoDestino" required>
+            <option value="">-- Seleccione un banco --</option>
+            <option value="Banco Nacional de Bolivia">Banco Nacional de Bolivia</option>
+            <option value="Banco Unión">Banco Unión</option>
+            <option value="Banco Mercantil Santa Cruz">Banco Mercantil Santa Cruz</option>
+            <option value="Banco Ganadero">Banco Ganadero</option>
+            <option value="Banco FIE">Banco FIE</option>
+            <option value="BancoSol">BancoSol</option>
+            <option value="Banco Bisa">Banco Bisa</option>
+            <option value="Banco de Crédito BCP">Banco de Crédito BCP</option>
+            <option value="Banco Fortaleza">Banco Fortaleza</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="numeroTransaccion">Número de transacción:</label>
+        <input type="text" class="form-control" id="numeroTransaccion" name="numeroTransaccion" required />
+    </div>
+
+    <div class="form-group">
+        <label for="comprobante">Adjuntar comprobante:</label>
+        <input type="file" class="form-control-file" id="comprobante" name="comprobante" accept="image/*" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enviar</button>
+</form>

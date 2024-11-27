@@ -44,6 +44,10 @@
                 <input type="radio" id="opcionTarjetaNueva" name="opcionTarjeta" value="nueva" />
                 <label for="opcionTarjetaNueva">Ingresar nueva tarjeta</label>
             </div>
+            <div>
+                <input type="radio" id="opcionQR" name="opcionTarjeta" value="qr" />
+                <label for="opcionQR">Pagar con QR</label>
+            </div>
         </div>
 
         <!-- Selección de tarjeta guardada -->
@@ -103,6 +107,9 @@
 
         <button type="submit" class="btn btn-success mt-3">Realizar Pago</button>
     </form>
+    <div id="pagarQR" style="display: none; margin-top: 20px;">
+        <a class="btn btn-primary" href="/CarritoDeCompras/PagarConQR">Ir a Pagar con QR</a>
+    </div>
 }
 else
 {
@@ -114,30 +121,21 @@ else
         option.addEventListener('change', () => {
             const tarjetasGuardadas = document.getElementById('tarjetasGuardadas');
             const nuevaTarjeta = document.getElementById('nuevaTarjeta');
+            const pagarQR = document.getElementById('pagarQR');
 
             if (document.getElementById('opcionTarjetaGuardada').checked) {
                 tarjetasGuardadas.style.display = 'block';
                 nuevaTarjeta.style.display = 'none';
-            } else {
+                pagarQR.style.display = 'none';
+            } else if (document.getElementById('opcionTarjetaNueva').checked) {
                 tarjetasGuardadas.style.display = 'none';
                 nuevaTarjeta.style.display = 'block';
+                pagarQR.style.display = 'none';
+            } else if (document.getElementById('opcionQR').checked) {
+                tarjetasGuardadas.style.display = 'none';
+                nuevaTarjeta.style.display = 'none';
+                pagarQR.style.display = 'block';
             }
         });
-    });
-
-    document.getElementById('formConfirmarCompra').addEventListener('submit', (event) => {
-        const tarjetaId = document.getElementById('tarjetaId').value;
-        const opcionGuardada = document.getElementById('opcionTarjetaGuardada').checked;
-        const nuevaTarjeta = document.getElementById('numeroTarjeta').value;
-
-        if (opcionGuardada && !tarjetaId) {
-            event.preventDefault();
-            alert("Debes seleccionar una tarjeta guardada antes de realizar la compra.");
-        }
-
-        if (!opcionGuardada && nuevaTarjeta.trim() === '') {
-            event.preventDefault();
-            alert("Debes ingresar los datos de la nueva tarjeta.");
-        }
     });
 </script>

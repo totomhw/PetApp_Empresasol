@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Pagar con QR";
+}
+
+<h2>Pagar con QR</h2>
+<p>Por favor, escanea el siguiente QR y adjunta el comprobante:</p>
+
+<div style="text-align: center; margin: 20px;">
+    <!-- Ruta actualizada para cargar la imagen -->
+    <img src="~/images/qr_code.jpeg" alt="Código QR para el pago" style="width: 330px; height: 340px;" />
+</div>
+
+<div style="text-align: center; margin-top: 20px;">
+    <form method="post" action="/CarritoDeCompras/DescargarQR">
+        <button type="submit" class="btn btn-primary">Descargar imagen</button>
+    </form>
+    <a href="/CarritoDeCompras/FormularioPago" class="btn btn-success" style="margin-left: 10px;">Siguiente</a>
+
+</div>

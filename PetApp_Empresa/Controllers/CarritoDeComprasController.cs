@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 using PetApp_Empresa.Models;
 
 namespace PetApp_Empresa.Controllers
@@ -19,7 +20,6 @@ namespace PetApp_Empresa.Controllers
             _context = context;
         }
 
-        // GET: CarritoDeCompras/Index
         public async Task<IActionResult> Index()
         {
             var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
@@ -32,7 +32,6 @@ namespace PetApp_Empresa.Controllers
             return View(carrito);
         }
 
-        // POST: CarritoDeCompras/AgregarAlCarrito
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AgregarAlCarrito(int accesorioId, int cantidad)
@@ -73,7 +72,6 @@ namespace PetApp_Empresa.Controllers
             }
         }
 
-        // POST: CarritoDeCompras/ConfirmarCompra
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmarCompra(
@@ -94,7 +92,6 @@ namespace PetApp_Empresa.Controllers
                     return RedirectToAction("ResumenCarrito");
                 }
 
-                // Validar si se usa una tarjeta guardada
                 if (tarjetaId.HasValue)
                 {
                     var tarjeta = await _context.Tarjetas.FindAsync(tarjetaId.Value);
@@ -107,7 +104,6 @@ namespace PetApp_Empresa.Controllers
                     return await ProcesarCompra(carrito, tarjetaId.Value);
                 }
 
-                // Validar datos de nueva tarjeta
                 if (!string.IsNullOrEmpty(numeroTarjeta) && mesVencimiento.HasValue && anioVencimiento.HasValue && !string.IsNullOrEmpty(cvv))
                 {
                     var nuevaTarjeta = new Tarjeta
@@ -170,7 +166,6 @@ namespace PetApp_Empresa.Controllers
             }
         }
 
-        // GET: CarritoDeCompras/HistorialCompras
         public async Task<IActionResult> HistorialCompras()
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -189,7 +184,6 @@ namespace PetApp_Empresa.Controllers
             return View(compras);
         }
 
-        // GET: CarritoDeCompras/ResumenCarrito
         public async Task<IActionResult> ResumenCarrito()
         {
             var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
@@ -208,7 +202,6 @@ namespace PetApp_Empresa.Controllers
             return View(carrito);
         }
 
-        // GET: CarritoDeCompras/ObtenerCantidadElementosCarrito
         [HttpGet]
         public async Task<IActionResult> ObtenerCantidadElementosCarrito()
         {
@@ -225,18 +218,124 @@ namespace PetApp_Empresa.Controllers
             }
         }
 
-        // GET: CarritoDeCompras/ConfirmacionPago
         public IActionResult ConfirmacionPago()
         {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            {
+                TempData["ErrorMessage"] = "Usuario no válido.";
+                return RedirectToAction("Index");
+            }
+
+            var compraReciente = _context.Compras
+                .Include(c => c.Tarjeta)
+                .Include(c => c.DetallesCompra)
+                .ThenInclude(d => d.Accesorio)
+                .Where(c => c.UsuarioId == userId)
+                .OrderByDescending(c => c.FechaCompra)
+                .FirstOrDefault();
+
+            if (compraReciente != null)
+            {
+                TempData["CompraReciente"] = compraReciente.CompraId;
+            }
+
             return View();
         }
 
-        // GET: CarritoDeCompras/ContarProductosEnCarrito
         [HttpGet]
         public async Task<int> ContarProductosEnCarrito()
         {
             var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
             return carrito.CarritoAccesorios.Sum(ca => ca.Cantidad);
+        }
+
+        public IActionResult PagarConQR()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult DescargarQR()
+        {
+            var qrPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "qr_code.jpeg");
+
+            if (!System.IO.File.Exists(qrPath))
+            {
+                return NotFound("El código QR no está disponible.");
+            }
+
+            var fileBytes = System.IO.File.ReadAllBytes(qrPath);
+            var fileName = "QR_Pago.jpeg";
+
+            return File(fileBytes, "image/jpeg", fileName);
+        }
+
+        public IActionResult FormularioPago()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EnviarFormularioPago(string nombre, string apellido, string bancoDestino, string numeroTransaccion, IFormFile comprobante)
+        {
+            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(apellido) || string.IsNullOrEmpty(bancoDestino) || string.IsNullOrEmpty(numeroTransaccion) || comprobante == null)
+            {
+                TempData["ErrorMessage"] = "Todos los campos son obligatorios.";
+                return RedirectToAction("FormularioPago");
+            }
+
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "comprobantes");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var filePath = Path.Combine(uploadsFolder, comprobante.FileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                comprobante.CopyTo(stream);
+            }
+
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdClaim, out int userId))
+            {
+                TempData["ErrorMessage"] = "Usuario no válido.";
+                return RedirectToAction("FormularioPago");
+            }
+
+            var carrito = _context.CarritoDeCompras
+                .Include(c => c.CarritoAccesorios)
+                .ThenInclude(ca => ca.Accesorio)
+                .FirstOrDefault(c => c.UsuarioId == userId);
+
+            if (carrito == null || carrito.CarritoAccesorios == null || !carrito.CarritoAccesorios.Any())
+            {
+                TempData["ErrorMessage"] = "No hay productos en el carrito.";
+                return RedirectToAction("FormularioPago");
+            }
+
+            var compra = new Compra
+            {
+                UsuarioId = userId,
+                FechaCompra = DateTime.Now,
+                Total = carrito.CarritoAccesorios.Sum(ca => (ca.Accesorio?.Precio ?? 0) * ca.Cantidad),
+                DetallesCompra = carrito.CarritoAccesorios.Select(ca => new DetalleCompra
+                {
+                    AccesorioId = ca.AccesorioId,
+                    Cantidad = ca.Cantidad,
+                    PrecioUnitario = ca.Accesorio?.Precio ?? 0
+                }).ToList()
+            };
+
+            _context.Compras.Add(compra);
+
+            _context.CarritoAccesorios.RemoveRange(carrito.CarritoAccesorios);
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = "Formulario enviado exitosamente.";
+            return RedirectToAction("ConfirmacionPago");
         }
     }
 }
