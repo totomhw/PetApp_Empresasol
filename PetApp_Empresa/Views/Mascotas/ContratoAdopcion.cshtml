@@ -1,20 +1,42 @@
-﻿@model int
+﻿@model PetApp_Empresa.Models.Adopcione
 
 @{
     ViewData["Title"] = "Contrato de Adopción";
 }
 
 <h2>Contrato de Adopción</h2>
-<p>Por favor, revisa el siguiente contrato de adopción. Al confirmar, aceptas todos los términos y condiciones para la adopción de la mascota.</p>
+<p>Por favor, revisa cuidadosamente el siguiente contrato de adopción. Al confirmar, aceptas todos los términos y condiciones establecidos para la adopción de la mascota.</p>
 
-<!-- Aquí se puede incluir el texto completo del contrato -->
-<p>Contrato de adopción: ... [contenido del contrato]</p>
+<h3>Detalles del Adoptante</h3>
+<ul>
+    <li><strong>Nombre Completo:</strong> @Model.NombreCompleto</li>
+    <li><strong>Correo Electrónico:</strong> @Model.CorreoElectronico</li>
+    <li><strong>Teléfono:</strong> @Model.Telefono</li>
+    <li><strong>Dirección:</strong> @Model.Direccion</li>
+</ul>
+
+<h3>Detalles de la Mascota</h3>
+<ul>
+    <li><strong>Nombre:</strong> @Model.Mascota.Nombre</li>
+    <li><strong>Raza:</strong> @Model.Mascota.Raza</li>
+    <li><strong>Edad:</strong> @Model.Mascota.Edad años</li>
+    <li><strong>Descripción:</strong> @Model.Mascota.Descripcion</li>
+</ul>
+
+<h3>Términos y Condiciones</h3>
+<p>
+    1. El adoptante se compromete a proporcionar un hogar seguro, limpio y amoroso para la mascota.<br />
+    2. La mascota no será utilizada para fines de lucro, peleas, experimentación o actividades ilegales.<br />
+    3. En caso de que el adoptante no pueda continuar cuidando a la mascota, se compromete a notificar al refugio para buscar alternativas responsables.<br />
+    4. El adoptante debe proporcionar atención veterinaria adecuada, incluyendo vacunas, chequeos regulares y cualquier tratamiento necesario.<br />
+    5. El adoptante acepta permitir inspecciones ocasionales por parte del refugio para garantizar el bienestar de la mascota.
+</p>
 
 <form asp-action="ConfirmarAdopcion" method="post">
-    <input type="hidden" name="mascotaId" value="@Model" />
+    <input type="hidden" name="mascotaId" value="@Model.MascotaId" />
     <button type="submit" class="btn btn-success">Aceptar y Confirmar Adopción</button>
 </form>
 
-<div>
-    <a asp-action="VistaMascota">Cancelar y Volver</a>
+<div class="mt-3">
+    <a asp-action="VistaMascota" class="btn btn-secondary">Cancelar y Volver</a>
 </div>
