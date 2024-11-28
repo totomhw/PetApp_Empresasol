@@ -1,0 +1,72 @@
+﻿@model List<PetApp_Empresa.Models.Compra>
+
+@{
+    ViewData["Title"] = "Validaciones de Pago";
+}
+
+<h1>Validaciones de Pago</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID Compra</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var compra in Model)
+        {
+            <tr id="row-@compra.CompraId" class="@(compra.Validado ? "table-success" : "")">
+                <td>@compra.CompraId</td>
+                <td>@compra.UsuarioId</td>
+                <td>@compra.FechaCompra.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@compra.Total.ToString("C")</td>
+                <td>
+                    @if (compra.Validado)
+                    {
+                        <span class="text-success">Validado</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Pendiente</span>
+                    }
+                </td>
+                <td>
+                    @if (!compra.Validado)
+                    {
+                        <button class="btn btn-outline-success btn-sm validar-pago" data-id="@compra.CompraId">
+                            Validar Pago
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.validar-pago').click(function () {
+            var compraId = $(this).data('id');
+            var row = $('#row-' + compraId);
+
+            $.ajax({
+                url: '@Url.Action("ValidarPago", "Validaciones")',
+                type: 'POST',
+                data: { compraId: compraId },
+                success: function (response) {
+                    if (response.success) {
+                        row.addClass('table-success');
+                        row.find('td:eq(4)').html('<span class="text-success">Validado</span>');
+                        row.find('td:eq(5)').html('');
+                    }
+                }
+            });
+        });
+    });
+</script>

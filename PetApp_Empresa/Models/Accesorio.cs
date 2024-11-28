@@ -17,6 +17,7 @@ public partial class Accesorio
 
     public int CantidadDisponible { get; set; }
 
+
     public virtual ICollection<CarritoAccesorio> CarritoAccesorios { get; set; } = new List<CarritoAccesorio>();
     public virtual Usuario? Vendedor { get; set; }
 

@@ -11,6 +11,7 @@
                 <th>Total</th>
                 <th>Tarjeta</th>
                 <th>Detalles</th>
+                <th>Pago Validado</th> <!-- Nueva columna -->
             </tr>
         </thead>
         <tbody>
@@ -34,9 +35,21 @@
                             Ver Detalles
                         </button>
                     </td>
+                    <td>
+                        <!-- Estado de validación del pago -->
+                        @if (compra.Validado)
+                        {
+                            <span class="text-success">Validado</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Validación Pendiente</span>
+                        }
+                    </td>
                 </tr>
                 <tr class="collapse" id="detalles-@compra.CompraId">
-                    <td colspan="4">
+                    <td colspan="5">
+                        <!-- Cambiado a 5 columnas por la nueva columna -->
                         <table class="table">
                             <thead>
                                 <tr>
@@ -58,7 +71,7 @@
                                             <td>@(detalle.PrecioUnitario * detalle.Cantidad)</td>
                                         </tr>
                                     }
-                                }   
+                                }
                                 else
                                 {
                                     <tr>

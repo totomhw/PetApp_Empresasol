@@ -14,6 +14,7 @@ namespace PetApp_Empresa.Models
 
         public virtual Usuario Usuario { get; set; }
         public virtual Tarjeta Tarjeta { get; set; } // Relación con Tarjeta
+        public bool Validado { get; set; } // Nuevo campo para marcar la validación
         public virtual ICollection<DetalleCompra> DetallesCompra { get; set; } = new List<DetalleCompra>();
     }
 
