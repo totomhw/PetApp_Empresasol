@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetApp_Empresa.Models;
 
@@ -11,9 +12,11 @@ using PetApp_Empresa.Models;
 namespace PetApp_Empresa.Migrations
 {
     [DbContext(typeof(PettappPruebaContext))]
-    partial class PettappPruebaContextModelSnapshot : ModelSnapshot
+    [Migration("20241129144851_AddBancoDestinoAndNumeroTransaccion")]
+    partial class AddBancoDestinoAndNumeroTransaccion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,12 +182,14 @@ namespace PetApp_Empresa.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompraId"));
 
                     b.Property<string>("BancoDestino")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaCompra")
                         .HasColumnType("datetime");
 
                     b.Property<string>("NumeroTransaccion")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TarjetaId")

@@ -243,13 +243,6 @@ namespace PetApp_Empresa.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<int> ContarProductosEnCarrito()
-        {
-            var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
-            return carrito.CarritoAccesorios.Sum(ca => ca.Cantidad);
-        }
-
         public IActionResult PagarConQR()
         {
             return View();
@@ -326,7 +319,9 @@ namespace PetApp_Empresa.Controllers
                     AccesorioId = ca.AccesorioId,
                     Cantidad = ca.Cantidad,
                     PrecioUnitario = ca.Accesorio?.Precio ?? 0
-                }).ToList()
+                }).ToList(),
+                BancoDestino = bancoDestino,
+                NumeroTransaccion = numeroTransaccion
             };
 
             _context.Compras.Add(compra);
