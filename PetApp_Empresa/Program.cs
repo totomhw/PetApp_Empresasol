@@ -36,30 +36,50 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Middleware personalizado para proteger rutas
+// Middleware para redirigir al dashboard adecuado según el rol del usuario
 app.Use(async (context, next) =>
 {
-    // Si el usuario no está autenticado
-    if (!context.User.Identity?.IsAuthenticated ?? false)
+    // Verificar si el usuario está autenticado
+    if (context.User.Identity?.IsAuthenticated ?? false)
     {
         var path = context.Request.Path.Value?.ToLower();
 
-        // Permitir acceso a ciertas rutas públicas como DashboardCliente o Login
-        if (path != null && !(
-            path.StartsWith("/auth") ||
-            path.StartsWith("/home/dashboardcliente") ||
-            path.Equals("/")
-        ))
+        // Evitar redirecciones repetitivas desde cualquier Dashboard
+        if (path != null &&
+            (path.Equals("/") || path.StartsWith("/home/dashboard")))
         {
-            // Redirigir al login si intenta interactuar con una ruta protegida
-            context.Response.Redirect($"/Auth/Login?returnUrl={context.Request.Path}");
-            return;
+            var roles = context.User.Claims
+                .Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
+                .Select(c => c.Value)
+                .ToList();
+
+            if (roles.Contains("Admin") && !path.EndsWith("dashboardadmin"))
+            {
+                context.Response.Redirect("/Home/DashboardAdmin");
+                return;
+            }
+            if (roles.Contains("Refugio") && !path.EndsWith("dashboardrefugio"))
+            {
+                context.Response.Redirect("/Home/DashboardRefugio");
+                return;
+            }
+            if (roles.Contains("Vendedor") && !path.EndsWith("dashboardvendedor"))
+            {
+                context.Response.Redirect("/Home/DashboardVendedor");
+                return;
+            }
+            if (roles.Contains("Cliente") && !path.EndsWith("dashboardcliente"))
+            {
+                context.Response.Redirect("/Home/DashboardCliente");
+                return;
+            }
         }
     }
 
-    await next(); // Continuar con la siguiente acción si no es una ruta protegida
+    await next(); // Continuar con la siguiente acción
 });
-
+app.UseStaticFiles();
+// Configurar la ruta por defecto
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=DashboardCliente}/{id?}");

@@ -12,8 +12,8 @@ using PetApp_Empresa.Models;
 namespace PetApp_Empresa.Migrations
 {
     [DbContext(typeof(PettappPruebaContext))]
-    [Migration("20241127191954_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241129221454_juan")]
+    partial class juan
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,10 +181,16 @@ namespace PetApp_Empresa.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompraId"));
 
+                    b.Property<string>("BancoDestino")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("FechaCompra")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("TarjetaId")
+                    b.Property<string>("NumeroTransaccion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TarjetaId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Total")
@@ -192,6 +198,9 @@ namespace PetApp_Empresa.Migrations
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Validado")
+                        .HasColumnType("bit");
 
                     b.HasKey("CompraId");
 
@@ -552,8 +561,7 @@ namespace PetApp_Empresa.Migrations
                 {
                     b.HasOne("PetApp_Empresa.Models.Tarjeta", "Tarjeta")
                         .WithMany("Compras")
-                        .HasForeignKey("TarjetaId")
-                        .IsRequired();
+                        .HasForeignKey("TarjetaId");
 
                     b.HasOne("PetApp_Empresa.Models.Usuario", "Usuario")
                         .WithMany("Compras")

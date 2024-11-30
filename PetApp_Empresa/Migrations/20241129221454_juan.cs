@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetApp_Empresa.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class juan : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -244,9 +244,12 @@ namespace PetApp_Empresa.Migrations
                     CompraId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    TarjetaId = table.Column<int>(type: "int", nullable: false),
+                    TarjetaId = table.Column<int>(type: "int", nullable: true),
                     FechaCompra = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Total = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
+                    Total = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    BancoDestino = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumeroTransaccion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Validado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
