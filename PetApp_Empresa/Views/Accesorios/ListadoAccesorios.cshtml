@@ -4,80 +4,187 @@
     ViewData["Title"] = "Tienda de Accesorios";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4 animate-page">
+    <!-- Título con animación -->
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold text-gradient animate-title">@ViewData["Title"]</h1>
+        <p class="lead text-muted animate-subtitle">
+            Explora nuestra selección de accesorios para tus mascotas y llena tu carrito.
+        </p>
+    </div>
 
-<!-- Carrito en la esquina superior derecha -->
-<div style="position: relative;">
-    <a href="@Url.Action("ResumenCarrito", "CarritoDeCompras")" style="position: absolute; top: 0; right: 0; text-decoration: none;">
-        <span id="carrito-icono" class="btn btn-primary">
-            Carrito <span id="carrito-count">0</span>
-        </span>
-    </a>
-</div>
+    <!-- Carrito -->
+    <div class="text-end mb-3">
+        <a href="@Url.Action("ResumenCarrito", "CarritoDeCompras")" class="btn btn-primary shadow-sm animate-cart">
+            <i class="fas fa-shopping-cart me-2"></i>Carrito <span id="carrito-count" class="badge bg-light text-dark">0</span>
+        </a>
+    </div>
 
-<hr />
-
-<div class="row">
-    @foreach (var accesorio in Model)
-    {
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">@accesorio.Nombre</h5>
-                    <p class="card-text">@accesorio.Descripcion</p>
-                    <p>
-                        <strong>Precio:</strong> @accesorio.Precio.ToString("C")
-                    </p>
-                    <p>
-                        <strong>Disponible:</strong>
-                        <span id="stock-@accesorio.AccesorioId" class="@((accesorio.CantidadDisponible == 0) ? "text-danger" : "")">
-                            @(accesorio.CantidadDisponible > 0 ? accesorio.CantidadDisponible.ToString() : "Out of Stock")
-                        </span>
-                    </p>
-
-                    @if (accesorio.CantidadDisponible > 0)
-                    {
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-outline-secondary" onclick="ajustarCantidad(@accesorio.AccesorioId, -1)">-</button>
+    <!-- Tarjetas -->
+    <div class="row g-4">
+        @foreach (var accesorio in Model)
+        {
+            <div class="col-md-6 col-lg-4 animate-card">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark">@accesorio.Nombre</h5>
+                        <p class="card-text text-secondary">@accesorio.Descripcion</p>
+                        <p class="mb-2">
+                            <strong class="text-secondary">Precio:</strong> <span class="text-success">@accesorio.Precio.ToString("C")</span>
+                        </p>
+                        <p class="mb-2">
+                            <strong class="text-secondary">Disponible:</strong>
+                            <span id="stock-@accesorio.AccesorioId" class="@((accesorio.CantidadDisponible == 0) ? "text-danger" : "text-success")">
+                                @(accesorio.CantidadDisponible > 0 ? accesorio.CantidadDisponible.ToString() : "Agotado")
                             </span>
-                            <input type="text" id="cantidad-@accesorio.AccesorioId" class="form-control text-center" value="0" readonly>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-outline-secondary" onclick="ajustarCantidad(@accesorio.AccesorioId, 1)">+</button>
-                            </span>
-                        </div>
-
-                        <button class="btn btn-success mt-2" onclick="agregarAlCarrito(@accesorio.AccesorioId)">Agregar al carrito</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-danger mt-2" disabled>Agotado</button>
-                    }
+                        </p>
+                        @if (accesorio.CantidadDisponible > 0)
+                        {
+                            <div class="mt-auto">
+                                <div class="input-group mb-2">
+                                    <button class="btn btn-outline-secondary" onclick="ajustarCantidad(@accesorio.AccesorioId, -1)">-</button>
+                                    <input type="text" id="cantidad-@accesorio.AccesorioId" class="form-control text-center" value="0" readonly>
+                                    <button class="btn btn-outline-secondary" onclick="ajustarCantidad(@accesorio.AccesorioId, 1)">+</button>
+                                </div>
+                                <button class="btn btn-success w-100" onclick="agregarAlCarrito(@accesorio.AccesorioId)">
+                                    <i class="fas fa-cart-plus me-2"></i>Agregar al carrito
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <button class="btn btn-danger w-100 mt-auto" disabled>
+                                <i class="fas fa-ban me-2"></i>Agotado
+                            </button>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
 
+<!-- Estilos -->
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
 
-<!-- Token antifalsificación -->
-<form id="antiForgeryForm" method="post" style="display:none;">
-    @Html.AntiForgeryToken()
-</form>
+    .text-gradient {
+        background: linear-gradient(to right, #6c757d, #495057);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
+    /* Animaciones */
+    .animate-page {
+        opacity: 0;
+        animation: fadeInPage 1s forwards ease-out;
+    }
+
+    .animate-title {
+        opacity: 0;
+        transform: translateY(-50px);
+        animation: fadeInSlideDown 1s forwards ease-out;
+    }
+
+    .animate-subtitle {
+        opacity: 0;
+        transform: translateY(-30px);
+        animation: fadeInSlideDown 1s 0.5s forwards ease-out;
+    }
+
+    .animate-cart {
+        opacity: 0;
+        transform: scale(0.8);
+        animation: fadeInScale 1s 0.8s forwards ease-out;
+    }
+
+    .animate-card {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInCard 1s forwards ease-out;
+    }
+
+    .animate-card:nth-child(odd) {
+        animation-delay: 0.3s;
+    }
+
+    .animate-card:nth-child(even) {
+        animation-delay: 0.6s;
+    }
+
+    @@keyframes fadeInPage {
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes fadeInSlideDown {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInScale {
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes fadeInCard {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 0.75rem;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: bold;
+        border-radius: 0.5rem;
+    }
+
+    .text-secondary {
+        color: #6c757d !important;
+    }
+
+    #carrito-count {
+        font-size: 0.9rem;
+    }
+</style>
+
+<!-- Librerías necesarias -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+
+<!-- Script -->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // Solicitar el número de elementos únicos en el carrito
         fetch('/CarritoDeCompras/ObtenerCantidadElementosCarrito')
             .then(response => response.json())
             .then(data => {
-                const carritoCount = document.getElementById("carrito-count");
-                carritoCount.innerText = data.cantidad; // Mostrar el número de elementos únicos
+                document.getElementById("carrito-count").innerText = data.cantidad;
             })
-            .catch(error => console.error('Error al cargar el número de elementos únicos en el carrito:', error));
+            .catch(error => console.error('Error:', error));
     });
 
-    // Función para ajustar la cantidad
     function ajustarCantidad(accesorioId, delta) {
         const cantidadInput = document.getElementById(`cantidad-${accesorioId}`);
         let cantidad = parseInt(cantidadInput.value);
@@ -85,7 +192,6 @@
         cantidadInput.value = cantidad;
     }
 
-    // Función para agregar al carrito
     function agregarAlCarrito(accesorioId) {
         const cantidad = parseInt(document.getElementById(`cantidad-${accesorioId}`).value);
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
@@ -97,25 +203,24 @@
                     'Content-Type': 'application/json',
                     'RequestVerificationToken': token
                 }
-            }).then(response => {
+            })
+            .then(response => {
                 if (response.ok) {
                     alert('Producto añadido al carrito');
-                    // Actualizar el contador de elementos únicos en el carrito
                     fetch('/CarritoDeCompras/ObtenerCantidadElementosCarrito')
                         .then(response => response.json())
                         .then(data => {
-                            const carritoCount = document.getElementById("carrito-count");
-                            carritoCount.innerText = data.cantidad;
+                            document.getElementById("carrito-count").innerText = data.cantidad;
                         });
-
                     document.getElementById(`cantidad-${accesorioId}`).value = 0;
                 } else {
                     response.json().then(data => {
-                        alert('Error al añadir el producto al carrito: ' + (data.message || 'Error desconocido'));
+                        alert('Error: ' + (data.message || 'Error desconocido'));
                     });
                 }
-            }).catch(error => {
-                console.error('Error en la solicitud:', error);
+            })
+            .catch(error => {
+                console.error('Error:', error);
                 alert('Hubo un problema al procesar la solicitud.');
             });
         } else {
