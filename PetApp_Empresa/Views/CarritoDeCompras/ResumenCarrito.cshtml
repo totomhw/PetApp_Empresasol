@@ -1,120 +1,204 @@
 ﻿@model PetApp_Empresa.Models.CarritoDeCompra
 
-<h2>Resumen del Carrito</h2>
+<div class="container py-5 animate-page">
+    <!-- Título -->
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold text-gradient animate-title">Resumen del Carrito</h1>
+        <p class="lead text-muted animate-subtitle">Revisa tus productos seleccionados y confirma tu compra.</p>
+    </div>
 
-@if (Model.CarritoAccesorios != null && Model.CarritoAccesorios.Any())
-{
-    <!-- Resumen del carrito -->
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio Unitario</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.CarritoAccesorios)
-            {
-                <tr>
-                    <td>@item.Accesorio.Nombre</td>
-                    <td>@item.Cantidad</td>
-                    <td>@item.Accesorio.Precio.ToString("C")</td>
-                    <td>@(item.Accesorio.Precio * item.Cantidad).ToString("C")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <h3>Total: @(Model.Total.HasValue ? Model.Total.Value.ToString("C") : "N/A")</h3>
-
-    <!-- Formulario para confirmar la compra -->
-    <form id="formConfirmarCompra" asp-action="ConfirmarCompra" method="post">
-        @Html.AntiForgeryToken()
-
-        <!-- Selección de tarjeta -->
-        <div class="form-group">
-            <label>¿Deseas usar una tarjeta guardada o ingresar una nueva?</label>
-            <div>
-                <input type="radio" id="opcionTarjetaGuardada" name="opcionTarjeta" value="guardada" checked />
-                <label for="opcionTarjetaGuardada">Usar tarjeta guardada</label>
-            </div>
-            <div>
-                <input type="radio" id="opcionTarjetaNueva" name="opcionTarjeta" value="nueva" />
-                <label for="opcionTarjetaNueva">Ingresar nueva tarjeta</label>
-            </div>
-            <div>
-                <input type="radio" id="opcionQR" name="opcionTarjeta" value="qr" />
-                <label for="opcionQR">Pagar con QR</label>
-            </div>
+    @if (Model.CarritoAccesorios != null && Model.CarritoAccesorios.Any())
+    {
+        <!-- Resumen del carrito -->
+        <div class="table-responsive animate-table">
+            <table class="table table-hover table-striped shadow-sm rounded">
+                <thead class="table-header text-white">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CarritoAccesorios)
+                    {
+                        <tr class="align-middle animate-row">
+                            <td>@item.Accesorio.Nombre</td>
+                            <td>@item.Cantidad</td>
+                            <td>@item.Accesorio.Precio.ToString("C")</td>
+                            <td>@(item.Accesorio.Precio * item.Cantidad).ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
 
-        <!-- Selección de tarjeta guardada -->
-        <div id="tarjetasGuardadas" class="form-group">
-            @if (ViewBag.Tarjetas != null && ((List<PetApp_Empresa.Models.Tarjeta>)ViewBag.Tarjetas).Any())
-            {
-                <label for="tarjetaId">Selecciona una tarjeta guardada:</label>
-                <select class="form-control" id="tarjetaId" name="tarjetaId" required>
-                    <option value="">-- Seleccione una tarjeta --</option>
-                    @foreach (var tarjeta in ViewBag.Tarjetas as List<PetApp_Empresa.Models.Tarjeta>)
+        <!-- Total -->
+        <div class="text-center mt-4">
+            <h3 class="fw-bold">
+                Total: <span class="text-success">@Model.Total?.ToString("C")</span>
+            </h3>
+        </div>
+
+        <!-- Formulario para confirmar la compra -->
+        <form id="formConfirmarCompra" asp-action="ConfirmarCompra" method="post" class="animate-form mt-4">
+            @Html.AntiForgeryToken()
+
+            <!-- Selección de tarjeta -->
+            <div class="form-group">
+                <label class="fw-bold">¿Cómo deseas pagar?</label>
+                <div class="form-check">
+                    <input type="radio" id="opcionTarjetaGuardada" name="opcionTarjeta" value="guardada" class="form-check-input" checked />
+                    <label for="opcionTarjetaGuardada" class="form-check-label">Usar tarjeta guardada</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" id="opcionTarjetaNueva" name="opcionTarjeta" value="nueva" class="form-check-input" />
+                    <label for="opcionTarjetaNueva" class="form-check-label">Ingresar nueva tarjeta</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" id="opcionQR" name="opcionTarjeta" value="qr" class="form-check-input" />
+                    <label for="opcionQR" class="form-check-label">Pagar con QR</label>
+                </div>
+            </div>
+
+            <!-- Selección de tarjeta guardada -->
+            <div id="tarjetasGuardadas" class="form-group mt-3">
+                @if (ViewBag.Tarjetas != null && ((List<PetApp_Empresa.Models.Tarjeta>)ViewBag.Tarjetas).Any())
+                {
+                    <label for="tarjetaId" class="fw-bold">Selecciona una tarjeta guardada:</label>
+                    <select class="form-control rounded" id="tarjetaId" name="tarjetaId" required>
+                        <option value="">-- Seleccione una tarjeta --</option>
+                        @foreach (var tarjeta in ViewBag.Tarjetas as List<PetApp_Empresa.Models.Tarjeta>)
+                        {
+                            <option value="@tarjeta.TarjetaId">
+                                Número: **** **** **** @tarjeta.Numero.Substring(tarjeta.Numero.Length - 4) - Vence: @tarjeta.FechaVencimiento
+                            </option>
+                        }
+                    </select>
+                }
+                else
+                {
+                    <p class="text-danger">No hay tarjetas guardadas disponibles.</p>
+                }
+            </div>
+
+            <!-- Nueva Tarjeta -->
+            <div id="nuevaTarjeta" class="form-group" style="display: none;">
+                <label for="numeroTarjeta">Número de Tarjeta</label>
+                <input type="text" class="form-control" id="numeroTarjeta" name="numeroTarjeta" maxlength="16" pattern="\d{16}" placeholder="Ej. 1234567812345678" />
+
+                <label for="mesVencimiento">Mes de Vencimiento</label>
+                <select class="form-control" id="mesVencimiento" name="mesVencimiento">
+                    <option value="" disabled selected>-- Mes --</option>
+                    @for (int mes = 1; mes <= 12; mes++)
                     {
-                        <option value="@tarjeta.TarjetaId">
-                            Número: **** **** **** @tarjeta.Numero.Substring(tarjeta.Numero.Length - 4) - Vence: @tarjeta.FechaVencimiento
-                        </option>
+                        <option value="@mes">@mes.ToString("D2")</option>
                     }
                 </select>
-            }
-            else
-            {
-                <p class="text-danger">No hay tarjetas guardadas disponibles.</p>
-            }
-        </div>
 
-        <!-- Ingresar nueva tarjeta -->
-        <div id="nuevaTarjeta" class="form-group" style="display: none;">
-            <label for="numeroTarjeta">Número de Tarjeta</label>
-            <input type="text" class="form-control" id="numeroTarjeta" name="numeroTarjeta" maxlength="16" pattern="\d{16}"
-                   placeholder="Ej. 1234567812345678" title="Debe contener 16 dígitos numéricos" />
+                <label for="anioVencimiento">Año de Vencimiento</label>
+                <select class="form-control" id="anioVencimiento" name="anioVencimiento">
+                    <option value="" disabled selected>-- Año --</option>
+                    @for (int anio = DateTime.Now.Year; anio <= DateTime.Now.Year + 10; anio++)
+                    {
+                        <option value="@anio">@anio</option>
+                    }
+                </select>
 
-            <label for="mesVencimiento">Mes de Vencimiento</label>
-            <select class="form-control" id="mesVencimiento" name="mesVencimiento">
-                <option value="" disabled selected>-- Mes --</option>
-                @for (int mes = 1; mes <= 12; mes++)
-                {
-                    <option value="@mes">@mes.ToString("D2")</option>
-                }
-            </select>
+                <label for="cvv">CVV</label>
+                <input type="text" class="form-control" id="cvv" name="cvv" maxlength="3" pattern="\d{3}" placeholder="Ej. 123" />
 
-            <label for="anioVencimiento">Año de Vencimiento</label>
-            <select class="form-control" id="anioVencimiento" name="anioVencimiento">
-                <option value="" disabled selected>-- Año --</option>
-                @for (int anio = DateTime.Now.Year; anio <= DateTime.Now.Year + 10; anio++)
-                {
-                    <option value="@anio">@anio</option>
-                }
-            </select>
-
-            <label for="cvv">CVV</label>
-            <input type="text" class="form-control" id="cvv" name="cvv" maxlength="3" pattern="\d{3}"
-                   placeholder="Ej. 123" title="Debe contener 3 dígitos numéricos" />
-
-            <div class="form-check mt-3">
-                <input type="checkbox" class="form-check-input" id="guardarTarjeta" name="guardarTarjeta" />
-                <label class="form-check-label" for="guardarTarjeta">Guardar tarjeta para futuras compras</label>
+                <div class="form-check mt-3">
+                    <input type="checkbox" class="form-check-input" id="guardarTarjeta" name="guardarTarjeta" />
+                    <label class="form-check-label" for="guardarTarjeta">Guardar tarjeta para futuras compras</label>
+                </div>
             </div>
-        </div>
 
-        <button type="submit" class="btn btn-success mt-3">Realizar Pago</button>
-    </form>
-    <div id="pagarQR" style="display: none; margin-top: 20px;">
-        <a class="btn btn-primary" href="/CarritoDeCompras/PagarConQR">Ir a Pagar con QR</a>
-    </div>
-}
-else
-{
-    <h3>El carrito está vacío.</h3>
-}
+            <!-- Pagar con QR -->
+            <div id="pagarQR" class="mt-3 text-center" style="display: none;">
+                <a class="btn btn-gradient" href="/CarritoDeCompras/PagarConQR">
+                    <i class="fas fa-qrcode me-2"></i>Ir a Pagar con QR
+                </a>
+            </div>
+
+            <!-- Botón de pago -->
+            <button type="submit" class="btn btn-gradient mt-4 w-100">Realizar Pago</button>
+        </form>
+    }
+    else
+    {
+        <h3 class="text-center text-muted">El carrito está vacío.</h3>
+    }
+</div>
+
+<!-- Estilos -->
+<style>
+    .text-gradient {
+        background: linear-gradient(to right, #800020, #a81c1c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .table-header {
+        background: linear-gradient(to right, #800020, #a81c1c);
+    }
+
+    .btn-gradient {
+        background: linear-gradient(to right, #800020, #a81c1c);
+        color: #fff;
+        font-weight: bold;
+        border-radius: 6px;
+    }
+
+        .btn-gradient:hover {
+            background: linear-gradient(to right, #a81c1c, #800020);
+            transform: scale(1.05);
+        }
+
+    .animate-page {
+        opacity: 0;
+        animation: fadeInPage 1s forwards ease-out;
+    }
+
+    .animate-title {
+        opacity: 0;
+        transform: translateY(-50px);
+        animation: fadeInSlideDown 1s forwards ease-out;
+    }
+
+    .animate-subtitle {
+        opacity: 0;
+        transform: translateY(-30px);
+        animation: fadeInSlideDown 1s 0.5s forwards ease-out;
+    }
+
+    .animate-table {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 1.5s forwards ease-in-out;
+    }
+
+    @@keyframes fadeInPage {
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes fadeInSlideDown {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
 
 <script>
     document.querySelectorAll('input[name="opcionTarjeta"]').forEach(option => {

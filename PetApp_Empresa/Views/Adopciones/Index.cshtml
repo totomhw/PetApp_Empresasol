@@ -15,7 +15,7 @@
 
     <!-- Botón Crear Nueva Solicitud -->
     <div class="d-flex justify-content-end mb-4 animate-button">
-        <a asp-action="Create" class="btn btn-accent shadow-sm d-flex align-items-center">
+        <a asp-action="Create" class="btn btn-create shadow-sm d-flex align-items-center">
             <i class="fas fa-plus me-2"></i> Crear Nueva Solicitud
         </a>
     </div>
@@ -79,26 +79,27 @@
 
     /* Gradiente para títulos */
     .text-gradient {
-        background: linear-gradient(to right, #4caf50, #2e7d32);
+        background: linear-gradient(to right, #a81c1c, #800020);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     /* Botón de acción */
-    .btn-accent {
+    .btn-create {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        background-color: #4caf50;
+        background-color: #a81c1c;
         color: white;
         border-radius: 0.5rem;
         font-weight: bold;
         border: none;
+        padding: 10px 20px;
     }
 
-    .btn-accent:hover {
-        background-color: #388e3c;
+    .btn-create:hover {
+        background-color: #800020;
     }
 
     /* Tabla */
@@ -108,7 +109,7 @@
     }
 
     .table-header {
-        background-color: #2e7d32;
+        background: linear-gradient(to right, #a81c1c, #800020);
         color: white;
         text-transform: uppercase;
         font-size: 0.9rem;
@@ -116,7 +117,7 @@
     }
 
     .table-hover tbody tr:hover {
-        background-color: rgba(76, 175, 80, 0.1);
+        background-color: rgba(168, 28, 28, 0.1);
         cursor: pointer;
     }
 
@@ -127,7 +128,7 @@
     }
 
     .bg-approve {
-        background-color: #4caf50;
+        background-color: #a81c1c;
         color: white;
     }
 

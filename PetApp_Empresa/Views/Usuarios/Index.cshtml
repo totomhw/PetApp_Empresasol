@@ -1,59 +1,215 @@
 ﻿@model IEnumerable<PetApp_Empresa.Models.Usuario>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<div class="container py-5 animate-page">
+    <!-- Título -->
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold text-gradient animate-title">Gestión de Usuarios</h1>
+        <p class="lead text-muted animate-subtitle">
+            Administra y gestiona los usuarios registrados en la plataforma.
+        </p>
+    </div>
 
-<h1>Index</h1>
+    <!-- Botón Crear Nuevo Usuario -->
+    <div class="d-flex justify-content-end mb-4 animate-button">
+        <a asp-action="Create" class="btn btn-create shadow-sm d-flex align-items-center">
+            <i class="fas fa-user-plus me-2"></i>Crear Nuevo Usuario
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaRegistro)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Activo)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaRegistro)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Activo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UsuarioId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UsuarioId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UsuarioId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <!-- Tabla de usuarios para pantallas grandes -->
+    <div class="table-responsive animate-table">
+        <table class="table table-hover table-striped shadow-sm border-0 w-100">
+            <thead class="table-gradient text-white">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                    <th>@Html.DisplayNameFor(model => model.Email)</th>
+                    <th>@Html.DisplayNameFor(model => model.Password)</th>
+                    <th>@Html.DisplayNameFor(model => model.FechaRegistro)</th>
+                    <th>@Html.DisplayNameFor(model => model.Activo)</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="align-middle animate-row">
+                        <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Password)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FechaRegistro)</td>
+                        <td>
+                            @if (item.Activo.HasValue && item.Activo.Value)
+                            {
+                                <span class="badge bg-success text-white">Activo</span>
+                            }
+                            else if (item.Activo.HasValue && !item.Activo.Value)
+                            {
+                                <span class="badge bg-danger text-white">Inactivo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Sin Definir</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.UsuarioId" class="btn btn-sm btn-edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.UsuarioId" class="btn btn-sm btn-details">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.UsuarioId" class="btn btn-sm btn-delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Estilos -->
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    /* Título gradiente */
+    .text-gradient {
+        background: linear-gradient(to right, #a81c1c, #800020);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Botón Crear Nuevo */
+    .btn-create {
+        background: linear-gradient(to right, #800020, #a81c1c);
+        color: #ffffff !important;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-create:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 8px 20px rgba(168, 28, 28, 0.5);
+    }
+
+    /* Tabla */
+    .table-gradient {
+        background: linear-gradient(to right, #800020, #a81c1c);
+    }
+
+    /* Botones de acción */
+    .btn {
+        font-size: 0.85rem;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit {
+        background-color: #a81c1c !important;
+        color: #ffffff !important;
+    }
+
+    .btn-edit:hover {
+        background-color: #800020 !important;
+    }
+
+    .btn-details {
+        background-color: #0056b3 !important;
+        color: #ffffff !important;
+    }
+
+    .btn-details:hover {
+        background-color: #003d80 !important;
+    }
+
+    .btn-delete {
+        background-color: #e63946 !important;
+        color: #ffffff !important;
+    }
+
+    .btn-delete:hover {
+        background-color: #b71c1c !important;
+    }
+
+    /* Animaciones */
+    .animate-page {
+        opacity: 0;
+        animation: fadeInPage 1s forwards ease-out;
+    }
+
+    .animate-title {
+        opacity: 0;
+        transform: translateY(-50px);
+        animation: fadeInSlideDown 1s forwards ease-out;
+    }
+
+    .animate-subtitle {
+        opacity: 0;
+        transform: translateY(-30px);
+        animation: fadeInSlideDown 1s 0.5s forwards ease-out;
+    }
+
+    .animate-button {
+        opacity: 0;
+        transform: scale(0.8);
+        animation: zoomIn 1s 0.8s forwards ease-out;
+    }
+
+    .animate-table {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInTable 1s forwards ease-out;
+    }
+
+    .animate-row {
+        opacity: 0;
+        transform: translateX(-30px);
+        animation: slideInFromLeft 0.8s forwards ease-out;
+    }
+
+    @@keyframes fadeInPage {
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes fadeInSlideDown {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes zoomIn {
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes fadeInTable {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideInFromLeft {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+</style>

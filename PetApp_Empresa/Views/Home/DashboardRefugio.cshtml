@@ -1,61 +1,179 @@
 ﻿@model PetApp_Empresa.Models.Mascota
 @{
-    ViewData["Title"] = "Vista Admin";
+    ViewData["Title"] = "Panel de Refugios";
 }
 
-<h1>Vista Admin</h1>
+<div class="container py-5">
+    <!-- Título -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-gradient">@ViewData["Title"]</h1>
+        <p class="lead text-muted animate-intro">
+            Bienvenido al Centro de control de Refugios. Aquí puedes gestionar todo el contenido disponible del refugiante:
+        </p>
+    </div>
 
-<p>Bienvenido a la vista de administrador. Aquí puedes gestionar todo el contenido disponible en la plataforma:</p>
-
-<div class="admin-menu">
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link btn btn-outline-primary mb-2" asp-area="" asp-controller="Mascotas" asp-action="VistaMascota">
-                <i class="fas fa-box-open"></i> VistaMascota
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link btn btn-outline-primary mb-2" asp-area="" asp-controller="Mascotas" asp-action="Index">
-                <i class="fas fa-box-open"></i> Index
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link btn btn-outline-primary mb-2" asp-area="" asp-controller="Mascotas" asp-action="MisMascotas">
-                <i class="fas fa-box-open"></i> MisMascotas
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link btn btn-outline-primary mb-2" asp-area="" asp-controller="Mascotas" asp-action="MisDonaciones">
-                <i class="fas fa-paw"></i> MisDonaciones
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link btn btn-outline-primary mb-2" asp-area="" asp-controller="Refugios" asp-action="Index">
-                <i class="fas fa-paw"></i> Index refugio
-            </a>
-        </li>
-    </ul>
+    <!-- Tarjetas de opciones -->
+    <div class="row g-4 animate-menu">
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card shadow-sm border-0 rounded card-option">
+                <div class="card-body text-center">
+                    <i class="fas fa-eye fa-3x mb-3 icon-style icon-red"></i>
+                    <h5 class="card-title fw-bold">Vista Mascota</h5>
+                    <p class="card-text text-muted">Consulta información general de las mascotas.</p>
+                    <a asp-area="" asp-controller="Mascotas" asp-action="VistaMascota" class="btn btn-option text-white">
+                        Ir a Vista Mascota
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card shadow-sm border-0 rounded card-option">
+                <div class="card-body text-center">
+                    <i class="fas fa-list fa-3x mb-3 icon-style icon-blue"></i>
+                    <h5 class="card-title fw-bold">Index Mascotas</h5>
+                    <p class="card-text text-muted">Gestiona y organiza las mascotas disponibles.</p>
+                    <a asp-area="" asp-controller="Mascotas" asp-action="Index" class="btn btn-option text-white">
+                        Ir a Index Mascotas
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card shadow-sm border-0 rounded card-option">
+                <div class="card-body text-center">
+                    <i class="fas fa-paw fa-3x mb-3 icon-style icon-green"></i>
+                    <h5 class="card-title fw-bold">Mis Mascotas</h5>
+                    <p class="card-text text-muted">Accede a la lista de mascotas que gestionas.</p>
+                    <a asp-area="" asp-controller="Mascotas" asp-action="MisMascotas" class="btn btn-option text-white">
+                        Ver Mis Mascotas
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card shadow-sm border-0 rounded card-option">
+                <div class="card-body text-center">
+                    <i class="fas fa-donate fa-3x mb-3 icon-style icon-yellow"></i>
+                    <h5 class="card-title fw-bold">Mis Donaciones</h5>
+                    <p class="card-text text-muted">Consulta y administra las donaciones realizadas.</p>
+                    <a asp-area="" asp-controller="Mascotas" asp-action="MisDonaciones" class="btn btn-option text-white">
+                        Ver Mis Donaciones
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card shadow-sm border-0 rounded card-option">
+                <div class="card-body text-center">
+                    <i class="fas fa-home fa-3x mb-3 icon-style icon-purple"></i>
+                    <h5 class="card-title fw-bold">Index Refugio</h5>
+                    <p class="card-text text-muted">Gestiona y supervisa los refugios registrados.</p>
+                    <a asp-area="" asp-controller="Refugios" asp-action="Index" class="btn btn-option text-white">
+                        Ver Index Refugio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Opcionalmente puedes incluir algunos estilos -->
+<!-- Estilos -->
 <style>
-    .admin-menu {
-        margin-top: 20px;
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: #343a40;
     }
 
-        .admin-menu .nav-link {
-            font-size: 1.1rem;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-        }
+    /* Título con gradiente */
+    .text-gradient {
+        background: linear-gradient(to right, #800020, #a81c1c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-            .admin-menu .nav-link i {
-                margin-right: 10px;
-                font-size: 1.2rem;
-            }
+    /* Animaciones de entrada */
+    .animate-intro {
+        opacity: 0;
+        animation: fadeInUp 1.5s ease-in-out forwards;
+    }
+
+    .animate-menu {
+        opacity: 0;
+        animation: fadeInUp 1.5s 0.5s ease-in-out forwards;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Estilo de tarjetas */
+    .card-option {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card-option:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Íconos con colores combinados */
+    .icon-style {
+        font-size: 3rem;
+        transition: transform 0.3s ease;
+    }
+
+    .icon-red {
+        color: #a81c1c; /* Rojo guindo */
+    }
+
+    .icon-blue {
+        color: #0056b3; /* Azul oscuro */
+    }
+
+    .icon-green {
+        color: #28a745; /* Verde */
+    }
+
+    .icon-yellow {
+        color: #ffc107; /* Amarillo */
+    }
+
+    .icon-purple {
+        color: #6f42c1; /* Morado */
+    }
+
+    .icon-style:hover {
+        transform: scale(1.1);
+    }
+
+    /* Botones en las tarjetas */
+    .btn-option {
+        background: linear-gradient(to right, #800020, #a81c1c);
+        color: #ffffff !important;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 8px 16px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-option:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(168, 28, 28, 0.7);
+    }
+
+    .btn-option i {
+        margin-right: 5px;
+    }
 </style>
 
-<!-- Recuerda incluir el CDN de Font Awesome para que los íconos funcionen -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<!-- Librerías necesarias -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
