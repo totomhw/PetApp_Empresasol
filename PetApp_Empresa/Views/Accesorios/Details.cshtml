@@ -4,50 +4,179 @@
     ViewData["Title"] = "Detalles del Accesorio";
 }
 
-<h1>Detalles del Accesorio</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PetApp_Empresa</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+   
+    <style>
+    /* Contenedor principal */
+    .details-container {
+        animation: fadeInScale 0.8s ease-out forwards; /* Cambio aquí: aseguramos que el contenedor permanezca visible */
+        opacity: 0; /* Inicialmente oculto */
+    }
 
-<div>
-    <h4>Accesorio</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
+    /* Contenedor del contenido */
+    .details-box {
+        background: #ffffff;
+        padding: 50px;
+        border-radius: 16px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        max-width: 600px;
+        margin: auto;
+        animation: fadeInScale 0.8s ease-out forwards;
+        border: 1px solid #ebebeb;
+        transition: all 0.3s ease-in-out;
+    }
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
+    .details-box:hover {
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
+    /* Animación de entrada */
+    @@keyframes fadeInScale {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vendedor)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vendedor.UsuarioId)
-        </dd>
+    /* Títulos con sombra dinámica */
+    .details-box h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #333333;
+        text-align: center;
+        margin-bottom: 20px;
+        font-family: 'Roboto', sans-serif;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        transition: text-shadow 0.3s ease, transform 0.3s ease;
+    }
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CantidadDisponible)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CantidadDisponible)
-        </dd>
-    </dl>
-</div>
+    .details-box h1:hover {
+        text-shadow: 0 4px 10px rgba(0, 123, 255, 0.6);
+        transform: scale(1.05);
+    }
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.AccesorioId">Editar</a> |
-    <a asp-action="Index">Volver a la lista</a>
-</div>
+    /* Listas de definición */
+    dl {
+        font-size: 1.2rem;
+        line-height: 2;
+        color: #555555;
+        margin-top: 20px;
+    }
+
+    dt {
+        font-weight: bold;
+        color: #333333;
+    }
+
+    dd {
+        color: #555555;
+    }
+
+    /* Botones */
+    .btn-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #7A1E3D; /* Mismo color del layout */
+        border-color: #7A1E3D;
+        color: #ffffff;
+        width: 100%;
+        text-align: center;
+    }
+
+    .btn-primary:hover {
+        background-color: #5B152E;
+        box-shadow: 0 6px 15px rgba(122, 30, 61, 0.4);
+        transform: translateY(-3px) scale(1.05);
+        text-shadow: 0 4px 10px rgba(122, 30, 61, 0.5);
+        cursor: pointer;
+    }
+
+    .btn-primary:active {
+        transform: translateY(1px) scale(1);
+    }
+
+    /* Estilo para botones secundarios */
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #ffffff;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #5a6268;
+        box-shadow: 0 6px 15px rgba(92, 117, 125, 0.4);
+        transform: translateY(-3px) scale(1.05);
+    }
+
+    .btn-secondary:active {
+        transform: translateY(1px) scale(1);
+    }
+
+    /* Centrado de la página */
+    .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+    }
+</style>
+
+
+</head>
+<body>
+    <div class="main-content">
+        <div class="details-box details-container">
+            <h1>Detalles del Accesorio</h1>
+            <dl class="row">
+                <dt class="col-sm-4">Nombre</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Nombre)</dd>
+
+                <dt class="col-sm-4">Descripción</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Descripcion)</dd>
+
+                <dt class="col-sm-4">Precio</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Precio)</dd>
+
+                <dt class="col-sm-4">Vendedor</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Vendedor.UsuarioId)</dd>
+
+                <dt class="col-sm-4">Cantidad Disponible</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.CantidadDisponible)</dd>
+            </dl>
+            <div class="btn-container">
+                <a asp-action="Edit" asp-route-id="@Model?.AccesorioId" class="btn btn-primary">Editar</a>
+                <a asp-action="Index" class="btn btn-secondary">Volver a la lista</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

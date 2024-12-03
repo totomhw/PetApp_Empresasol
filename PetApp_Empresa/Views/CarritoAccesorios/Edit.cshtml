@@ -37,3 +37,119 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+
+<style>
+    /* Centrado de la página */
+    .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+        padding: 20px;
+    }
+
+    /* Cuadro del formulario */
+    .edit-box {
+        background-color: #ffffff;
+        padding: 40px 50px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+        text-align: left;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Encabezados */
+    h1, h4 {
+        text-align: center;
+        color: #333333;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h4 {
+        font-size: 1.3rem;
+        font-weight: 400;
+        color: #555555;
+    }
+
+    hr {
+        margin: 20px 0;
+    }
+
+    /* Formulario */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #555555;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid #cccccc;
+        padding: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #7A1E3D;
+        box-shadow: 0 0 5px rgba(122, 30, 61, 0.4);
+    }
+
+    .text-danger {
+        font-size: 0.9rem;
+        color: #d9534f;
+    }
+
+    /* Botones */
+    .btn-primary {
+        background-color: #7A1E3D;
+        border-color: #7A1E3D;
+        color: #ffffff;
+        font-size: 1.1rem;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        background-color: #5B152E;
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(122, 30, 61, 0.4);
+    }
+
+    a {
+        display: inline-block;
+        margin-top: 10px;
+        color: #7A1E3D;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s ease-in-out;
+    }
+
+    a:hover {
+        color: #5B152E;
+        text-decoration: underline;
+    }
+</style>

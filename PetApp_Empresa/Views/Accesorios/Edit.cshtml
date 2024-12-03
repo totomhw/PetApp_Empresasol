@@ -4,59 +4,217 @@
     ViewData["Title"] = "Editar Accesorio";
 }
 
-<h1>Editar Accesorio</h1>
-
-<h4>Accesorio</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="AccesorioId" />
-
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="CantidadDisponible" class="control-label"></label>
-                <input asp-for="CantidadDisponible" class="form-control" />
-                <span asp-validation-for="CantidadDisponible" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="VendedorId" class="control-label"></label>
-                <select asp-for="VendedorId" class="form-control" asp-items="ViewBag.VendedorId"></select>
-                <span asp-validation-for="VendedorId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Volver a la lista</a>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PetApp_Empresa</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+   
+  <style>
+    /* Animación de deslizamiento desde la izquierda */
+    .form-slide {
+        animation: slideIn 1s ease-out;
     }
-}
+
+    @@keyframes slideIn {
+        from {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Estilo mejorado para el formulario */
+    .form-container {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra consistente */
+        max-width: 600px;
+        margin: 0 auto;
+        opacity: 0;
+        animation: fadeIn 1s ease-out forwards; /* Animación de fadeIn */
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .form-container h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .form-group label {
+        font-size: 1.1rem;
+        color: #555;
+    }
+
+    .form-control {
+        font-size: 1.1rem;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        transition: border 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #7A1E3D; /* Color personalizado */
+        box-shadow: 0 0 10px rgba(122, 30, 61, 0.3); /* Sombra coherente */
+    }
+
+    .btn-primary {
+        background-color: #7A1E3D; /* Color personalizado */
+        border-color: #7A1E3D;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra coherente */
+    }
+
+    .btn-primary:hover {
+        background-color: #5B152E; /* Color más oscuro al pasar el ratón */
+        border-color: #5B152E;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+    }
+
+    .text-danger {
+        font-size: 0.9rem;
+        color: #e74c3c;
+    }
+
+    .back-btn {
+        margin-top: 20px;
+        display: inline-block;
+        text-align: center;
+        font-size: 1rem;
+        color: #7A1E3D; /* Color consistente con el diseño */
+        text-decoration: none;
+    }
+
+    .back-btn:hover {
+        text-decoration: underline;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    /* Centrar el formulario */
+    .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+    }
+</style>
+
+
+
+
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center">
+                    <a class="navbar-brand ms-2" asp-area="" asp-controller="Home" asp-action="Index">AdoptIt</a>
+                </div>
+                <div class="d-flex align-items-center ms-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-light me-2">Cerrar sesión</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-light me-2" asp-controller="Auth" asp-action="Login">Iniciar sesión</a>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <main role="main" class="container py-5">
+            <div class="form-container form-slide">
+                <h1>Editar Accesorio</h1>
+
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+                    <input type="hidden" asp-for="AccesorioId" />
+
+                    <div class="form-group">
+                        <label asp-for="Nombre" class="control-label">Nombre del Accesorio</label>
+                        <input asp-for="Nombre" class="form-control" placeholder="Introduce el nombre del accesorio" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Descripcion" class="control-label">Descripción</label>
+                        <input asp-for="Descripcion" class="form-control" placeholder="Descripción del accesorio" />
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Precio" class="control-label">Precio</label>
+                        <input asp-for="Precio" class="form-control" placeholder="Precio del accesorio" />
+                        <span asp-validation-for="Precio" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="CantidadDisponible" class="control-label">Cantidad Disponible</label>
+                        <input asp-for="CantidadDisponible" class="form-control" placeholder="Cantidad disponible" />
+                        <span asp-validation-for="CantidadDisponible" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="VendedorId" class="control-label">Vendedor</label>
+                        <select asp-for="VendedorId" class="form-control" asp-items="ViewBag.VendedorId">
+                            <option value="">Seleccione un Vendedor</option>
+                        </select>
+                        <span asp-validation-for="VendedorId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <a asp-action="Index" class="back-btn">Volver a la lista</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

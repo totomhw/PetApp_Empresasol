@@ -18,7 +18,6 @@ namespace PetApp_Empresa.Controllers
             _context = context;
         }
 
-
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Usuarios()
         {
@@ -29,7 +28,6 @@ namespace PetApp_Empresa.Controllers
 
             return View(usuarios);
         }
-
 
         // Acción raíz: Redirige al DashboardCliente
         public IActionResult Index()
@@ -97,8 +95,18 @@ namespace PetApp_Empresa.Controllers
 
         // Dashboard para Administrador
         [Authorize(Roles = "Admin")]
-        public IActionResult DashboardAdmin()
+        public async Task<IActionResult> DashboardAdmin()
         {
+            // Consulta la cantidad de usuarios por rol desde la tabla intermedia UsuarioRol
+            var usuariosPorRol = await _context.UsuarioRols
+                .Include(ur => ur.Rol) // Incluye información del Rol
+                .GroupBy(ur => ur.Rol.Nombre) // Agrupa por el nombre del rol
+                .Select(g => new { Rol = g.Key, Cantidad = g.Count() }) // Obtén el rol y la cantidad
+                .ToDictionaryAsync(x => x.Rol, x => x.Cantidad); // Convierte a diccionario
+
+            // Pasa los datos a la vista
+            ViewBag.UsuariosPorRol = usuariosPorRol;
+
             return View();
         }
 

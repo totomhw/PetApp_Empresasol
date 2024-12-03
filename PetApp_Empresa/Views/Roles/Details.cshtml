@@ -4,27 +4,118 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="role-details-container">
+    <h1 class="titulo-negro text-center">Detalles del Rol</h1>
 
-<div>
-    <h4>Role</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-    </dl>
+    <div class="role-details">
+        <h4 class="text-center mb-4">Información del Rol</h4>
+        <hr />
+        <dl class="row">
+            <!-- Nombre del rol -->
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Nombre)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Nombre)
+            </dd>
+            
+            <!-- Descripción del rol -->
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Descripcion)
+            </dd>
+        </dl>
+    </div>
+
+    <!-- Enlaces de acción: Editar y Volver -->
+    <div class="text-center mt-4">
+        <a asp-action="Edit" asp-route-id="@Model?.RolId" class="btn btn-save btn-animated">Editar</a> |
+        <a asp-action="Index" class="btn btn-back btn-animated">Volver al Listado</a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.RolId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<style>
+    /* Contenedor principal */
+    .role-details-container {
+        margin-top: 50px;
+    }
+
+    /* Estilo del título */
+    .titulo-negro {
+        font-family: 'Arial', sans-serif;
+        font-size: 2rem;
+        color: black !important;
+        margin-bottom: 20px;
+    }
+
+    /* Estilos de los detalles del rol */
+    .role-details {
+        background-color: var(--background-color);
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-out;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .role-details dl dt {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+
+    .role-details dl dd {
+        color: var(--text-color);
+    }
+
+    /* Botón de Editar */
+    .btn-save {
+        background-color: #7A1E3D; /* Rojo para "Editar" */
+        color: white;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-save:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    /* Botón de Volver al listado */
+    .btn-back {
+        background-color: #cccccc; /* Gris para "Volver al listado" */
+        color: black;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background-color: #aaaaaa;
+    }
+
+    /* Animación */
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

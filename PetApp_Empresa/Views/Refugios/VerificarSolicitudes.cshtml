@@ -4,56 +4,219 @@
     ViewData["Title"] = "Verificar Solicitudes de Adopción";
 }
 
-<h1>Solicitudes de Adopción en Proceso</h1>
+<div class="container py-4 animate-page">
+    <!-- Título -->
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold text-gradient animate-title">Solicitudes de Adopción en Proceso</h1>
+        <p class="lead text-muted animate-subtitle">
+            Visualiza y gestiona todas las solicitudes de adopción pendientes.
+        </p>
+    </div>
 
-<table class="table table-bordered">
-    <thead class="thead-dark">
-        <tr>
-            <th>Mascota</th>
-            <th>Raza</th>
-            <th>Edad</th>
-            <th>Solicitante</th>
-            <th>Correo Electrónico</th>
-            <th>Teléfono</th>
-            <th>Dirección</th>
-            <th>Fecha de Solicitud</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Any())
-        {
-            @foreach (var adopcion in Model)
-            {
+    <!-- Tabla de solicitudes -->
+    <div class="table-responsive animate-table">
+        <table class="table table-hover table-striped shadow-sm border-0">
+            <thead class="table-gradient text-white">
                 <tr>
-                    <td>@adopcion.Mascota.Nombre</td>
-                    <td>@adopcion.Mascota.Raza</td>
-                    <td>@adopcion.Mascota.Edad años</td>
-                    <td>@adopcion.NombreCompleto</td>
-                    <td>@adopcion.CorreoElectronico</td>
-                    <td>@adopcion.Telefono</td>
-                    <td>@adopcion.Direccion</td>
-                    <td>@adopcion.FechaSolicitud?.ToString("dd/MM/yyyy")</td>
-                    <td>@adopcion.Estado</td>
-                    <td>
-                        <form asp-action="AprobarAdopcion" method="post" style="display:inline">
-                            <input type="hidden" name="adopcionId" value="@adopcion.AdopcionId" />
-                            <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
-                        </form>
-                        <form asp-action="RechazarAdopcion" method="post" style="display:inline">
-                            <input type="hidden" name="adopcionId" value="@adopcion.AdopcionId" />
-                            <button type="submit" class="btn btn-danger btn-sm">Rechazar</button>
-                        </form>
-                    </td>
+                    <th>Mascota</th>
+                    <th>Raza</th>
+                    <th>Edad</th>
+                    <th>Solicitante</th>
+                    <th>Correo Electrónico</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Fecha de Solicitud</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var adopcion in Model)
+                    {
+                        <tr class="align-middle animate-row">
+                            <td>@adopcion.Mascota.Nombre</td>
+                            <td>@adopcion.Mascota.Raza</td>
+                            <td>@adopcion.Mascota.Edad años</td>
+                            <td>@adopcion.NombreCompleto</td>
+                            <td>@adopcion.CorreoElectronico</td>
+                            <td>@adopcion.Telefono</td>
+                            <td>@adopcion.Direccion</td>
+                            <td>@adopcion.FechaSolicitud?.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <span class="badge @(adopcion.Estado == "Pendiente" ? "bg-warning" : "bg-success")">
+                                    @adopcion.Estado
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <form asp-action="AprobarAdopcion" method="post" style="display:inline">
+                                    <input type="hidden" name="adopcionId" value="@adopcion.AdopcionId" />
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="fas fa-check"></i> Aprobar
+                                    </button>
+                                </form>
+                                <form asp-action="RechazarAdopcion" method="post" style="display:inline">
+                                    <input type="hidden" name="adopcionId" value="@adopcion.AdopcionId" />
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-times"></i> Rechazar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="10" class="text-center text-muted">No hay solicitudes de adopción en proceso.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Estilos -->
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .text-gradient {
+        background: linear-gradient(to right, #a81c1c, #800020);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .table-gradient {
+        background: linear-gradient(to right, #800020, #a81c1c);
+    }
+
+    .table {
+        border-radius: 0.75rem;
+        overflow: hidden;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(168, 28, 28, 0.1);
+        cursor: pointer;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+    }
+
+    .btn-sm {
+        font-size: 0.85rem;
+        padding: 0.4rem 1rem;
+        border-radius: 0.5rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-sm:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-success {
+        background-color: #28a745 !important;
+        color: #ffffff !important;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #dc3545 !important;
+        color: #ffffff !important;
+        border: none;
+    }
+
+    /* Animaciones */
+    .animate-page {
+        opacity: 0;
+        animation: fadeInPage 1s forwards ease-out;
+    }
+
+    .animate-title {
+        opacity: 0;
+        transform: translateY(-50px) rotateX(15deg);
+        animation: fadeInRotateDown 1.2s forwards ease-out;
+    }
+
+    .animate-subtitle {
+        opacity: 0;
+        transform: translateY(-30px);
+        animation: fadeInSlideDown 1s 0.5s forwards ease-out;
+    }
+
+    .animate-table {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInTable 1s forwards ease-out;
+    }
+
+    .animate-row {
+        opacity: 0;
+        transform: scale(0.9);
+        animation: fadeInScale 0.8s forwards ease-out;
+    }
+
+    .animate-row:nth-child(odd) {
+        animation-delay: 0.3s;
+    }
+
+    .animate-row:nth-child(even) {
+        animation-delay: 0.5s;
+    }
+
+    @@keyframes fadeInPage {
+        to {
+            opacity: 1;
         }
-        else
-        {
-            <tr>
-                <td colspan="10" class="text-center">No hay solicitudes de adopción en proceso.</td>
-            </tr>
+    }
+
+    @@keyframes fadeInRotateDown {
+        to {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
         }
-    </tbody>
-</table>
+    }
+
+    @@keyframes fadeInSlideDown {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInTable {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInScale {
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+
+<!-- Librerías necesarias -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+
+<!-- Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const rows = document.querySelectorAll(".animate-row");
+        rows.forEach((row, index) => {
+            row.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+</script>

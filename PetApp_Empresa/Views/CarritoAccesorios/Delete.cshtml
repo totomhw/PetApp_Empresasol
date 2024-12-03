@@ -31,3 +31,145 @@
         <a asp-action="Index">Back to List</a>
     </form>
 </div>
+
+<style>
+    /* Animaciones */
+    .details-container {
+        animation: slideInDetails 1s ease-out;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    @@keyframes slideInDetails {
+        from {
+            transform: translateY(-50%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Centrado de la página */
+    .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+        padding: 20px;
+    }
+
+    /* Contenedor del cuadro */
+    .details-box {
+        background-color: #ffffff;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Encabezado */
+    h1 {
+        font-size: 2.5rem;
+        color: #333333;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        color: #555555;
+        margin-bottom: 20px;
+        font-weight: 400;
+    }
+
+    h4 {
+        font-size: 1.3rem;
+        color: #666666;
+        margin-bottom: 15px;
+    }
+
+    /* Lista de detalles */
+    dl {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin: 20px 0;
+        text-align: left;
+    }
+
+    dt {
+        font-weight: bold;
+        color: #555555;
+    }
+
+    dd {
+        color: #333333;
+        margin-left: 20px;
+    }
+
+    /* Botones */
+    .btn-container {
+        margin-top: 20px;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 10px 20px;
+        border-radius: 8px;
+        margin: 0 10px;
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-danger {
+        background-color: #7A1E3D;
+        color: #ffffff;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #5B152E;
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(122, 30, 61, 0.4);
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #ffffff;
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(92, 117, 125, 0.4);
+    }
+
+    /* Ajustes para dispositivos pequeños */
+    @@media (max-width: 768px) {
+        .details-box {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+        }
+
+        dl {
+            font-size: 1rem;
+        }
+
+        .btn {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+

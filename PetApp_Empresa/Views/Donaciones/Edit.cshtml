@@ -5,46 +5,152 @@
 }
 <link rel="stylesheet" href="~/css/donaciones.css" />
 
-<h1>Edit</h1>
+<div class="edit-container">
+    <h1 class="text-center mb-4">Editar Donación</h1>
 
-<h4>Donacione</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="edit-form-container">
+        <h4 class="text-center mb-4">Detalles de la Donación</h4>
+        <form asp-action="Edit" class="edit-form animate__animated animate__fadeIn">
+            <!-- Validación -->
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
             <input type="hidden" asp-for="DonacionId" />
-            <div class="form-group">
-                <label asp-for="RefugioId" class="control-label"></label>
-                <select asp-for="RefugioId" class="form-control" asp-items="ViewBag.RefugioId"></select>
+
+            <!-- Seleccionar Refugio -->
+            <div class="form-group mb-4">
+                <label asp-for="RefugioId" class="form-label">Seleccionar Refugio</label>
+                <select asp-for="RefugioId" class="form-select" asp-items="ViewBag.RefugioId">
+                    <option value="">Seleccione un refugio...</option>
+                </select>
                 <span asp-validation-for="RefugioId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UsuarioId" class="control-label"></label>
-                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
+
+            <!-- Seleccionar Usuario -->
+            <div class="form-group mb-4">
+                <label asp-for="UsuarioId" class="form-label">Seleccionar Usuario</label>
+                <select asp-for="UsuarioId" class="form-select" asp-items="ViewBag.UsuarioId">
+                    <option value="">Seleccione un usuario...</option>
+                </select>
                 <span asp-validation-for="UsuarioId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Monto" class="control-label"></label>
-                <input asp-for="Monto" class="form-control" />
+
+            <!-- Monto -->
+            <div class="form-group mb-4">
+                <label asp-for="Monto" class="form-label">Monto de Donación</label>
+                <input asp-for="Monto" class="form-control" placeholder="Ingrese el monto en Bs." />
                 <span asp-validation-for="Monto" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="FechaDonacion" class="control-label"></label>
-                <input asp-for="FechaDonacion" class="form-control" />
+
+            <!-- Fecha Donación -->
+            <div class="form-group mb-4">
+                <label asp-for="FechaDonacion" class="form-label">Fecha de Donación</label>
+                <input asp-for="FechaDonacion" class="form-control" placeholder="Ingrese la fecha" />
                 <span asp-validation-for="FechaDonacion" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <!-- Botones -->
+            <div class="form-group text-center">
+                <input type="submit" value="Guardar" class="btn btn-save btn-animated" />
+                <a asp-action="Index" class="btn btn-back btn-animated">Volver al Listado</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<style>
+    /* Contenedor general */
+    .edit-container {
+        margin-top: 50px;
+    }
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    h1 {
+        font-family: 'Arial', sans-serif;
+        font-size: 2.5rem;
+        color: black; /* Título negro */
+        text-align: center;
+    }
+
+    .edit-form-container {
+        background-color: var(--background-color);
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-out;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Formulario */
+    .edit-form .form-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .edit-form .form-select,
+    .edit-form .form-control {
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+        border: 1px solid var(--input-border-color);
+        margin-bottom: 15px;
+    }
+
+    .edit-form .form-control:focus {
+        border-color: var(--focus-border-color);
+        box-shadow: 0 0 5px var(--focus-box-shadow);
+    }
+
+    /* Botón Guardar */
+    .btn-save {
+        background-color: #7A1E3D;
+        border-color: #7A1E3D;
+        color: white;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        margin-right: 10px;
+    }
+
+    .btn-save:hover {
+        background-color: #5a142c;
+        border-color: #5a142c;
+    }
+
+    /* Botón Volver */
+    .btn-back {
+        background-color: #cccccc;
+        color: black;
+        padding: 12px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background-color: #aaaaaa;
+    }
+
+    /* Animación */
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mensajes de validación */
+    .alert-danger {
+        background-color: var(--error-background-color);
+        color: var(--error-text-color);
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+</style>

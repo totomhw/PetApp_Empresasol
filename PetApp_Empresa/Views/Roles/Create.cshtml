@@ -4,35 +4,137 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<div class="role-create-container">
+    <h1 class="titulo-negro text-center">Crear Rol</h1>
 
-<h4>Role</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    <div class="role-form">
+        <h4 class="text-center mb-4">Detalles del Rol</h4>
+        <hr />
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <!-- Nombre -->
             <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
+                <label asp-for="Nombre" class="control-label">Nombre</label>
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
+
+            <!-- Descripción -->
             <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
+                <label asp-for="Descripcion" class="control-label">Descripción</label>
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <!-- Botón de Crear -->
+            <div class="form-group text-center mt-4">
+                <input type="submit" value="Crear" class="btn btn-save btn-animated" />
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <!-- Botón de Volver -->
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-back btn-animated">Volver al Listado</a>
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<style>
+    /* Contenedor principal */
+    .role-create-container {
+        margin-top: 50px;
+    }
+
+    /* Estilo del título */
+    .titulo-negro {
+        font-family: 'Arial', sans-serif;
+        font-size: 2rem;
+        color: black !important;
+        margin-bottom: 20px;
+    }
+
+    /* Estilos del formulario */
+    .role-form {
+        background-color: var(--background-color);
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-out;
+        max-width: 400px; /* Formulario más compacto */
+        margin: 0 auto;
+    }
+
+    .role-form h4 {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+
+    .form-group input {
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        width: 100%;
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+
+    .form-group .text-danger {
+        font-size: 0.9rem;
+    }
+
+    /* Botón de Crear */
+    .btn-save {
+        background-color: #7A1E3D; /* Rojo para "Crear" */
+        color: white;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-save:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    /* Botón de Volver */
+    .btn-back {
+        background-color: #cccccc; /* Gris */
+        color: black;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background-color: #aaaaaa;
+    }
+
+    /* Animaciones */
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

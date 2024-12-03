@@ -5,39 +5,126 @@
 }
 <link rel="stylesheet" href="~/css/donaciones.css" />
 
-<h1>Details</h1>
+<div class="details-container">
+    <h1 class="text-center mb-4">Detalles de Donación</h1>
 
-<div>
-    <h4>Donacione</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Monto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Monto)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaDonacion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaDonacion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Refugio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Refugio.RefugioId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Usuario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Usuario.UsuarioId)
-        </dd>
-    </dl>
+    <div class="details-card">
+        <h4 class="text-center mb-4">Información de la Donación</h4>
+        <dl class="row">
+            <dt class="col-sm-4 details-label">
+                @Html.DisplayNameFor(model => model.Monto)
+            </dt>
+            <dd class="col-sm-8 details-value">
+                @Html.DisplayFor(model => model.Monto)
+            </dd>
+
+            <dt class="col-sm-4 details-label">
+                @Html.DisplayNameFor(model => model.FechaDonacion)
+            </dt>
+            <dd class="col-sm-8 details-value">
+                @Html.DisplayFor(model => model.FechaDonacion)
+            </dd>
+
+            <dt class="col-sm-4 details-label">
+                @Html.DisplayNameFor(model => model.Refugio)
+            </dt>
+            <dd class="col-sm-8 details-value">
+                @Html.DisplayFor(model => model.Refugio.RefugioId)
+            </dd>
+
+            <dt class="col-sm-4 details-label">
+                @Html.DisplayNameFor(model => model.Usuario)
+            </dt>
+            <dd class="col-sm-8 details-value">
+                @Html.DisplayFor(model => model.Usuario.UsuarioId)
+            </dd>
+        </dl>
+    </div>
+
+    <!-- Botones -->
+    <div class="text-center mt-4">
+        <a asp-action="Edit" asp-route-id="@Model?.DonacionId" class="btn btn-edit btn-animated">Editar</a>
+        <a asp-action="Index" class="btn btn-back btn-animated">Volver al Listado</a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.DonacionId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<style>
+    /* General */
+    .details-container {
+        margin-top: 50px;
+    }
+
+    h1 {
+        font-family: 'Arial', sans-serif;
+        font-size: 2.5rem;
+        color: black; /* Título en negro */
+        text-align: center;
+    }
+
+    .details-card {
+        background-color: var(--background-color);
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-out;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .details-label {
+        font-weight: bold;
+        color: var(--primary-color);
+        font-size: 1.1rem;
+    }
+
+    .details-value {
+        color: #333;
+        font-size: 1rem;
+    }
+
+    /* Botón Editar */
+    .btn-edit {
+        background-color: #7A1E3D;
+        border-color: #7A1E3D;
+        color: white;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        margin-right: 10px;
+    }
+
+        .btn-edit:hover {
+            background-color: #5a142c;
+            border-color: #5a142c;
+        }
+
+    /* Botón Volver */
+    .btn-back {
+        background-color: #cccccc;
+        color: black;
+        padding: 12px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-back:hover {
+            background-color: #aaaaaa;
+        }
+
+    /* Animación */
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

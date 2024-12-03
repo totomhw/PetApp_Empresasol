@@ -4,45 +4,136 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="usuario-details-container">
+    <h1 class="titulo-negro text-center">Detalles del Usuario</h1>
 
-<div>
-    <h4>Usuario</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaRegistro)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaRegistro)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Activo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Activo)
-        </dd>
-    </dl>
+    <div class="usuario-details">
+        <h4 class="text-center">Información del Usuario</h4>
+        <hr />
+        
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Nombre)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Nombre)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Password)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Password)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FechaRegistro)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.FechaRegistro)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Activo)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Activo)
+            </dd>
+        </dl>
+        
+        <div class="text-center mt-4">
+            <a asp-action="Edit" asp-route-id="@Model?.UsuarioId" class="btn btn-danger">Editar</a> |
+            <a asp-action="Index" class="btn btn-back">Volver al Listado</a>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.UsuarioId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<style>
+    /* Contenedor principal */
+    .usuario-details-container {
+        margin-top: 50px;
+    }
+
+    /* Estilo del título */
+    .titulo-negro {
+        font-family: 'Arial', sans-serif;
+        font-size: 2rem;
+        color: black !important;
+        margin-bottom: 20px;
+    }
+
+    /* Estilos del contenedor de detalles */
+    .usuario-details {
+        background-color: var(--background-color);
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-out;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .usuario-details dl dt {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+
+    .usuario-details dl dd {
+        color: var(--text-color);
+    }
+
+    /* Botón de "Eliminar" */
+    .btn-danger {
+        background-color: #7A1E3D; /* Rojo para "Eliminar" */
+        color: white;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    /* Botón de Volver al listado */
+    .btn-back {
+        background-color: #cccccc; /* Gris para "Volver al listado" */
+        color: black;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background-color: #aaaaaa;
+    }
+
+    /* Animación */
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

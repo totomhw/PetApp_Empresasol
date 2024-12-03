@@ -4,50 +4,138 @@
     ViewData["Title"] = "Detalles del Accesorio";
 }
 
-<h1>Detalles del Accesorio</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PetApp_Empresa</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    
+    <style>
+    /* Animaciones */
+    .details-container {
+        animation: slideInDetails 1s ease-out;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
 
-<div>
-    <h4>Accesorio</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
+    @@keyframes slideInDetails {
+        from {
+            transform: translateY(-50%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
+    /* Estilo del contenedor */
+    .details-box {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+        text-align: left;
+    }
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
+    h1 {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 30px;
+    }
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vendedor)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vendedor.UsuarioId)
-        </dd>
+    dl {
+        font-size: 1.2rem;
+        line-height: 2;
+    }
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CantidadDisponible)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CantidadDisponible)
-        </dd>
-    </dl>
-</div>
+    dt {
+        font-weight: bold;
+        color: #555;
+    }
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.AccesorioId">Editar</a> |
-    <a asp-action="Index">Volver a la lista</a>
-</div>
+    dd {
+        color: #333;
+    }
+
+    .btn-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .btn {
+        font-size: 1.1rem;
+        padding: 10px 30px;
+        border-radius: 8px;
+        margin: 0 10px;
+    }
+
+    .btn-primary {
+        background-color: #7A1E3D; /* Cambiado a #7A1E3D */
+        border-color: #7A1E3D;
+    }
+
+    .btn-primary:hover {
+        background-color: #5B152E; /* Color más oscuro al pasar el ratón */
+        border-color: #5B152E;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #5a6268;
+    }
+
+    /* Centrado de la página */
+    .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+    }
+</style>
+
+
+</head>
+<body>
+    <div class="main-content">
+        <div class="details-box details-container">
+            <h1>Detalles del Accesorio</h1>
+            <dl class="row">
+                <dt class="col-sm-4">Nombre</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Nombre)</dd>
+
+                <dt class="col-sm-4">Descripción</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Descripcion)</dd>
+
+                <dt class="col-sm-4">Precio</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Precio)</dd>
+
+                <dt class="col-sm-4">Vendedor</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Vendedor.UsuarioId)</dd>
+
+                <dt class="col-sm-4">Cantidad Disponible</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.CantidadDisponible)</dd>
+            </dl>
+            <div class="btn-container">
+                <a asp-action="Edit" asp-route-id="@Model?.AccesorioId" class="btn btn-primary">Editar</a>
+                <a asp-action="Index" class="btn btn-secondary">Volver a la lista</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

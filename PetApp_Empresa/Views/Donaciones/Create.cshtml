@@ -5,39 +5,146 @@
 }
 <link rel="stylesheet" href="~/css/donaciones.css" />
 
+<div class="donation-container">
+    <!-- Cambié text-primary por una clase personalizada para evitar conflictos -->
+    <h1 class="text-center titulo-negro mb-4">Realizar Donación</h1>
 
-<h1 class="text-center text-primary mb-4">Realizar Donación</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Create" class="donation-form animate__animated animate__fadeIn">
+                <!-- Validación -->
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-            
-            <div class="form-group mb-3">
-                <label asp-for="RefugioId" class="form-label">Seleccionar Refugio</label>
-                <select asp-for="RefugioId" class="form-select" asp-items="ViewBag.RefugioId">
-                    <option value="">Seleccione un refugio...</option>
-                </select>
-                <span asp-validation-for="RefugioId" class="text-danger"></span>
-            </div>
+                <!-- Seleccionar Refugio -->
+                <div class="form-group mb-4">
+                    <label asp-for="RefugioId" class="form-label">Seleccionar Refugio</label>
+                    <select asp-for="RefugioId" class="form-select" asp-items="ViewBag.RefugioId">
+                        <option value="">Seleccione un refugio...</option>
+                    </select>
+                    <span asp-validation-for="RefugioId" class="text-danger"></span>
+                </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Monto" class="form-label">Monto de Donación</label>
-                <input asp-for="Monto" class="form-control" placeholder="Ingrese el monto en Bs." />
-                <span asp-validation-for="Monto" class="text-danger"></span>
-            </div>
+                <!-- Monto -->
+                <div class="form-group mb-4">
+                    <label asp-for="Monto" class="form-label">Monto de Donación</label>
+                    <input asp-for="Monto" class="form-control" placeholder="Ingrese el monto en Bs." />
+                    <span asp-validation-for="Monto" class="text-danger"></span>
+                </div>
 
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-success btn-lg">Donar</button>
-            </div>
-        </form>
+                <!-- Botón Donar -->
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-success btn-lg btn-animated">Donar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Botón Regresar -->
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-secondary btn-back btn-animated">Regresar al listado</a>
     </div>
 </div>
 
-<div class="text-center mt-4">
-    <a asp-action="Index" class="btn btn-secondary">Regresar al listado</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+
+<style>
+    /* Archivo donaciones.css */
+
+    /* General */
+    .donation-container {
+        margin-top: 50px;
+    }
+
+    /* Clase personalizada para el título en negro */
+    .titulo-negro {
+        font-family: 'Arial', sans-serif;
+        font-size: 2.5rem;
+        color: black !important; /* Asegura que el título sea negro */
+        text-align: center;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    /* Formulario */
+    .donation-form {
+        background-color: var(--background-color); /* Fondo suave según layout */
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-out;
+    }
+
+        .donation-form .form-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color); /* Color del texto de las etiquetas del formulario */
+        }
+
+        .donation-form .form-select,
+        .donation-form .form-control {
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid var(--input-border-color); /* Color del borde del input */
+            margin-bottom: 15px;
+        }
+
+            .donation-form .form-control:focus {
+                border-color: var(--focus-border-color); /* Color de foco del input */
+                box-shadow: 0 0 5px var(--focus-box-shadow); /* Sombra del input en foco */
+            }
+
+        /* Botón Donar */
+        .donation-form .btn-success {
+            background-color: #7A1E3D; /* Color del layout para el botón */
+            border-color: #7A1E3D; /* Color del borde del botón */
+            color: white; /* Color de texto blanco en el botón */
+        }
+
+            .donation-form .btn-success:hover {
+                background-color: #0056b3; /* Color oscuro para el hover */
+                border-color: #0056b3; /* Borde oscuro en hover */
+            }
+
+    /* Botón Regresar */
+    .btn-back {
+        background-color: var(--secondary-color); /* Usar el color secundario del layout */
+        color: var(--button-text-color); /* Color de texto del botón */
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-back:hover {
+            background-color: var(--secondary-dark-color); /* Color oscuro para el hover */
+        }
+
+    /* Animaciones */
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mensajes de validación */
+    .alert-danger {
+        background-color: var(--error-background-color);
+        color: var(--error-text-color);
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+</style>

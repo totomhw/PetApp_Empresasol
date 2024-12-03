@@ -1,150 +1,186 @@
 ﻿@model IEnumerable<PetApp_Empresa.Models.Mascota>
 
-@{
-    ViewData["Title"] = "Lista de Mascotas Disponibles";
-}
+<div class="container-fluid py-5">
+    <!-- Título con animación -->
+    <div class="text-center mb-4 animate-title">
+        <h1 class="display-4 fw-bold title-gradient">Mascotas Disponibles para Adopción</h1>
+        <p class="lead text-muted">Encuentra la mascota perfecta para adoptar y brindarle un hogar lleno de amor.</p>
+    </div>
 
-<!-- Contenedor del encabezado estático -->
-<div class="header-fixed">
-    <h1>Mascotas Disponibles para Adopción</h1>
+    <!-- Formulario para filtrar -->
+    <div class="text-center mb-4">
+        <form method="get" asp-action="VistaMascota" class="d-flex justify-content-center align-items-center gap-3">
+            <input type="number" name="edadFiltro" id="edadFiltro" class="form-control filter-input" placeholder="Edad" />
+            <button type="submit" class="btn btn-filter">Aplicar Filtro</button>
+        </form>
+    </div>
 
-    <!-- Formulario para filtrar por edad -->
-    <form method="get" asp-action="VistaMascota" class="form-inline">
-        <label for="edadFiltro" class="mr-2">Filtrar por Edad:</label>
-        <input type="number" name="edadFiltro" id="edadFiltro" class="form-control mr-2" placeholder="Edad" />
-        <button type="submit" class="btn btn-primary">Aplicar Filtro</button>
-    </form>
+    <!-- Tarjetas de mascotas -->
+    <div class="row justify-content-center gap-4 animate-cards">
+        @foreach (var mascota in Model.OrderBy(m => m.EstadoAdopcion == "Adoptado"))
+        {
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mascota-card @(mascota.EstadoAdopcion == "Adoptado" ? "adopted-card" : "")">
+                <img src="@mascota.ImagenUrl" alt="@mascota.Nombre" class="mascota-img rounded-top" />
+                <div class="card-body">
+                    <h2 class="card-title text-center">@mascota.Nombre</h2>
+                    <p class="card-text"><strong>Raza:</strong> @mascota.Raza</p>
+                    <p class="card-text"><strong>Edad:</strong> @mascota.Edad años</p>
+                    <p class="card-text"><strong>Sexo:</strong> @mascota.Sexo</p>
+                    <a href="@Url.Action("DetailsMascota", new { id = mascota.MascotaId })" class="btn btn-adoptar">Adoptar</a>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
-<!-- Contenedor desplazable para las tarjetas -->
-<div class="mascotas-container">
-    @foreach (var mascota in Model.OrderBy(m => m.EstadoAdopcion == "Adoptado"))
-    {
-        <div class="mascota-card @(mascota.EstadoAdopcion == "Adoptado" ? "adopted-card" : "")">
-            <img src="@mascota.ImagenUrl" alt="@mascota.Nombre">
-            <h2>@mascota.Nombre</h2>
-            <p><strong>Raza:</strong> @mascota.Raza</p>
-            <p><strong>Edad:</strong> @mascota.Edad años</p>
-            <p><strong>Sexo:</strong> @mascota.Sexo</p>
-            <a href="@Url.Action("DetailsMascota", new { id = mascota.MascotaId })" class="btn btn-primary">Adoptar</a>
-        </div>
-    }
-</div>
-
+<!-- Estilos -->
 <style>
-    /* Header fijo (título y filtro) */
-    .header-fixed {
-        position: fixed;
-        top: 60px; /* Espacio reservado para el header del layout */
-        left: 220px; /* Ajuste para evitar el sidebar */
-        width: calc(100% - 220px); /* Ajuste del ancho según el sidebar */
-        background-color: #a81c1c; /* Rojo de Univalle */
-        z-index: 1000;
-        padding: 10px 0;
-        text-align: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        color: white;
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: #343a40;
     }
 
-        .header-fixed h1 {
-            font-size: 2rem;
-            margin: 10px 0;
-            color: #ffdf91; /* Color amarillo cálido */
-        }
-
-        .header-fixed .form-inline {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 10px 0;
-        }
-
-        .header-fixed .form-control {
-            width: 150px;
-            margin-right: 10px;
-        }
-
-        .header-fixed .btn-primary {
-            background-color: white;
-            color: #a81c1c;
-            border: 1px solid #a81c1c;
-            font-weight: bold;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-            .header-fixed .btn-primary:hover {
-                background-color: #a81c1c;
-                color: white;
-            }
-
-    /* Contenedor desplazable */
-    .mascotas-container {
-        margin-top: 140px; /* Espacio reservado para el header fijo y principal */
-        margin-left: 220px; /* Espacio reservado para el sidebar */
-        padding: 20px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        height: calc(100vh - 140px); /* Altura ajustada para que sea desplazable */
-        overflow-y: auto; /* Sólo una barra de desplazamiento */
+    /* Título gradiente con animación */
+    .title-gradient {
+        background: linear-gradient(to right, #a81c1c, #800020);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: glowingTitle 1.5s infinite alternate;
     }
 
-    /* Estilo de tarjetas */
+    @@keyframes glowingTitle {
+        from {
+            filter: brightness(1);
+        }
+
+        to {
+            filter: brightness(1.5);
+        }
+    }
+
+    /* Botón de filtro */
+    .btn-filter {
+        background: linear-gradient(to right, #343a40, #6c757d);
+        color: #ffffff;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .btn-filter:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    /* Entrada de filtro */
+    .filter-input {
+        width: 200px;
+        border: 2px solid #6c757d;
+        border-radius: 6px;
+        padding: 8px;
+    }
+
+        .filter-input:focus {
+            border-color: #a81c1c;
+            outline: none;
+        }
+
+    /* Tarjetas de mascotas */
     .mascota-card {
-        border: 1px solid #ddd;
-        padding: 20px;
-        margin: 15px;
-        width: 250px;
-        text-align: center;
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 8px;
-        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
         position: relative;
+        animation: fadeIn 1s ease-in-out;
     }
 
         .mascota-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+    /* Imagen de la tarjeta */
+    .mascota-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 3px solid #a81c1c;
+    }
+
+    /* Contenido de la tarjeta */
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        color: #6c757d;
+    }
+
+    /* Botón Adoptar */
+    .btn-adoptar {
+        display: block;
+        width: 100%;
+        background: linear-gradient(to right, #a81c1c, #800020);
+        color: #ffffff !important; /* Texto blanco */
+        text-align: center;
+        padding: 10px 0;
+        font-weight: bold;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .btn-adoptar:hover {
             transform: scale(1.05);
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 6px 15px rgba(168, 28, 28, 0.3);
         }
 
-        .mascota-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 8px 8px 0 0;
-            margin-bottom: 10px;
-        }
-
-        .mascota-card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .mascota-card p {
-            font-size: 1rem;
-            margin: 5px 0;
-        }
-
-        .mascota-card .btn-primary {
-            background-color: #a81c1c;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-decoration: none;
-        }
-
-            .mascota-card .btn-primary:hover {
-                background-color: #7f1414;
-            }
-
-    /* Tarjetas de mascotas adoptadas */
+    /* Tarjetas adoptadas */
     .adopted-card {
-        background-color: rgba(168, 28, 28, 0.2); /* Fondo rojo suave */
-        order: 1; /* Coloca las tarjetas adoptadas al final */
+        background: #f8d7da;
+        border: 2px solid #a81c1c;
+    }
+
+    /* Animación de entrada */
+    .animate-title {
+        opacity: 0;
+        transform: translateY(-50px);
+        animation: fadeInDown 1.2s forwards ease-out;
+    }
+
+    @@keyframes fadeInDown {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-cards {
+        opacity: 0;
+        animation: fadeIn 1.5s forwards ease-in-out;
+    }
+
+    @@keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
     }
 </style>
+
+<!-- Librerías necesarias -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">

@@ -4,83 +4,134 @@
     ViewData["Title"] = "Detalles de la Mascota";
 }
 
-<h1>Detalles de @Model.Nombre</h1>
+<div class="mascota-detalles-container">
+    <h1 class="titulo-negro text-center">Detalles de @Model.Nombre</h1>
 
-<div>
-    <h4>Información de la Mascota</h4>
-    <dl class="row">
-        <dt class="col-sm-2">Raza</dt>
-        <dd class="col-sm-10">@Model.Raza</dd>
+    <div class="mascota-detalles">
+        <h4 class="text-center mb-4">Información de la Mascota</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">Raza</dt>
+            <dd class="col-sm-9">@Model.Raza</dd>
 
-        <dt class="col-sm-2">Edad</dt>
-        <dd class="col-sm-10">@Model.Edad años</dd>
+            <dt class="col-sm-3">Edad</dt>
+            <dd class="col-sm-9">@Model.Edad años</dd>
 
-        <dt class="col-sm-2">Sexo</dt>
-        <dd class="col-sm-10">@Model.Sexo</dd>
+            <dt class="col-sm-3">Sexo</dt>
+            <dd class="col-sm-9">@Model.Sexo</dd>
 
-        <dt class="col-sm-2">Descripción</dt>
-        <dd class="col-sm-10">@Model.Descripcion</dd>
+            <dt class="col-sm-3">Descripción</dt>
+            <dd class="col-sm-9">@Model.Descripcion</dd>
 
-        <dt class="col-sm-2">Estado</dt>
-        <dd class="col-sm-10">@Model.EstadoAdopcion</dd>
-    </dl>
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9">
+                <span class="estado @((Model.EstadoAdopcion == "Disponible") ? "text-success" : "text-danger")">
+                    @Model.EstadoAdopcion
+                </span>
+            </dd>
+        </dl>
 
-    <!-- Si la mascota está disponible, mostrar botón para iniciar solicitud de adopción -->
-    @if (Model.EstadoAdopcion == "Disponible")
-    {
-        <a asp-action="SolicitarAdopcion" asp-route-id="@Model.MascotaId" class="btn btn-primary mt-3">Solicitar Adopción</a>
-    }
-    else
-    {
-        <p>Esta mascota ya ha sido adoptada.</p>
-    }
-</div>
+        @if (Model.EstadoAdopcion == "Disponible")
+        {
+            <div class="text-center mt-4">
+                <a asp-action="SolicitarAdopcion" asp-route-id="@Model.MascotaId" class="btn btn-save btn-animated">Solicitar Adopción</a>
+            </div>
+        }
+        else
+        {
+            <p class="text-center text-muted mt-4">Esta mascota ya ha sido adoptada.</p>
+        }
+    </div>
 
-<div>
-    <a asp-action="VistaMascota">Volver a la lista</a>
+    <div class="text-center mt-4">
+        <a asp-action="VistaMascota" class="btn btn-back btn-animated">Volver a la lista</a>
+    </div>
 </div>
 
 <style>
+    /* Contenedor principal */
+    .mascota-detalles-container {
+        margin-top: 50px;
+    }
+
+    /* Estilo del título */
+    .titulo-negro {
+        font-family: 'Arial', sans-serif;
+        font-size: 2.5rem;
+        color: black !important;
+        margin-bottom: 30px;
+    }
+
+    /* Estilos de los detalles de la mascota */
     .mascota-detalles {
+        background-color: var(--background-color);
         border: 1px solid #ddd;
         padding: 20px;
-        margin-top: 20px;
-        background-color: rgba(255, 255, 255, 0.95);
         border-radius: 8px;
-        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-        color: #333;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-out;
     }
 
-        .mascota-detalles p {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 8px;
-        }
+    .mascota-detalles dl dt {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
 
-        .mascota-detalles h1 {
-            font-size: 2.5rem;
-            color: #ffdf91;
-        }
+    .mascota-detalles dl dd {
+        color: var(--text-color);
+    }
 
-        .mascota-detalles .descripcion {
-            color: #555;
-        }
+    .estado.text-success {
+        font-weight: bold;
+        color: #28a745; /* Verde para "Disponible" */
+    }
 
-        .mascota-detalles .estado {
-            font-weight: bold;
-            color: #ff0000;
-        }
+    .estado.text-danger {
+        font-weight: bold;
+        color: #dc3545; /* Rojo para "Adoptada" */
+    }
 
-    .btn-success {
-        background-color: #28a745;
+    /* Botón de "Solicitar Adopción" */
+    .btn-save {
+        background-color: #7A1E3D; /* Rojo para "Solicitar Adopción" */
         color: white;
-        padding: 10px 20px;
+        padding: 12px 20px;
+        font-size: 1.2rem;
         border-radius: 5px;
-        border: none;
-        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
     }
 
-        .btn-success:hover {
-            background-color: #218838;
+    .btn-save:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    /* Botón de "Volver a la lista" */
+    .btn-back {
+        background-color: #cccccc; /* Gris */
+        color: black;
+        padding: 12px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background-color: #aaaaaa;
+    }
+
+    /* Animaciones */
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
         }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>

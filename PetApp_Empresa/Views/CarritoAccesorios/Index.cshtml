@@ -1,41 +1,188 @@
 ﻿@model IEnumerable<PetApp_Empresa.Models.CarritoAccesorio>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Carrito de Accesorios";
 }
 
-<h1>Index</h1>
+<div class="container py-5 animate-container">
+    <!-- Título -->
+    <div class="text-center mb-5 animate-title">
+        <h1 class="display-4 text-gradient">@ViewData["Title"]</h1>
+        <p class="lead text-muted">Administra los accesorios en el carrito de compras con facilidad.</p>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Accesorio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Carrito)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Accesorio.AccesorioId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Carrito.CarritoId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CarritoAccesorioId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CarritoAccesorioId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CarritoAccesorioId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <!-- Botón Crear Nuevo -->
+    <div class="d-flex justify-content-end mb-4 animate-button">
+        <a asp-action="Create" class="btn btn-create shadow-sm d-flex align-items-center">
+            <i class="fas fa-plus me-2"></i>Crear Nuevo
+        </a>
+    </div>
+
+    <!-- Tabla de accesorios -->
+    <div class="table-responsive animate-table">
+        <table class="table table-hover shadow-sm border-0">
+            <thead class="table-header">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Accesorio)</th>
+                    <th>@Html.DisplayNameFor(model => model.Carrito)</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr class="align-middle animate-row">
+                            <td>@Html.DisplayFor(modelItem => item.Accesorio.AccesorioId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Carrito.CarritoId)</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.CarritoAccesorioId" class="btn btn-sm btn-edit me-2">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.CarritoAccesorioId" class="btn btn-sm btn-details me-2">
+                                    <i class="fas fa-info-circle"></i> Detalles
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.CarritoAccesorioId" class="btn btn-sm btn-delete">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr class="animate-row">
+                        <td colspan="3" class="text-center text-muted">No hay accesorios en el carrito.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Estilos -->
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: #343a40;
+    }
+
+    /* Gradiente para títulos */
+    .text-gradient {
+        background: linear-gradient(to right, #800020, #a81c1c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Tabla */
+    .table-header {
+        background: linear-gradient(to right, #800020, #a81c1c);
+        color: white;
+        font-weight: bold;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(168, 28, 28, 0.1);
+        cursor: pointer;
+    }
+
+    /* Botones */
+    .btn-create {
+        background: linear-gradient(to right, #800020, #a81c1c);
+        color: white !important;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 10px 20px;
+    }
+
+    .btn-edit {
+        background-color: #0056b3 !important;
+        color: white !important;
+    }
+
+    .btn-details {
+        background-color: #17a2b8 !important;
+        color: white !important;
+    }
+
+    .btn-delete {
+        background-color: #dc3545 !important;
+        color: white !important;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Animaciones de entrada */
+    .animate-container {
+        opacity: 0;
+        animation: fadeInContainer 1s ease-in forwards;
+    }
+
+    .animate-title {
+        opacity: 0;
+        transform: translateY(-30px);
+        animation: fadeInTitle 1s ease-out forwards;
+    }
+
+    .animate-button {
+        opacity: 0;
+        transform: scale(0.9);
+        animation: fadeInButton 1s 0.5s ease-out forwards;
+    }
+
+    .animate-table {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInTable 1s 0.5s ease-out forwards;
+    }
+
+    .animate-row {
+        opacity: 0;
+        transform: translateX(-30px);
+        animation: fadeInRow 0.8s ease-out forwards;
+    }
+
+    /* Keyframes */
+    @@keyframes fadeInContainer {
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes fadeInTitle {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInButton {
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes fadeInTable {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInRow {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+</style>
+
+<!-- Librerías necesarias -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
