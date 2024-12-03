@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetApp_Empresa.Models;
 
@@ -12,15 +11,9 @@ using PetApp_Empresa.Models;
 namespace PetApp_Empresa.Migrations
 {
     [DbContext(typeof(PettappPruebaContext))]
-<<<<<<<< HEAD:PetApp_Empresa/Migrations/20241201060301_InitialCreate.Designer.cs
-    [Migration("20241201060301_InitialCreate")]
-========
-    [Migration("20241202044239_InitialCreate")]
->>>>>>>> 2b15b0080aa1d8bd7ac419d07506f67911332faf:PetApp_Empresa/Migrations/20241202044239_InitialCreate.Designer.cs
-    partial class InitialCreate
+    partial class PettappPruebaContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
