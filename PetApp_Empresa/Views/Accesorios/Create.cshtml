@@ -13,157 +13,152 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-  
+
     <style>
-    /* Contenedor del formulario */
-    .form-container {
-        background: #ffffff;
-        padding: 50px;
-        border-radius: 16px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        max-width: 600px;
-        margin: auto;
-        animation: fadeInScale 0.8s ease-out;
-        border: 1px solid #ebebeb;
-        transition: all 0.3s ease-in-out;
-    }
-
-    @@keyframes fadeInScale {
-        from {
-            opacity: 0;
-            transform: scale(0.95);
+        /* Contenedor del formulario */
+        .form-container {
+            background: #ffffff;
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            max-width: 600px;
+            margin: auto;
+            animation: fadeInScale 0.8s ease-out;
+            border: 1px solid #ebebeb;
+            transition: all 0.3s ease-in-out;
         }
-        to {
-            opacity: 1;
-            transform: scale(1);
+
+        @@keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
-    }
 
-    .form-container:hover {
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-        transform: translateY(-5px);
-    }
+        .form-container:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
 
-    /* Título con sombra dinámica */
-    .form-container h1 {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #333333;
-        text-align: center;
-        margin-bottom: 20px;
-        font-family: 'Roboto', sans-serif;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-        transition: text-shadow 0.3s ease, transform 0.3s ease;
-    }
+        /* Título con sombra dinámica */
+        .form-container h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Roboto', sans-serif;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            transition: text-shadow 0.3s ease, transform 0.3s ease;
+        }
 
-    .form-container h1:hover {
-        text-shadow: 0 4px 10px rgba(0, 123, 255, 0.6);
-        transform: scale(1.05);
-    }
+            .form-container h1:hover {
+                text-shadow: 0 4px 10px rgba(0, 123, 255, 0.6);
+                transform: scale(1.05);
+            }
 
-    /* Etiquetas */
-    .form-group label {
-        font-size: 1rem;
-        font-weight: 500;
-        color: #555555;
-        margin-bottom: 8px;
-        display: inline-block;
-        font-family: 'Roboto', sans-serif;
-        transition: text-shadow 0.3s ease;
-    }
+        /* Etiquetas */
+        .form-group label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #555555;
+            margin-bottom: 8px;
+            display: inline-block;
+            font-family: 'Roboto', sans-serif;
+            transition: text-shadow 0.3s ease;
+        }
 
-    .form-group label:hover {
-        text-shadow: 0 3px 8px rgba(0, 123, 255, 0.5);
-    }
+            .form-group label:hover {
+                text-shadow: 0 3px 8px rgba(0, 123, 255, 0.5);
+            }
 
-    /* Campos del formulario */
-    .form-control {
-        font-size: 1rem;
-        padding: 12px 15px;
-        border-radius: 8px;
-        border: 1px solid #dddddd;
-        background-color: #f9f9f9;
-        transition: all 0.3s ease, text-shadow 0.3s ease;
-    }
+        /* Campos del formulario */
+        .form-control {
+            font-size: 1rem;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #dddddd;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease, text-shadow 0.3s ease;
+        }
 
-    .form-control:focus {
-        border-color: #007bff;
-        background-color: #ffffff;
-        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-        transform: scale(1.03);
-    }
+            .form-control:focus {
+                border-color: #007bff;
+                background-color: #ffffff;
+                box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+                transform: scale(1.03);
+            }
 
-    .form-control:hover {
-        border-color: #007bff;
-        background-color: #f1f8ff;
-        text-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
-        transform: scale(1.02);
-    }
+            .form-control:hover {
+                border-color: #007bff;
+                background-color: #f1f8ff;
+                text-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+                transform: scale(1.02);
+            }
 
-    /* Botón principal con color del layout */
-    .btn-primary {
-        background-color: #7A1E3D; /* Color del layout */
-        border-color: #7A1E3D;
-        padding: 12px;
-        font-size: 1rem;
-        font-weight: 600;
-        color: #ffffff;
-        border-radius: 8px;
-        text-align: center;
-        width: 100%;
-        margin-top: 20px;
-        transition: all 0.3s ease, text-shadow 0.3s ease;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
+        /* Botón principal con color del layout */
+        .btn-primary {
+            background-color: #7A1E3D; /* Color del layout */
+            border-color: #7A1E3D;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s ease, text-shadow 0.3s ease;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
 
-    .btn-primary:hover {
-        background-color: #5B152E; /* Color más oscuro para el hover */
-        box-shadow: 0 6px 15px rgba(122, 30, 61, 0.4);
-        transform: translateY(-3px) scale(1.05);
-        text-shadow: 0 4px 10px rgba(122, 30, 61, 0.5);
-        cursor: pointer;
-    }
+            .btn-primary:hover {
+                background-color: #5B152E; /* Color más oscuro para el hover */
+                box-shadow: 0 6px 15px rgba(122, 30, 61, 0.4);
+                transform: translateY(-3px) scale(1.05);
+                text-shadow: 0 4px 10px rgba(122, 30, 61, 0.5);
+                cursor: pointer;
+            }
 
-    .btn-primary:active {
-        transform: translateY(1px) scale(1);
-    }
+            .btn-primary:active {
+                transform: translateY(1px) scale(1);
+            }
 
-    /* Validación de errores */
-    .text-danger {
-        font-size: 0.9rem;
-        margin-top: 5px;
-        color: #d9534f;
-    }
+        /* Validación de errores */
+        .text-danger {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: #d9534f;
+        }
 
-    /* Botón de volver */
-    .back-btn {
-        display: block;
-        text-align: center;
-        font-size: 0.9rem;
+        /* Botón de volver */
+        .back-btn {
+            display: block;
+            text-align: center;
+            font-size: 0.9rem;
             color: #7A1E3D;
-        font-weight: 500;
-        margin-top: 15px;
-        text-decoration: none;
-        transition: all 0.3s ease, text-shadow 0.3s ease;
-    }
+            font-weight: 500;
+            margin-top: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease, text-shadow 0.3s ease;
+        }
 
-    .back-btn:hover {
-        color: #0056b3;
-        text-shadow: 0 3px 8px rgba(0, 123, 255, 0.5);
-        transform: translateY(-2px);
-    }
+            .back-btn:hover {
+                color: #0056b3;
+                text-shadow: 0 3px 8px rgba(0, 123, 255, 0.5);
+                transform: translateY(-2px);
+            }
 
-    /* Espaciado entre elementos */
-    .form-group {
-        margin-bottom: 20px;
-    }
-</style>
-
-
-
-
-
-
+        /* Espaciado entre elementos */
+        .form-group {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -193,7 +188,7 @@
             <div class="form-container form-slide">
                 <h1>Crear Nuevo Accesorio</h1>
 
-                <form asp-action="Create">
+                <form asp-action="Create" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
 
                     <div class="form-group">
@@ -221,12 +216,11 @@
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="VendedorId" class="control-label">Vendedor</label>
-                        <select asp-for="VendedorId" class="form-control" asp-items="ViewBag.VendedorId">
-                            <option value="">Seleccione un Vendedor</option>
-                        </select>
-                        <span asp-validation-for="VendedorId" class="text-danger"></span>
+                        <label for="ImagenArchivo" class="control-label">Imagen del Accesorio</label>
+                        <input type="file" name="ImagenArchivo" class="form-control-file" id="ImagenArchivo" />
                     </div>
+
+
 
                     <div class="form-group text-center">
                         <input type="submit" value="Crear Accesorio" class="btn btn-primary" />
@@ -241,9 +235,7 @@
     </div>
 
     @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
+        @await Html.PartialAsync("_ValidationScriptsPartial")
     }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
