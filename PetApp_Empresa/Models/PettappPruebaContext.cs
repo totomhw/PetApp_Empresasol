@@ -118,11 +118,17 @@ public partial class PettappPruebaContext : DbContext
             entity.Property(e => e.CantidadDisponible)
                 .HasDefaultValue(0);
 
+            // Configuración de la propiedad ImagenUrl
+            entity.Property(e => e.ImagenUrl)
+                .HasMaxLength(255) // Longitud máxima para la URL de la imagen
+                .IsUnicode(false); // Define que no es texto Unicode, útil para rutas de archivos
+
             entity.HasOne(d => d.Vendedor)
                 .WithMany(p => p.Accesorios)
                 .HasForeignKey(d => d.VendedorId)
                 .OnDelete(DeleteBehavior.SetNull);
         });
+
 
 
         modelBuilder.Entity<Accesorio>(entity =>

@@ -110,12 +110,41 @@
                             </a>
                         </li>
                     }
+                    <!-- Menú para Clientes -->
+                    @if (User.IsInRole("Cliente"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="DashboardCliente">
+                                <i class="fas fa-home"></i> Menú Principal
+                            </a>
+                        </li>
+
+                        <!-- Opciones del Cliente -->
+                        <li class="nav-item section-title">Opciones del Cliente</li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Mascotas" asp-action="VistaMascota">
+                                <i class="fas fa-paw"></i> Adoptar una mascota
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Accesorios" asp-action="ListadoAccesorios">
+                                <i class="fas fa-shopping-cart"></i> Comprar Accesorios
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Donaciones" asp-action="Index">
+                                <i class="fas fa-hand-holding-heart"></i> Hacer una Donación
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="CarritoDeCompras" asp-action="HistorialCompras">
+                                <i class="fas fa-history"></i> Historial de Compras
+                            </a>
+                        </li>
+                    }
                 </ul>
             </div>
-
-
-
-
         }
 
         <div class="main-content">

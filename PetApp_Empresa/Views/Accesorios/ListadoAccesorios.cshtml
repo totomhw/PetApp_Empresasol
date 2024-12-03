@@ -15,7 +15,7 @@
 
     <!-- Carrito -->
     <div class="text-end mb-3">
-        <a href="@Url.Action("ResumenCarrito", "CarritoDeCompras")" class="btn btn-gradient shadow-sm animate-cart">
+        <a href="@Url.Action("ResumenCarrito", "CarritoDeCompras")" class="btn btn-carrito shadow-sm animate-cart">
             <i class="fas fa-shopping-cart me-2"></i>Carrito <span id="carrito-count" class="badge bg-light text-dark">0</span>
         </a>
     </div>
@@ -26,8 +26,18 @@
         {
             <div class="col-md-6 col-lg-4 animate-card">
                 <div class="card shadow-sm border-0 h-100">
+                    @if (!string.IsNullOrEmpty(accesorio.ImagenUrl))
+                    {
+                        <img src="@accesorio.ImagenUrl" class="card-img-top img-fluid" alt="Imagen del accesorio" style="height: 200px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
+                            <span class="text-muted">Sin imagen</span>
+                        </div>
+                    }
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bold text-dark">@accesorio.Nombre</h5>
+                        <h5 class="card-title fw-bold text-guindo">@accesorio.Nombre</h5>
                         <p class="card-text text-secondary">@accesorio.Descripcion</p>
                         <p class="mb-2">
                             <strong class="text-secondary">Precio:</strong> <span class="text-success">@accesorio.Precio.ToString("C")</span>
@@ -42,11 +52,11 @@
                         {
                             <div class="mt-auto">
                                 <div class="input-group mb-2">
-                                    <button class="btn btn-outline-secondary" onclick="ajustarCantidad(@accesorio.AccesorioId, -1)">-</button>
+                                    <button class="btn btn-outline-guindo" onclick="ajustarCantidad(@accesorio.AccesorioId, -1)">-</button>
                                     <input type="text" id="cantidad-@accesorio.AccesorioId" class="form-control text-center" value="0" readonly>
-                                    <button class="btn btn-outline-secondary" onclick="ajustarCantidad(@accesorio.AccesorioId, 1)">+</button>
+                                    <button class="btn btn-outline-guindo" onclick="ajustarCantidad(@accesorio.AccesorioId, 1)">+</button>
                                 </div>
-                                <button class="btn btn-gradient w-100" onclick="agregarAlCarrito(@accesorio.AccesorioId)">
+                                <button class="btn btn-guindo w-100" onclick="agregarAlCarrito(@accesorio.AccesorioId)">
                                     <i class="fas fa-cart-plus me-2"></i>Agregar al carrito
                                 </button>
                             </div>
@@ -64,171 +74,104 @@
     </div>
 </div>
 
-<!-- Estilos -->
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: #f8f9fa;
-    }
-
-    .text-gradient {
-        background: linear-gradient(to right, #800020, #a81c1c);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .btn-gradient {
-        background: linear-gradient(to right, #800020, #a81c1c);
-        color: #ffffff !important;
-        font-weight: bold;
-        border-radius: 6px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-        .btn-gradient:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 6px 15px rgba(168, 28, 28, 0.5);
-        }
-
-    .card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border-radius: 0.75rem;
-    }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-
-    .text-secondary {
-        color: #6c757d !important;
-    }
-
-    #carrito-count {
-        font-size: 0.9rem;
-    }
-
-    /* Animaciones */
-    .animate-page {
-        opacity: 0;
-        animation: fadeInPage 1s forwards ease-out;
-    }
-
-    .animate-title {
-        opacity: 0;
-        transform: translateY(-50px);
-        animation: fadeInSlideDown 1s forwards ease-out;
-    }
-
-    .animate-subtitle {
-        opacity: 0;
-        transform: translateY(-30px);
-        animation: fadeInSlideDown 1s 0.5s forwards ease-out;
-    }
-
-    .animate-cart {
-        opacity: 0;
-        transform: scale(0.8);
-        animation: fadeInScale 1s 0.8s forwards ease-out;
-    }
-
-    .animate-card {
-        opacity: 0;
-        transform: translateY(30px);
-        animation: fadeInCard 1s forwards ease-out;
-    }
-
-        .animate-card:nth-child(odd) {
-            animation-delay: 0.3s;
-        }
-
-        .animate-card:nth-child(even) {
-            animation-delay: 0.6s;
-        }
-
-    @@keyframes fadeInPage {
-        to {
-            opacity: 1;
-        }
-    }
-
-    @@keyframes fadeInSlideDown {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @@keyframes fadeInScale {
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    @@keyframes fadeInCard {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>
-
-<!-- Librerías necesarias -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-
-<!-- Script -->
+<!-- Script para manejo de cantidad y carrito -->
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    // Manejo de la cantidad
+    function ajustarCantidad(accesorioId, delta) {
+        const cantidadInput = document.getElementById(`cantidad-${accesorioId}`);
+        let cantidad = parseInt(cantidadInput.value) || 0;
+        cantidad = Math.max(0, cantidad + delta); // Evitar valores negativos
+        cantidadInput.value = cantidad;
+    }
+
+    // Agregar al carrito
+    function agregarAlCarrito(accesorioId) {
+        const cantidad = parseInt(document.getElementById(`cantidad-${accesorioId}`).value) || 0;
+
+        if (cantidad > 0) {
+            fetch(`/CarritoDeCompras/AgregarAlCarrito`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({ accesorioId, cantidad })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Error al agregar al carrito');
+                    }
+                })
+                .then(data => {
+                    alert(data.message);
+                    actualizarCarrito();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ocurrió un error al agregar el producto al carrito.');
+                });
+        } else {
+            alert('Seleccione al menos una unidad para agregar al carrito.');
+        }
+    }
+
+    // Actualizar la cantidad de elementos en el carrito
+    function actualizarCarrito() {
         fetch('/CarritoDeCompras/ObtenerCantidadElementosCarrito')
             .then(response => response.json())
             .then(data => {
                 document.getElementById("carrito-count").innerText = data.cantidad;
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error al actualizar el carrito:', error);
+            });
+    }
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+        actualizarCarrito();
     });
-
-    function ajustarCantidad(accesorioId, delta) {
-        const cantidadInput = document.getElementById(`cantidad-${accesorioId}`);
-        let cantidad = parseInt(cantidadInput.value);
-        cantidad = Math.max(0, cantidad + delta);
-        cantidadInput.value = cantidad;
-    }
-
-    function agregarAlCarrito(accesorioId) {
-        const cantidad = parseInt(document.getElementById(`cantidad-${accesorioId}`).value);
-        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-        if (cantidad > 0) {
-            fetch(`/CarritoDeCompras/AgregarAlCarrito?accesorioId=${accesorioId}&cantidad=${cantidad}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': token
-                }
-            })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Producto añadido al carrito');
-                        fetch('/CarritoDeCompras/ObtenerCantidadElementosCarrito')
-                            .then(response => response.json())
-                            .then(data => {
-                                document.getElementById("carrito-count").innerText = data.cantidad;
-                            });
-                        document.getElementById(`cantidad-${accesorioId}`).value = 0;
-                    } else {
-                        response.json().then(data => {
-                            alert('Error: ' + (data.message || 'Error desconocido'));
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Hubo un problema al procesar la solicitud.');
-                });
-        } else {
-            alert("Seleccione al menos 1 unidad para agregar al carrito.");
-        }
-    }
 </script>
+
+<!-- Estilos personalizados -->
+<style>
+    .btn-guindo {
+        background-color: #800020;
+        color: #fff;
+        border-radius: 6px;
+        font-weight: bold;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .btn-guindo:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(128, 0, 32, 0.5);
+        }
+
+    .btn-outline-guindo {
+        border-color: #800020;
+        color: #800020;
+    }
+
+        .btn-outline-guindo:hover {
+            background-color: #800020;
+            color: #fff;
+        }
+
+    .text-guindo {
+        color: #800020;
+    }
+
+    .btn-carrito {
+        background-color: #800020;
+        color: #fff;
+        font-weight: bold;
+    }
+
+        .btn-carrito:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(128, 0, 32, 0.5);
+        }
+</style>

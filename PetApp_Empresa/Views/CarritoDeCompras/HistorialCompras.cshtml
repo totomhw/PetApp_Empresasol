@@ -1,92 +1,216 @@
 ﻿@model List<PetApp_Empresa.Models.Compra>
 
-<h2>Historial de Compras</h2>
+<div class="container py-4 animate-page">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-gradient animate-title">Historial de Compras</h2>
+        <p class="lead text-muted animate-subtitle">
+            Revisa tus compras realizadas y sus detalles.
+        </p>
+    </div>
 
-@if (Model != null && Model.Any())
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Total</th>
-                <th>Tarjeta</th>
-                <th>Detalles</th>
-                <th>Pago Validado</th> <!-- Nueva columna -->
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var compra in Model)
-            {
-                <tr>
-                    <td>@compra.FechaCompra.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@compra.Total.ToString("C")</td>
-                    <td>
-                        @if (compra.Tarjeta != null && !string.IsNullOrEmpty(compra.Tarjeta.Numero) && compra.Tarjeta.Numero.Length >= 4)
-                        {
-                            <span>************ @compra.Tarjeta.Numero</span>
-                        }
-                        else
-                        {
-                            <span class="text-danger">Sin tarjeta asociada</span>
-                        }
-                    </td>
-                    <td>
-                        <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detalles-@compra.CompraId" aria-expanded="false" aria-controls="detalles-@compra.CompraId">
-                            Ver Detalles
-                        </button>
-                    </td>
-                    <td>
-                        <!-- Estado de validación del pago -->
-                        @if (compra.Validado)
-                        {
-                            <span class="text-success">Validado</span>
-                        }
-                        else
-                        {
-                            <span class="text-danger">Validación Pendiente</span>
-                        }
-                    </td>
-                </tr>
-                <tr class="collapse" id="detalles-@compra.CompraId">
-                    <td colspan="5">
-                        <!-- Cambiado a 5 columnas por la nueva columna -->
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (compra.DetallesCompra != null && compra.DetallesCompra.Any())
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive animate-fade-up">
+            <table class="table table-hover table-borderless shadow-sm">
+                <thead class="table-gradient text-white">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Tarjeta</th>
+                        <th>Detalles</th>
+                        <th>Pago Validado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var compra in Model)
+                    {
+                        <tr class="align-middle animate-row">
+                            <td>@compra.FechaCompra.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td class="text-success fw-bold">@compra.Total.ToString("C")</td>
+                            <td>
+                                @if (compra.Tarjeta != null && !string.IsNullOrEmpty(compra.Tarjeta.Numero) && compra.Tarjeta.Numero.Length >= 4)
                                 {
-                                    @foreach (var detalle in compra.DetallesCompra)
-                                    {
-                                        <tr>
-                                            <td>@(detalle.Accesorio?.Nombre ?? "Producto no disponible")</td>
-                                            <td>@detalle.Cantidad</td>
-                                            <td>@detalle.PrecioUnitario.ToString("C")</td>
-                                            <td>@(detalle.PrecioUnitario * detalle.Cantidad)</td>
-                                        </tr>
-                                    }
+                                    <span>************ @compra.Tarjeta.Numero</span>
                                 }
                                 else
                                 {
-                                    <tr>
-                                        <td colspan="4" class="text-warning">No hay detalles disponibles para esta compra.</td>
-                                    </tr>
+                                    <span class="text-danger">Sin tarjeta asociada</span>
                                 }
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p class="text-warning">No se encontraron compras realizadas.</p>
-}
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-gradient" type="button" data-bs-toggle="collapse" data-bs-target="#detalles-@compra.CompraId" aria-expanded="false" aria-controls="detalles-@compra.CompraId">
+                                    Ver Detalles
+                                </button>
+                            </td>
+                            <td>
+                                @if (compra.Validado)
+                                {
+                                    <span class="badge bg-success">Validado</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Validación Pendiente</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr class="collapse animate-collapse" id="detalles-@compra.CompraId">
+                            <td colspan="5">
+                                <table class="table table-sm table-striped">
+                                    <thead class="table-secondary">
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (compra.DetallesCompra != null && compra.DetallesCompra.Any())
+                                        {
+                                            @foreach (var detalle in compra.DetallesCompra)
+                                            {
+                                                <tr>
+                                                    <td>@(detalle.Accesorio?.Nombre ?? "Producto no disponible")</td>
+                                                    <td>@detalle.Cantidad</td>
+                                                    <td>@detalle.PrecioUnitario.ToString("C")</td>
+                                                    <td class="text-success">@((detalle.PrecioUnitario * detalle.Cantidad).ToString("C"))</td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="4" class="text-warning">No hay detalles disponibles para esta compra.</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-warning text-center">No se encontraron compras realizadas.</p>
+    }
+</div>
+
+<!-- Estilos -->
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .text-gradient {
+        background: linear-gradient(to right, #800020, #a81c1c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .btn-gradient {
+        background: linear-gradient(45deg, #800020, #a81c1c);
+        color: #ffffff !important;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .btn-gradient:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(168, 28, 28, 0.5);
+        }
+
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table-gradient {
+        background: linear-gradient(to right, #800020, #a81c1c);
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+    }
+
+    .animate-page {
+        opacity: 0;
+        animation: fadeInPage 1s forwards ease-out;
+    }
+
+    .animate-title {
+        opacity: 0;
+        transform: translateY(-50px);
+        animation: fadeInRotateDown 1s forwards ease-out;
+    }
+
+    .animate-subtitle {
+        opacity: 0;
+        transform: translateY(-30px);
+        animation: fadeInSlideDown 1s 0.5s forwards ease-out;
+    }
+
+    .animate-fade-up {
+        opacity: 0;
+        transform: translateY(50px);
+        animation: fadeUp 1s 0.6s forwards ease-out;
+    }
+
+    .animate-row {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: rowFadeIn 0.8s forwards ease-out;
+    }
+
+        .animate-row:nth-child(odd) {
+            animation-delay: 0.3s;
+        }
+
+        .animate-row:nth-child(even) {
+            animation-delay: 0.5s;
+        }
+
+    .animate-collapse {
+        transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
+    @@keyframes fadeInPage {
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes fadeInRotateDown {
+        to {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
+        }
+    }
+
+    @@keyframes fadeInSlideDown {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes rowFadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

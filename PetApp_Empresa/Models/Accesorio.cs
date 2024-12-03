@@ -17,6 +17,8 @@ public partial class Accesorio
 
     public int CantidadDisponible { get; set; }
 
+    public string? ImagenUrl { get; set; } // Nueva propiedad
+
 
     public virtual ICollection<CarritoAccesorio> CarritoAccesorios { get; set; } = new List<CarritoAccesorio>();
     public virtual Usuario? Vendedor { get; set; }

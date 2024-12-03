@@ -34,37 +34,52 @@ namespace PetApp_Empresa.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AgregarAlCarrito(int accesorioId, int cantidad)
+        public async Task<IActionResult> AgregarAlCarrito([FromBody] CarritoRequestModel request)
         {
             try
             {
-                var accesorio = await _context.Accesorios.FindAsync(accesorioId);
+                if (request == null || request.AccesorioId <= 0 || request.Cantidad <= 0)
+                {
+                    return BadRequest(new { message = "Datos inválidos." });
+                }
+
+                var accesorio = await _context.Accesorios.FindAsync(request.AccesorioId);
                 if (accesorio == null)
                 {
-                    return BadRequest(new { message = "El accesorio no existe." });
+                    return NotFound(new { message = "El accesorio no existe." });
+                }
+
+                if (accesorio.CantidadDisponible < request.Cantidad)
+                {
+                    return BadRequest(new { message = "Stock insuficiente." });
                 }
 
                 var carrito = await CarritoHelper.ObtenerOCrearCarritoUsuario(_context, User);
 
-                var carritoAccesorio = carrito.CarritoAccesorios.FirstOrDefault(ca => ca.AccesorioId == accesorioId);
+                var carritoAccesorio = carrito.CarritoAccesorios.FirstOrDefault(ca => ca.AccesorioId == request.AccesorioId);
                 if (carritoAccesorio == null)
                 {
                     carritoAccesorio = new CarritoAccesorio
                     {
                         CarritoId = carrito.CarritoId,
-                        AccesorioId = accesorioId,
-                        Cantidad = cantidad
+                        AccesorioId = request.AccesorioId,
+                        Cantidad = request.Cantidad
                     };
                     _context.CarritoAccesorios.Add(carritoAccesorio);
                 }
                 else
                 {
-                    carritoAccesorio.Cantidad += cantidad;
+                    carritoAccesorio.Cantidad += request.Cantidad;
+
+                    if (carritoAccesorio.Cantidad > accesorio.CantidadDisponible)
+                    {
+                        return BadRequest(new { message = "Cantidad solicitada supera el stock disponible." });
+                    }
                 }
 
                 await _context.SaveChangesAsync();
 
-                return Json(new { message = "Producto añadido al carrito" });
+                return Json(new { message = "Producto añadido al carrito correctamente." });
             }
             catch (Exception ex)
             {
@@ -332,5 +347,11 @@ namespace PetApp_Empresa.Controllers
             TempData["SuccessMessage"] = "Formulario enviado exitosamente.";
             return RedirectToAction("ConfirmacionPago");
         }
+    }
+
+    public class CarritoRequestModel
+    {
+        public int AccesorioId { get; set; }
+        public int Cantidad { get; set; }
     }
 }
