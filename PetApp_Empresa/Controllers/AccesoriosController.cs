@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -31,19 +32,34 @@ namespace PetApp_Empresa.Controllers
         // GET: Accesorios/Create
         public IActionResult Create()
         {
-            ViewData["VendedorId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId");
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                ModelState.AddModelError("", "No se pudo identificar al usuario autenticado.");
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewData["VendedorId"] = userIdClaim;
             return View();
         }
 
         // POST: Accesorios/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AccesorioId,Nombre,Descripcion,Precio,VendedorId,CantidadDisponible")] Accesorio accesorio, IFormFile ImagenArchivo)
+        public async Task<IActionResult> Create([Bind("AccesorioId,Nombre,Descripcion,Precio,CantidadDisponible")] Accesorio accesorio, IFormFile ImagenArchivo)
         {
             if (true)
             {
                 try
                 {
+                    var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    if (string.IsNullOrEmpty(userIdClaim))
+                    {
+                        ModelState.AddModelError("", "No se pudo identificar al usuario autenticado.");
+                        return View(accesorio);
+                    }
+                    accesorio.VendedorId = int.Parse(userIdClaim);
+
                     if (ImagenArchivo != null && ImagenArchivo.Length > 0)
                     {
                         var extensionesPermitidas = new[] { ".jpg", ".jpeg", ".png", ".gif" };
@@ -82,7 +98,6 @@ namespace PetApp_Empresa.Controllers
                 }
             }
 
-            ViewData["VendedorId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", accesorio.VendedorId);
             return View(accesorio);
         }
 
@@ -99,7 +114,7 @@ namespace PetApp_Empresa.Controllers
             {
                 return NotFound();
             }
-            ViewData["VendedorId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", accesorio.VendedorId);
+            ViewData["VendedorId"] = accesorio.VendedorId;
             return View(accesorio);
         }
 
@@ -155,8 +170,60 @@ namespace PetApp_Empresa.Controllers
                 }
             }
 
-            ViewData["VendedorId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", accesorio.VendedorId);
             return View(accesorio);
+        }
+
+        // GET: Accesorios/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var accesorio = await _context.Accesorios
+                .Include(a => a.Vendedor)
+                .FirstOrDefaultAsync(m => m.AccesorioId == id);
+            if (accesorio == null)
+            {
+                return NotFound();
+            }
+
+            return View(accesorio);
+        }
+
+        // GET: Accesorios/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var accesorio = await _context.Accesorios
+                .Include(a => a.Vendedor)
+                .FirstOrDefaultAsync(m => m.AccesorioId == id);
+            if (accesorio == null)
+            {
+                return NotFound();
+            }
+
+            return View(accesorio);
+        }
+
+        // POST: Accesorios/DeleteConfirmed
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var accesorio = await _context.Accesorios.FindAsync(id);
+            if (accesorio != null)
+            {
+                _context.Accesorios.Remove(accesorio);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // Nueva acción: ListadoAccesorios

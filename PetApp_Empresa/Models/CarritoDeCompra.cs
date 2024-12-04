@@ -14,4 +14,7 @@ public partial class CarritoDeCompra
     public virtual ICollection<CarritoAccesorio> CarritoAccesorios { get; set; } = new List<CarritoAccesorio>();
 
     public virtual Usuario Usuario { get; set; } = null!;
+    // Propiedad calculada para el total
+
+    
 }

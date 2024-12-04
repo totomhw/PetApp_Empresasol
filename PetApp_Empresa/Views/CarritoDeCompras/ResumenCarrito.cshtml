@@ -37,7 +37,7 @@
         <!-- Total -->
         <div class="text-center mt-4">
             <h3 class="fw-bold">
-                Total: <span class="text-success">@Model.Total?.ToString("C")</span>
+                Total: <span class="text-success">@(Model.CarritoAccesorios.Sum(ca => ca.Accesorio.Precio * ca.Cantidad).ToString("C"))</span>
             </h3>
         </div>
 
