@@ -12,12 +12,8 @@ using PetApp_Empresa.Models;
 namespace PetApp_Empresa.Migrations
 {
     [DbContext(typeof(PettappPruebaContext))]
-<<<<<<<< HEAD:PetApp_Empresa/Migrations/20241201060301_InitialCreate.Designer.cs
-    [Migration("20241201060301_InitialCreate")]
-========
-    [Migration("20241202044239_InitialCreate")]
->>>>>>>> 2b15b0080aa1d8bd7ac419d07506f67911332faf:PetApp_Empresa/Migrations/20241202044239_InitialCreate.Designer.cs
-    partial class InitialCreate
+    [Migration("20241203193724_juan")]
+    partial class juan
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,8 +43,9 @@ namespace PetApp_Empresa.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("ImagenUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
