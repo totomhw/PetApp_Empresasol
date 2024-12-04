@@ -31,7 +31,7 @@ public partial class PettappPruebaContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=SERG\\SQLEXPRESS;Database=PettappPrueba;Trusted_connection=true;TrustServerCertificate=true;");
+        optionsBuilder.UseSqlServer("Server=KYARA;Database=PettappPrueba;Trusted_connection=true;TrustServerCertificate=true;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

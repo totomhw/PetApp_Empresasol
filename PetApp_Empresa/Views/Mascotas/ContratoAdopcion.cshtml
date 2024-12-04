@@ -4,39 +4,155 @@
     ViewData["Title"] = "Contrato de Adopción";
 }
 
-<h2>Contrato de Adopción</h2>
-<p>Por favor, revisa cuidadosamente el siguiente contrato de adopción. Al confirmar, aceptas todos los términos y condiciones establecidos para la adopción de la mascota.</p>
+<div class="contract-wrapper">
+    <div class="contract-container">
+        <h2>Contrato de Adopción</h2>
+        <p>Por favor, revisa cuidadosamente el siguiente contrato de adopción. Al confirmar, aceptas todos los términos y condiciones establecidos para la adopción de la mascota.</p>
 
-<h3>Detalles del Adoptante</h3>
-<ul>
-    <li><strong>Nombre Completo:</strong> @Model.NombreCompleto</li>
-    <li><strong>Correo Electrónico:</strong> @Model.CorreoElectronico</li>
-    <li><strong>Teléfono:</strong> @Model.Telefono</li>
-    <li><strong>Dirección:</strong> @Model.Direccion</li>
-</ul>
+        <h3>Detalles del Adoptante</h3>
+        <ul>
+            <li><strong>Nombre Completo:</strong> @Model.NombreCompleto</li>
+            <li><strong>Correo Electrónico:</strong> @Model.CorreoElectronico</li>
+            <li><strong>Teléfono:</strong> @Model.Telefono</li>
+            <li><strong>Dirección:</strong> @Model.Direccion</li>
+        </ul>
 
-<h3>Detalles de la Mascota</h3>
-<ul>
-    <li><strong>Nombre:</strong> @Model.Mascota.Nombre</li>
-    <li><strong>Raza:</strong> @Model.Mascota.Raza</li>
-    <li><strong>Edad:</strong> @Model.Mascota.Edad años</li>
-    <li><strong>Descripción:</strong> @Model.Mascota.Descripcion</li>
-</ul>
+        <h3>Detalles de la Mascota</h3>
+        <ul>
+            <li><strong>Nombre:</strong> @Model.Mascota.Nombre</li>
+            <li><strong>Raza:</strong> @Model.Mascota.Raza</li>
+            <li><strong>Edad:</strong> @Model.Mascota.Edad años</li>
+            <li><strong>Descripción:</strong> @Model.Mascota.Descripcion</li>
+        </ul>
 
-<h3>Términos y Condiciones</h3>
-<p>
-    1. El adoptante se compromete a proporcionar un hogar seguro, limpio y amoroso para la mascota.<br />
-    2. La mascota no será utilizada para fines de lucro, peleas, experimentación o actividades ilegales.<br />
-    3. En caso de que el adoptante no pueda continuar cuidando a la mascota, se compromete a notificar al refugio para buscar alternativas responsables.<br />
-    4. El adoptante debe proporcionar atención veterinaria adecuada, incluyendo vacunas, chequeos regulares y cualquier tratamiento necesario.<br />
-    5. El adoptante acepta permitir inspecciones ocasionales por parte del refugio para garantizar el bienestar de la mascota.
-</p>
+        <h3>Términos y Condiciones</h3>
+        <p>
+            1. El adoptante se compromete a proporcionar un hogar seguro, limpio y amoroso para la mascota.<br />
+            2. La mascota no será utilizada para fines de lucro, peleas, experimentación o actividades ilegales.<br />
+            3. En caso de que el adoptante no pueda continuar cuidando a la mascota, se compromete a notificar al refugio para buscar alternativas responsables.<br />
+            4. El adoptante debe proporcionar atención veterinaria adecuada, incluyendo vacunas, chequeos regulares y cualquier tratamiento necesario.<br />
+            5. El adoptante acepta permitir inspecciones ocasionales por parte del refugio para garantizar el bienestar de la mascota.
+        </p>
 
-<form asp-action="ConfirmarAdopcion" method="post">
-    <input type="hidden" name="mascotaId" value="@Model.MascotaId" />
-    <button type="submit" class="btn btn-success">Aceptar y Confirmar Adopción</button>
-</form>
+        <form asp-action="ConfirmarAdopcion" method="post">
+            <input type="hidden" name="mascotaId" value="@Model.MascotaId" />
+            <button type="submit" class="btn btn-primary">Aceptar y Confirmar Adopción</button>
+        </form>
 
-<div class="mt-3">
-    <a asp-action="VistaMascota" class="btn btn-secondary">Cancelar y Volver</a>
+        <div class="mt-3">
+            <a asp-action="VistaMascota" class="btn btn-secondary">Cancelar y Volver</a>
+        </div>
+    </div>
 </div>
+
+<style>
+    /* Estilo general */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        color: #343a40;
+        margin: 0;
+        padding: 20px;
+    }
+
+    /* Contenedor principal */
+    .contract-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Títulos */
+    h2, h3 {
+        color: #343a40;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        text-align: left;
+        margin-top: 30px;
+        border-bottom: 2px solid #dee2e6;
+        padding-bottom: 5px;
+    }
+
+    /* Listas */
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    ul li {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    ul li strong {
+        font-weight: bold;
+        color: #495057;
+    }
+
+    /* Párrafos */
+    p {
+        line-height: 1.6;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    /* Botones */
+    button, a.btn {
+        display: inline-block;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+
+    button.btn-primary {
+        background-color: #800000;
+        color: #fff;
+    }
+
+    button.btn-primary:hover {
+        background-color: #660000;
+    }
+
+    a.btn.btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    a.btn.btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    /* Espaciado */
+    .mt-3 {
+        margin-top: 20px;
+    }
+
+    /* Responsivo */
+    @@media (max-width: 768px) {
+        .contract-wrapper {
+            padding: 15px;
+        }
+
+        form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        button, a.btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>

@@ -6,77 +6,188 @@
 
 <h1>Detalles de la Adopción</h1>
 
-<div>
+<div class="details-container">
     <h4>Información de la Adopción</h4>
     <hr />
     <dl class="row">
         <!-- Fecha de Adopción -->
-        <dt class="col-sm-2">
+        <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.FechaAprobacion)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-9">
             @Html.DisplayFor(model => model.FechaAprobacion)
         </dd>
 
         <!-- Mascota -->
-        <dt class="col-sm-2">
+        <dt class="col-sm-3">
             Mascota
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-9">
             @Html.DisplayFor(model => model.Mascota.Nombre)
         </dd>
 
         <!-- Usuario -->
-        <dt class="col-sm-2">
+        <dt class="col-sm-3">
             Usuario
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-9">
             @Html.DisplayFor(model => model.Usuario.Nombre)
         </dd>
 
         <!-- Estado de la Adopción -->
-        <dt class="col-sm-2">
+        <dt class="col-sm-3">
             Estado
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-9">
             @Html.DisplayFor(model => model.Estado)
         </dd>
 
         <!-- Nombre Completo -->
-        <dt class="col-sm-2">
+        <dt class="col-sm-3">
             Nombre Completo
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-9">
             @Html.DisplayFor(model => model.NombreCompleto)
         </dd>
 
         <!-- Correo Electrónico -->
-        <dt class="col-sm-2">
+        <dt class="col-sm-3">
             Correo Electrónico
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-9">
             @Html.DisplayFor(model => model.CorreoElectronico)
         </dd>
 
         <!-- Teléfono -->
-        <dt class="col-sm-2">
+        <dt class="col-sm-3">
             Teléfono
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-9">
             @Html.DisplayFor(model => model.Telefono)
         </dd>
 
         <!-- Dirección -->
-        <dt class="col-sm-2">
+        <dt class="col-sm-3">
             Dirección
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-9">
             @Html.DisplayFor(model => model.Direccion)
         </dd>
     </dl>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.AdopcionId">Editar</a> |
-    <a asp-action="Index">Volver a la Lista</a>
+<div class="details-buttons">
+    <a asp-action="Edit" asp-route-id="@Model?.AdopcionId" class="btn btn-primary">Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
 </div>
+
+<style>
+    /* Contenedor principal */
+    .details-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-out;
+    }
+
+    /* Título principal */
+    h1 {
+        text-align: center;
+        font-size: 2rem;
+        color: #7A1E3D;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    /* Subtítulo */
+    h4 {
+        font-size: 1.5rem;
+        color: #333333;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    /* Detalles */
+    dl.row {
+        margin: 20px 0;
+    }
+
+    dt {
+        font-weight: bold;
+        color: #555555;
+    }
+
+    dd {
+        font-size: 1rem;
+        color: #333333;
+    }
+
+    /* Botones */
+    .details-buttons {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .details-buttons .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #ffffff;
+        border-radius: 5px;
+        text-decoration: none;
+        margin: 0 10px;
+        transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+
+    /* Botón Editar */
+    .details-buttons .btn-primary {
+        background-color: #7A1E3D;
+    }
+
+    .details-buttons .btn-primary:hover {
+        background-color: #c82333;
+        transform: scale(1.05);
+    }
+
+    /* Botón Volver */
+    .details-buttons .btn-secondary {
+        background-color: #cccccc;
+        color: black;
+    }
+
+    .details-buttons .btn-secondary:hover {
+        background-color: #aaaaaa;
+        transform: scale(1.05);
+    }
+
+    /* Animación de entrada */
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsivo */
+    @@media (max-width: 576px) {
+        .details-container {
+            padding: 15px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            font-size: 0.9rem;
+        }
+    }
+</style>

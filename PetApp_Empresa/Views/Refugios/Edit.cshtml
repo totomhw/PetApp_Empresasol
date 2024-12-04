@@ -36,3 +36,150 @@
 <div>
     <a asp-action="Index">Volver a la lista</a>
 </div>
+
+<style>
+/* Animación para el formulario */
+@@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Contenedor principal */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Formulario */
+form {
+    background-color: #ffffff;
+    padding: 30px; /* Aumenta el relleno */
+    border-radius: 16px; /* Bordes más grandes */
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+    max-width: 500px; /* Más ancho */
+    width: 100%;
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Encabezado */
+h2 {
+    text-align: center;
+    font-size: 2rem; /* Título más grande */
+    color: #7A1E3D;
+    margin-bottom: 25px;
+}
+
+/* Etiquetas */
+label {
+    font-weight: bold;
+    font-size: 1.2rem; /* Etiquetas más grandes */
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 15px; /* Inputs más altos */
+    font-size: 1.1rem; /* Texto más grande */
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+}
+
+/* Foco en inputs */
+input:focus {
+    border-color: #7A1E3D;
+    outline: none;
+}
+
+/* Validaciones */
+.text-danger {
+    font-size: 1rem;
+    color: #e74c3c;
+}
+
+/* Botón principal */
+.btn-primary {
+    width: 100%;
+    padding: 15px; /* Botones más grandes */
+    font-size: 1.2rem; /* Texto más grande */
+    background-color: #7A1E3D;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #5B152E;
+    transform: translateY(-3px);
+}
+
+.btn-primary:active {
+    background-color: #9e2a47;
+    transform: translateY(1px);
+}
+
+/* Enlace */
+a {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+    font-size: 1.2rem; /* Texto del enlace más grande */
+    text-decoration: none;
+    color: #7A1E3D;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #5B152E;
+}
+
+/* Animación de aparición del enlace */
+a {
+    animation: slideIn 0.7s ease-out;
+}
+
+/* Responsividad */
+@@media (max-width: 768px) {
+    form {
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    label {
+        font-size: 1rem;
+    }
+
+    input {
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        font-size: 1rem;
+    }
+
+    a {
+        font-size: 1rem;
+    }
+}
+</style>

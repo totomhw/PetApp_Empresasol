@@ -26,7 +26,15 @@
                     <p class="card-text"><strong>Raza:</strong> @mascota.Raza</p>
                     <p class="card-text"><strong>Edad:</strong> @mascota.Edad años</p>
                     <p class="card-text"><strong>Sexo:</strong> @mascota.Sexo</p>
-                    <a href="@Url.Action("DetailsMascota", new { id = mascota.MascotaId })" class="btn btn-adoptar">Adoptar</a>
+
+                    @if (mascota.EstadoAdopcion == "En Proceso")
+                    {
+                        <p class="text-info">La adopción de esta mascota está en proceso.</p>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("DetailsMascota", new { id = mascota.MascotaId })" class="btn btn-adoptar">Adoptar</a>
+                    }
                 </div>
             </div>
         }

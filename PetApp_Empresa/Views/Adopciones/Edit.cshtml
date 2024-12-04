@@ -6,83 +6,82 @@
 
 <h1>Editar Solicitud de Adopción</h1>
 
-<h4>Información de la Adopción</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="AdopcionId" />
+<div class="edit-form-container">
+    <h4>Información de la Adopción</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" class="adoption-edit-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="AdopcionId" />
 
-            <!-- Mascota -->
-            <div class="form-group">
-                <label asp-for="MascotaId" class="control-label"></label>
-                <select asp-for="MascotaId" class="form-control" asp-items="ViewBag.MascotaId"></select>
-                <span asp-validation-for="MascotaId" class="text-danger"></span>
-            </div>
+                <!-- Mascota -->
+                <div class="form-group">
+                    <label asp-for="MascotaId" class="control-label"></label>
+                    <select asp-for="MascotaId" class="form-control" asp-items="ViewBag.MascotaId"></select>
+                    <span asp-validation-for="MascotaId" class="text-danger"></span>
+                </div>
 
-            <!-- Usuario -->
-            <div class="form-group">
-                <label asp-for="UsuarioId" class="control-label"></label>
-                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
-                <span asp-validation-for="UsuarioId" class="text-danger"></span>
-            </div>
+                <!-- Usuario -->
+                <div class="form-group">
+                    <label asp-for="UsuarioId" class="control-label"></label>
+                    <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
+                    <span asp-validation-for="UsuarioId" class="text-danger"></span>
+                </div>
 
-            <!-- Fecha de Adopción -->
-            <div class="form-group">
-                <label asp-for="FechaAprobacion" class="control-label"></label>
-                <input asp-for="FechaAprobacion" class="form-control" />
-                <span asp-validation-for="FechaAprobacion" class="text-danger"></span>
-            </div>
+                <!-- Fecha de Adopción -->
+                <div class="form-group">
+                    <label asp-for="FechaAprobacion" class="control-label"></label>
+                    <input asp-for="FechaAprobacion" class="form-control" />
+                    <span asp-validation-for="FechaAprobacion" class="text-danger"></span>
+                </div>
 
-            <!-- Estado de la Adopción -->
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <select asp-for="Estado" class="form-control">
-                    <option value="Pendiente">Pendiente</option>
-                    <option value="Aprobado">Aprobado</option>
-                    <option value="Rechazado">Rechazado</option>
-                </select>
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
+                <!-- Estado de la Adopción -->
+                <div class="form-group">
+                    <label asp-for="Estado" class="control-label"></label>
+                    <select asp-for="Estado" class="form-control">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Aprobado">Aprobado</option>
+                        <option value="Rechazado">Rechazado</option>
+                    </select>
+                    <span asp-validation-for="Estado" class="text-danger"></span>
+                </div>
 
-            <!-- Nombre Completo -->
-            <div class="form-group">
-                <label asp-for="NombreCompleto" class="control-label"></label>
-                <input asp-for="NombreCompleto" class="form-control" />
-                <span asp-validation-for="NombreCompleto" class="text-danger"></span>
-            </div>
+                <!-- Nombre Completo -->
+                <div class="form-group">
+                    <label asp-for="NombreCompleto" class="control-label"></label>
+                    <input asp-for="NombreCompleto" class="form-control" />
+                    <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+                </div>
 
-            <!-- Correo Electrónico -->
-            <div class="form-group">
-                <label asp-for="CorreoElectronico" class="control-label"></label>
-                <input asp-for="CorreoElectronico" class="form-control" />
-                <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
-            </div>
+                <!-- Correo Electrónico -->
+                <div class="form-group">
+                    <label asp-for="CorreoElectronico" class="control-label"></label>
+                    <input asp-for="CorreoElectronico" class="form-control" />
+                    <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+                </div>
 
-            <!-- Teléfono -->
-            <div class="form-group">
-                <label asp-for="Telefono" class="control-label"></label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
+                <!-- Teléfono -->
+                <div class="form-group">
+                    <label asp-for="Telefono" class="control-label"></label>
+                    <input asp-for="Telefono" class="form-control" />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                </div>
 
-            <!-- Dirección -->
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
+                <!-- Dirección -->
+                <div class="form-group">
+                    <label asp-for="Direccion" class="control-label"></label>
+                    <input asp-for="Direccion" class="form-control" />
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
+                </div>
 
-            <div class="form-group mt-3">
-                <input type="submit" value="Guardar" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="form-buttons">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Volver a la Lista</a>
 </div>
 
 @section Scripts {
@@ -90,3 +89,116 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+<style>
+/* Contenedor principal del formulario */
+.edit-form-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-out;
+}
+
+/* Encabezado principal */
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #7A1E3D;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Subtítulo */
+h4 {
+    font-size: 1.5rem;
+    color: #333333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Formularios */
+.adoption-edit-form {
+    width: 100%;
+}
+
+/* Campos de formulario */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+/* Botones del formulario */
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.form-buttons .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+/* Botón Guardar */
+.form-buttons .btn-primary {
+    background-color: #7A1E3D;
+    color: #ffffff;
+}
+
+.form-buttons .btn-primary:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+/* Botón Cancelar */
+.form-buttons .btn-secondary {
+    background-color: #cccccc;
+    color: black;
+}
+
+.form-buttons .btn-secondary:hover {
+    background-color: #aaaaaa;
+    transform: scale(1.05);
+}
+
+/* Responsivo */
+@@media (max-width: 576px) {
+    .edit-form-container {
+        padding: 15px;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .form-buttons .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Animación de entrada */
+@@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>

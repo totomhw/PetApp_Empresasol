@@ -46,3 +46,211 @@
     <a asp-action="Edit" asp-route-id="@Model?.RefugioId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+<style>
+   /* Estilos específicos para la página de detalles */
+ 
+/* Contenedor principal de detalles */
+
+h1 + div {
+
+    max-width: 800px;
+
+    margin: 20px auto;
+
+    background-color: #fff;
+
+    padding: 40px;
+
+    border-radius: 16px;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
+    animation: fadeInScale 0.8s ease-out forwards;
+
+}
+ 
+/* Animación de entrada */
+
+@@keyframes fadeInScale {
+
+    from {
+
+        opacity: 0;
+
+        transform: scale(0.95);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: scale(1);
+
+    }
+
+}
+ 
+/* Estilo del título principal solo en detalles */
+
+h1 {
+
+    font-size: 2rem;
+
+    font-weight: 700;
+
+    color: #333333;
+
+    text-align: center;
+
+    margin-bottom: 20px;
+
+    font-family: 'Roboto', sans-serif;
+
+}
+ 
+/* Subtítulo en detalles */
+
+h4 {
+
+    font-size: 1.5rem;
+
+    font-weight: 600;
+
+    color: #444;
+
+    margin-bottom: 10px;
+
+    text-align: center;
+
+}
+ 
+/* Estilos para listas de definición en detalles */
+
+h1 + div dl.row {
+
+    font-size: 1.1rem;
+
+    line-height: 2;
+
+    color: #555;
+
+    margin-top: 20px;
+
+}
+ 
+h1 + div dt.col-sm-2 {
+
+    font-weight: bold;
+
+    color: #333;
+
+    width: 30%;
+
+    float: left;
+
+    clear: left;
+
+    margin-bottom: 10px;
+
+}
+ 
+h1 + div dd.col-sm-10 {
+
+    width: 70%;
+
+    float: left;
+
+    margin-bottom: 10px;
+
+    color: #555;
+
+}
+ 
+/* Limpieza de floats */
+
+h1 + div dd.col-sm-10::after {
+
+    content: "";
+
+    display: table;
+
+    clear: both;
+
+}
+ 
+/* Línea divisoria en detalles */
+
+h1 + div hr {
+
+    border-top: 1px solid #e0e0e0;
+
+    margin: 20px 0;
+
+}
+ 
+/* Enlaces en la sección de detalles */
+
+h1 + div + div a {
+
+    font-size: 1.1rem;
+
+    color: #007bff;
+
+    text-decoration: none;
+
+    font-weight: 600;
+
+    padding: 5px 10px;
+
+    border-radius: 4px;
+
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+}
+ 
+h1 + div + div a:hover {
+
+    background-color: #f8f9fa;
+
+    color: #0056b3;
+
+}
+ 
+/* Responsividad para pantallas pequeñas en detalles */
+
+@@media (max-width: 768px) {
+
+    h1 + div dt.col-sm-2,
+
+    h1 + div dd.col-sm-10 {
+
+        width: 100%;
+
+        float: none;
+
+    }
+
+    h1 {
+
+        font-size: 1.8rem;
+
+    }
+
+    h4 {
+
+        font-size: 1.3rem;
+
+    }
+
+    h1 + div + div a {
+
+        font-size: 1rem;
+
+    }
+
+}
+
+ 
+</style>

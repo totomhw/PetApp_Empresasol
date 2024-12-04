@@ -60,3 +60,159 @@
 
     <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
+
+<style>
+    /* Estilo para el contenedor principal */
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Contenedor de detalles */
+.details-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Título principal */
+h1 {
+    text-align: center;
+    font-size: 2.4rem;
+    color: #2C3E50;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+/* Título secundario */
+h4 {
+    font-size: 1.5rem;
+    color: #2C3E50;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Línea divisoria */
+hr {
+    border: 0;
+    border-top: 1px solid #e0e0e0;
+    margin: 20px 0;
+}
+
+/* Estilo para listas de definición */
+dl {
+    font-size: 1.2rem;
+    line-height: 2;
+    color: #555;
+}
+
+dt {
+    font-weight: bold;
+    color: #333;
+}
+
+dd {
+    color: #555;
+}
+
+/* Estilo de los enlaces */
+a {
+    font-size: 1.1rem;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a:hover {
+    background-color: #f8f9fa;
+    color: #0056b3;
+}
+
+/* Estilo del botón de acción */
+.btn {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: #7A1E3D; /* Color común para los botones */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background-color: #5e162a; /* Tono más oscuro al hacer hover */
+    transform: scale(1.05);
+}
+
+/* Estilo del botón de logout */
+.btn-logout {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: #BDC3C7; /* Botón neutro */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+    margin-top: 20px;
+}
+
+.btn-logout:hover {
+    background-color: #95A5A6; /* Tono más oscuro al hacer hover */
+    transform: scale(1.05);
+}
+
+/* Responsividad para pantallas pequeñas */
+@@media (max-width: 768px) {
+    .details-container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h4 {
+        font-size: 1.3rem;
+    }
+
+    dl {
+        font-size: 1rem;
+    }
+
+    a {
+        font-size: 1rem;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+
+    .btn-logout {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+}
+
+</style>
+
+

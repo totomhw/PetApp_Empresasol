@@ -28,3 +28,114 @@
 
     <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
 </form>
+
+<style>
+    /* Contenedor del formulario */
+    form {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-out;
+    }
+
+    /* Título */
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+        color: #333333;
+        font-weight: bold;
+    }
+
+    /* Grupo de formularios */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    /* Etiquetas */
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #555555;
+    }
+
+    /* Campos de entrada */
+    input.form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #cccccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    }
+
+        input.form-control:hover {
+            border-color: #7A1E3D;
+            transform: scale(1.02);
+        }
+
+        input.form-control:focus {
+            border-color: #7A1E3D;
+            box-shadow: 0 0 8px rgba(122, 30, 61, 0.25);
+            outline: none;
+        }
+
+    /* Mensajes de validación */
+    span.text-danger {
+        font-size: 0.85rem;
+        color: #e74c3c;
+    }
+
+    /* Botón */
+    button.btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #7A1E3D;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s;
+    }
+
+        button.btn:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+    /* Animación de entrada */
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsivo */
+    @@media (max-width: 576px) {
+        form {
+            padding: 15px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        button.btn {
+            font-size: 0.9rem;
+        }
+    }
+</style>

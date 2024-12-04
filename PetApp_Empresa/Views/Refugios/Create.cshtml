@@ -35,3 +35,122 @@
 <div>
     <a asp-action="Index">Volver a la lista</a>
 </div>
+
+<style>
+/* Contenedor principal */
+.form-container {
+    width: 100%;
+    max-width: 500px; /* Ancho máximo del contenedor */
+    margin: 50px auto; /* Centrado vertical y horizontal */
+    padding: 30px;
+    background-color: #ffffff; /* Fondo blanco */
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Sombra */
+    border: 1px solid #ddd; /* Borde suave */
+    animation: fadeInScale 0.8s ease-out forwards; /* Animación de entrada */
+    opacity: 0; /* Inicialmente oculto */
+}
+
+/* Animación de entrada */
+@@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Títulos */
+h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: 'Roboto', sans-serif;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: text-shadow 0.3s ease, transform 0.3s ease;
+}
+
+h2:hover {
+    text-shadow: 0 4px 10px rgba(168, 28, 28, 0.6); /* Color de texto hover */
+    transform: scale(1.05);
+}
+
+/* Estilos para los inputs */
+input.form-control {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+    margin-bottom: 15px; /* Separación entre campos */
+}
+
+input.form-control:focus {
+    border-color: #a81c1c;
+    outline: none;
+}
+
+/* Mensajes de validación */
+.text-danger {
+    color: #e74c3c;
+    font-size: 0.875rem;
+}
+
+/* Botón Crear */
+.btn-primary {
+    background-color: #7A1E3D; /* Color personalizado */
+    border: none;
+    color: #ffffff;
+    font-size: 1.1rem;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #800020; /* Hover con color más oscuro */
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 15px rgba(168, 28, 28, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(1px) scale(1);
+}
+
+/* Enlace para volver */
+a {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    font-size: 1rem;
+    color: #a81c1c;
+    font-weight: bold;
+    text-align: center;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Responsividad */
+@@media (max-width: 767px) {
+    .form-container {
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+
+</style>
