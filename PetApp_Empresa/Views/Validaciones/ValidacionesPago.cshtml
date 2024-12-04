@@ -1,6 +1,25 @@
 ﻿@model List<PetApp_Empresa.Models.Compra>
 
 <div class="container py-5 animate-page">
+    <!-- Mensajes -->
+    <div class="mb-4">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-1"></i> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-1"></i> @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
     <!-- Título -->
     <div class="text-center mb-4">
         <h2 class="display-5 fw-bold text-gradient animate-title">Validaciones de Pago</h2>
@@ -96,10 +115,10 @@
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .btn-validate:hover {
-        transform: scale(1.05);
-        box-shadow: 0px 6px 15px rgba(40, 167, 69, 0.3);
-    }
+        .btn-validate:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(40, 167, 69, 0.3);
+        }
 
     /* Badge Validado */
     .badge {
@@ -138,13 +157,13 @@
         animation: fadeInRow 0.8s forwards ease-out;
     }
 
-    .animate-row:nth-child(odd) {
-        animation-delay: 0.3s;
-    }
+        .animate-row:nth-child(odd) {
+            animation-delay: 0.3s;
+        }
 
-    .animate-row:nth-child(even) {
-        animation-delay: 0.5s;
-    }
+        .animate-row:nth-child(even) {
+            animation-delay: 0.5s;
+        }
 
     @@keyframes fadeInPage {
         to {

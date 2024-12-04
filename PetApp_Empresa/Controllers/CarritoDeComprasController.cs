@@ -163,11 +163,30 @@ namespace PetApp_Empresa.Controllers
                         AccesorioId = item.AccesorioId,
                         Cantidad = item.Cantidad,
                         PrecioUnitario = item.Accesorio?.Precio ?? 0
-                    }).ToList()
+                    }).ToList(),
+                    Validado = true // Marcar como validada automáticamente
                 };
+
+                // Reducir el stock de los accesorios
+                foreach (var detalle in compra.DetallesCompra)
+                {
+                    var accesorio = await _context.Accesorios.FindAsync(detalle.AccesorioId);
+                    if (accesorio != null)
+                    {
+                        accesorio.CantidadDisponible -= detalle.Cantidad;
+
+                        if (accesorio.CantidadDisponible < 0)
+                        {
+                            return BadRequest(new { message = "Stock insuficiente para uno o más productos." });
+                        }
+
+                        _context.Accesorios.Update(accesorio);
+                    }
+                }
 
                 _context.Compras.Add(compra);
 
+                // Vaciar el carrito
                 _context.CarritoAccesorios.RemoveRange(carrito.CarritoAccesorios);
                 await _context.SaveChangesAsync();
 
@@ -180,6 +199,8 @@ namespace PetApp_Empresa.Controllers
                 return RedirectToAction("ResumenCarrito");
             }
         }
+
+
 
         public async Task<IActionResult> HistorialCompras()
         {

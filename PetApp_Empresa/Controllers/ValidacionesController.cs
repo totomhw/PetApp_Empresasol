@@ -26,24 +26,53 @@ namespace PetApp_Empresa.Controllers
             return View(compras);
         }
 
-        // POST: Validaciones/ValidarPago
         [HttpPost]
         public async Task<IActionResult> ValidarPago(int compraId)
         {
-            var compra = await _context.Compras.FindAsync(compraId);
+            var compra = await _context.Compras
+                .Include(c => c.DetallesCompra)
+                .ThenInclude(d => d.Accesorio)
+                .FirstOrDefaultAsync(c => c.CompraId == compraId);
 
             if (compra == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "La compra no existe.";
+                return RedirectToAction("ValidacionesPago");
             }
 
-            // Marcar la compra como validada (simulamos esto con un campo adicional)
-            compra.Validado = true;
+            if (compra.Validado)
+            {
+                TempData["ErrorMessage"] = "El pago ya ha sido validado anteriormente.";
+                return RedirectToAction("ValidacionesPago");
+            }
 
+            // Reducir el stock de los accesorios
+            foreach (var detalle in compra.DetallesCompra)
+            {
+                var accesorio = await _context.Accesorios.FindAsync(detalle.AccesorioId);
+                if (accesorio != null)
+                {
+                    accesorio.CantidadDisponible -= detalle.Cantidad;
+
+                    if (accesorio.CantidadDisponible < 0)
+                    {
+                        TempData["ErrorMessage"] = "Stock insuficiente para uno o más productos.";
+                        return RedirectToAction("ValidacionesPago");
+                    }
+
+                    _context.Accesorios.Update(accesorio);
+                }
+            }
+
+            // Marcar la compra como validada
+            compra.Validado = true;
             _context.Compras.Update(compra);
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true });
+            TempData["SuccessMessage"] = "Pago validado y stock actualizado correctamente.";
+            return RedirectToAction("ValidacionesPago");
         }
+
+
     }
 }
