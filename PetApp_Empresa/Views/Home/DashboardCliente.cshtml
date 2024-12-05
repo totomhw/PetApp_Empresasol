@@ -19,9 +19,13 @@
         }
 
         .carousel-item img {
-            height: 400px; /* Altura uniforme */
-            object-fit: cover; /* Ajuste de imagen */
+            width: 100%; /* Ocupa todo el ancho */
+            height: auto; /* Ajusta la altura automáticamente */
+            max-height: 400px; /* Altura máxima para mantener la proporción */
+            object-fit: cover; /* Ajusta la imagen dentro del contenedor */
+            object-position: center; /* Centra la imagen */
         }
+
 
         .carousel-caption {
             background: rgba(0, 0, 0, 0.7);
@@ -131,6 +135,7 @@
                 <span class="visually-hidden">Siguiente</span>
             </button>
         </div>
+
         <!-- Opciones para el Cliente -->
         <div class="client-options mt-4 mb-4 row text-center">
             <div class="col-md-3">
@@ -168,42 +173,64 @@
         </div>
 
         <!-- Sección de Adopciones -->
-        <h3 class="text-gradient">Mis Adopciones</h3>
-        @if (adopciones != null && adopciones.Any())
-        {
-            <ul>
+        <h3 class="text-gradient text-danger">Mis Adopciones</h3>
+        <div class="row mt-4">
+            @if (adopciones != null && adopciones.Any())
+            {
                 @foreach (var adopcion in adopciones)
                 {
-                    <li>
-                        Mascota: @adopcion.Mascota.Nombre - Estado: @adopcion.Estado - Fecha: @adopcion.FechaSolicitud?.ToString("dd/MM/yyyy")
-                    </li>
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-danger shadow-sm">
+                            <div class="card-header bg-danger text-white">
+                                <strong>Mascota: @adopcion.Mascota.Nombre</strong>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <strong>Estado:</strong> @adopcion.Estado<br />
+                                    <strong>Fecha:</strong> @adopcion.FechaSolicitud?.ToString("dd/MM/yyyy")
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 }
-            </ul>
-        }
-        else
-        {
-            <p>No has adoptado ninguna mascota.</p>
-        }
+            }
+            else
+            {
+                <p class="text-muted">No has adoptado ninguna mascota.</p>
+            }
+        </div>
 
         <hr />
 
         <!-- Sección de Donaciones -->
-        <h3 class="text-gradient">Mis Donaciones</h3>
-        @if (donaciones != null && donaciones.Any())
-        {
-            <ul>
+        <h3 class="text-gradient text-danger">Mis Donaciones</h3>
+        <div class="row mt-4">
+            @if (donaciones != null && donaciones.Any())
+            {
                 @foreach (var donacion in donaciones)
                 {
-                    <li>
-                        Refugio: @donacion.Refugio.Nombre - Monto: @donacion.Monto.ToString("C") - Fecha: @donacion.FechaDonacion?.ToString("dd/MM/yyyy")
-                    </li>
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-danger shadow-sm">
+                            <div class="card-header bg-danger text-white">
+                                <strong>Refugio: @donacion.Refugio.Nombre</strong>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <strong>Monto:</strong> @donacion.Monto.ToString("C")<br />
+                                    <strong>Fecha:</strong> @donacion.FechaDonacion?.ToString("dd/MM/yyyy")
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 }
-            </ul>
-        }
-        else
-        {
-            <p>No has realizado donaciones.</p>
-        }
+            }
+            else
+            {
+                <p class="text-muted">No has realizado donaciones.</p>
+            }
+        </div>
+
+
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
