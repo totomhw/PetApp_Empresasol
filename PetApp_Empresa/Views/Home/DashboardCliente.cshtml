@@ -20,12 +20,10 @@
 
         .carousel-item img {
             width: 100%; /* Ocupa todo el ancho */
-            height: auto; /* Ajusta la altura automáticamente */
-            max-height: 400px; /* Altura máxima para mantener la proporción */
-            object-fit: cover; /* Ajusta la imagen dentro del contenedor */
-            object-position: center; /* Centra la imagen */
+            height: 400px; /* Altura fija */
+            object-fit: contain; /* Ajusta la imagen completa dentro del contenedor */
+            background-color: #f5f5f5; /* Color de fondo para bordes vacíos */
         }
-
 
         .carousel-caption {
             background: rgba(0, 0, 0, 0.7);
@@ -101,31 +99,37 @@
             </div>
 
             <div class="carousel-inner">
+                <!-- Imagen 1 -->
                 <div class="carousel-item active">
                     <a href="@Url.Action("VistaMascota", "Mascotas")">
-                        <img src="https://media.istockphoto.com/id/513133900/es/foto/oro-retriever-sentado-en-frente-de-un-fondo-blanco.jpg?s=612x612&w=0&k=20&c=0lRWImB8Y4p6X6YGt06c6q8I3AqBgKD-OGQxjLCI5EY=" class="d-block w-100" alt="Adoptar">
+                        <img src="https://placedog.net/1200/400?id=1" class="d-block w-100" alt="Golden Retriever">
                         <div class="carousel-caption d-none d-md-block">
                             <h5 class="carousel-text">¿Quieres adoptar una mascota?</h5>
                         </div>
                     </a>
                 </div>
+
+                <!-- Imagen 2 -->
                 <div class="carousel-item">
                     <a href="@Url.Action("ListadoAccesorios", "Accesorios")">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREzFFwrXe2kl1G7W4uLmLS-z5mESml63nI3Q&s" class="d-block w-100" alt="Accesorios">
+                        <img src="https://placedog.net/1200/400?id=2" class="d-block w-100" alt="Accesorios">
                         <div class="carousel-caption d-none d-md-block">
                             <h5 class="carousel-text">Compra accesorios para tu mascota aquí.</h5>
                         </div>
                     </a>
                 </div>
+
+                <!-- Imagen 3 -->
                 <div class="carousel-item">
                     <a href="@Url.Action("Index", "Donaciones")">
-                        <img src="https://images.ecestaticos.com/h34TvzTFVdrau9Un4Wdmwhed_e4=/0x115:2265x1390/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F8ec%2F08c%2F85c%2F8ec08c85c866ccb70c4f1c36492d890f.jpg" class="d-block w-100" alt="Donaciones">
+                        <img src="https://placedog.net/1200/400?id=3" class="d-block w-100" alt="Donaciones">
                         <div class="carousel-caption d-none d-md-block">
                             <h5 class="carousel-text">Apoya a nuestros refugios con una donación.</h5>
                         </div>
                     </a>
                 </div>
             </div>
+
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Anterior</span>
@@ -135,6 +139,7 @@
                 <span class="visually-hidden">Siguiente</span>
             </button>
         </div>
+
 
         <!-- Opciones para el Cliente -->
         <div class="client-options mt-4 mb-4 row text-center">

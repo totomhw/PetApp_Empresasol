@@ -381,5 +381,78 @@ namespace PetApp_Empresa.Controllers
             return RedirectToAction("VistaMascota", "Mascotas");
         }
 
+
+        // GET: Mascotas/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            int userId = int.Parse(userIdClaim.Value);
+
+            var mascota = await _context.Mascotas
+                .Include(m => m.Refugio)
+                .FirstOrDefaultAsync(m => m.MascotaId == id);
+
+            if (mascota == null || mascota.Refugio.UsuarioId != userId)
+            {
+                return Unauthorized("No tienes permiso para eliminar esta mascota.");
+            }
+
+            return View(mascota);
+        }
+
+        // POST: Mascotas/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            int userId = int.Parse(userIdClaim.Value);
+
+            var mascota = await _context.Mascotas
+                .Include(m => m.Refugio)
+                .FirstOrDefaultAsync(m => m.MascotaId == id);
+
+            if (mascota == null || mascota.Refugio.UsuarioId != userId)
+            {
+                return Unauthorized("No tienes permiso para eliminar esta mascota.");
+            }
+
+            try
+            {
+                if (!string.IsNullOrEmpty(mascota.ImagenUrl))
+                {
+                    // Eliminar la imagen del servidor
+                    var rutaCompleta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", mascota.ImagenUrl.TrimStart('/'));
+                    if (System.IO.File.Exists(rutaCompleta))
+                    {
+                        System.IO.File.Delete(rutaCompleta);
+                    }
+                }
+
+                _context.Mascotas.Remove(mascota);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error al eliminar la mascota: {ex.Message}");
+                return View(mascota);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
