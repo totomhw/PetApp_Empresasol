@@ -112,8 +112,23 @@ namespace PetApp_Empresa.Controllers
 
         // Dashboard para Vendedor
         [Authorize(Roles = "Vendedor,Admin")]
-        public IActionResult DashboardVendedor()
+        public async Task<IActionResult> DashboardVendedor()
         {
+            // Obtén los datos de los accesorios disponibles desde la base de datos
+            var accesoriosDisponibles = await _context.Accesorios
+                .Select(a => new { a.Nombre, a.CantidadDisponible })
+                .ToListAsync();
+
+            // Obtén los datos de pagos validados y no validados
+            var pagosValidados = await _context.Compras
+                .GroupBy(c => c.Validado)
+                .Select(g => new { Estado = g.Key ? "Validados" : "No Validados", Cantidad = g.Count() })
+                .ToListAsync();
+
+            // Pasa los datos a la vista como JSON para los gráficos
+            ViewData["AccesoriosDisponibles"] = accesoriosDisponibles;
+            ViewData["PagosValidados"] = pagosValidados;
+
             return View();
         }
 
